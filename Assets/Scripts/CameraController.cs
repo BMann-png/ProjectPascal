@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
 {
 	private static readonly float MAX_ANGLE = 90.0f;
 
-	[SerializeField] private float sensitivity;
+	[SerializeField] private float sensitivity = 100.0f;
 
 	private Transform player;
 

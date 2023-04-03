@@ -5,15 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] private CharacterController controller;
-	[SerializeField] private float movementSpeed;
-	[SerializeField] private float sprintSpeed;
+	[SerializeField] private float movementSpeed = 5.0f;
+	[SerializeField] private float sprintSpeed = 10.0f;
+	[SerializeField] private float sprintTime = 2.0f;
+	[SerializeField] private float sprintCooldown = 5.0f;
 
+	private CharacterController controller;
 	private new Transform camera;
 
 	private bool sprinting;
 	private float sprintTimer;
-	private float sprintCooldown;
+	private float sprintCooldownTimer;
 
 	private void OnValidate()
 	{
@@ -26,15 +28,15 @@ public class PlayerController : MonoBehaviour
 		Vector3 movement = Vector3.zero;
 
 		sprintTimer -= Time.fixedDeltaTime;
-		sprintCooldown -= Time.fixedDeltaTime;
+		sprintCooldownTimer -= Time.fixedDeltaTime;
 
 		sprinting = sprintTimer > 0.0f;
 
-		if (Input.GetKey(KeyCode.LeftShift) && sprintCooldown <= 0.0f)
+		if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f)
 		{
 			sprinting = true;
-			sprintTimer = 1.0f;
-			sprintCooldown = 10.0f;
+			sprintTimer = sprintTime;
+			sprintCooldownTimer = sprintCooldown;
 		}
 
 		if (sprinting)
