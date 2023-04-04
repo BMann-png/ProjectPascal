@@ -19,14 +19,14 @@ public class CameraController : MonoBehaviour
 		Cursor.visible = false;
 	}
 
-	void FixedUpdate()
-    {
-		float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
-		float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
+	private void Update()
+	{
+		float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+		float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 
 		player.Rotate(Vector3.up, mouseX);
 
 		Quaternion yQuat = transform.localRotation * Quaternion.Euler(-mouseY, 0.0f, 0.0f);
 		if (Quaternion.Angle(Quaternion.identity, yQuat) < MAX_ANGLE) { transform.localRotation = yQuat; }
-    }
+	}
 }

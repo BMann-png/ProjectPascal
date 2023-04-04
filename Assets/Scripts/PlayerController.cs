@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private float sprintCooldown = 5.0f;
 
 	private CharacterController controller;
-	private new Transform camera;
 
 	private bool sprinting;
 	private float sprintTimer;
@@ -20,15 +19,14 @@ public class PlayerController : MonoBehaviour
 	private void OnValidate()
 	{
 		if(controller == null) { controller = GetComponent<CharacterController>(); }
-		camera = transform.GetChild(0);
 	}
 
-	private void FixedUpdate()
+	private void Update()
 	{
 		Vector3 movement = Vector3.zero;
 
-		sprintTimer -= Time.fixedDeltaTime;
-		sprintCooldownTimer -= Time.fixedDeltaTime;
+		sprintTimer -= Time.deltaTime;
+		sprintCooldownTimer -= Time.deltaTime;
 
 		sprinting = sprintTimer > 0.0f;
 
@@ -41,12 +39,12 @@ public class PlayerController : MonoBehaviour
 
 		if (sprinting)
 		{
-			movement = camera.forward * sprintSpeed * Time.fixedDeltaTime;
+			movement = transform.forward * sprintSpeed * Time.deltaTime;
 		}
 		else
 		{
-			movement += camera.forward * Input.GetAxis("Vertical") * movementSpeed * Time.fixedDeltaTime;
-			movement += camera.right * Input.GetAxis("Horizontal") * movementSpeed * Time.fixedDeltaTime;
+			movement += transform.forward * Input.GetAxis("Vertical") * movementSpeed * Time.deltaTime;
+			movement += transform.right * Input.GetAxis("Horizontal") * movementSpeed * Time.deltaTime;
 		}
 
 		movement.y = 0.0f;
