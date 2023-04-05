@@ -4,7 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,7 +17,6 @@ public class NetworkManager : Singleton<NetworkManager>
     public SteamId PlayerId { get; private set; }
 
     private string playerIdString;
-    private List<Lobby> activeLobbies;
     private bool connectedToSteam;
 
     private Pascal.SocketManager socketManager;
@@ -22,7 +24,12 @@ public class NetworkManager : Singleton<NetworkManager>
     private bool activeSocketServer;
     private bool activeSocketConnection;
 
-    void Awake()
+
+    private List<Lobby> activeLobbies;
+    public Lobby currentLobby;
+    private Lobby hostedLobby;
+
+    protected override void Awake()
     {
         try
         {
@@ -50,91 +57,151 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void Start()
     {
-        SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
-        SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
-        SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
-        SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
-        SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
-        SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
-        SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
-        SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
-        SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
+        //SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
+        //SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
+        //SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
+        //SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
+        //SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
+        //SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
+        //SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
+        //SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public async Task<bool> CreateLobby(int lobbyParameters)
-    {
-        try
-        {
-            var createLobbyOutput = await SteamMatchmaking.CreateLobbyAsync(2);
-            if (!createLobbyOutput.HasValue)
-            {
-                Debug.Log("Lobby created but not correctly instantiated");
-                throw new Exception();
-            }
-            return true;
-        }
-        catch
-        {
+    #region Obsolete
+    //public async Task<bool> CreateLobby()
+    //{
+    //    try
+    //    {
+    //        var createLobbyOutput = await SteamMatchmaking.CreateLobbyAsync(2);
+    //        if (!createLobbyOutput.HasValue)
+    //        {
+    //            Debug.Log("Lobby created but not correctly instantiated");
+    //            throw new Exception();
+    //        }
 
-            return false;
-        }
-    }
+    //        hostedLobby = createLobbyOutput.Value;
+    //        hostedLobby.SetPublic();
+    //        hostedLobby.SetJoinable(true);
+    //        //Set Lobby Data
 
-    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    {
-        throw new NotImplementedException();
-    }
+    //        currentLobby = hostedLobby;
 
-    private void OnDlcInstalledCallback(AppId obj)
-    {
-        throw new NotImplementedException();
-    }
+    //        return true;
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.Log("Failed to created lobby");
+    //        Debug.Log(e.ToString());
 
-    private void OnGameLobbyJoinRequestedCallback(Lobby arg1, SteamId arg2)
-    {
-        throw new NotImplementedException();
-    }
+    //        return false;
+    //    }
+    //}
 
-    private void OnLobbyMemberLeaveCallback(Lobby arg1, Friend arg2)
-    {
-        throw new NotImplementedException();
-    }
+    //public async Task<bool> RefreshLobbyBrowser()
+    //{
+    //    try
+    //    {
+    //        activeLobbies.Clear();
+    //        activeLobbies = (await SteamMatchmaking.LobbyList.WithMaxResults(20).RequestAsync()).ToList();
+    //        return true;
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.Log("Error fetching multiplayer lobbies");
+    //        Debug.Log(e.ToString());
+    //        return false;
+    //    }
+    //}
 
-    private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
-    {
-        throw new NotImplementedException();
-    }
+    //private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
-    {
-        throw new NotImplementedException();
-    }
+    //private void OnDlcInstalledCallback(AppId obj)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    private void OnLobbyMemberJoinedCallback(Lobby arg1, Friend arg2)
-    {
-        throw new NotImplementedException();
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="lobby"></param>
+    ///// <param name="id"></param>
+    //[Obsolete("This is deprecated, please use JoinSocketServer instead.")]
+    //async private void OnGameLobbyJoinRequestedCallback(Lobby lobby, SteamId id)
+    //{
+    //    RoomEnter joinedLobby = await lobby.Join();
 
-    private void OnLobbyEnteredCallback(Lobby obj)
-    {
-        throw new NotImplementedException();
-    }
+    //    if (joinedLobby == RoomEnter.Success)
+    //    {
+    //        currentLobby = lobby;
+    //        //AcceptP2P(OpponentSteamId);
+    //        SceneManager.LoadScene("Scene to load");
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("failed to join lobby");
+    //    }
+    //}
 
-    private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
-    {
-        throw new NotImplementedException();
-    }
+    //private void OnLobbyMemberLeaveCallback(Lobby arg1, Friend arg2)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
-    {
-        throw new NotImplementedException();
-    }
+    //private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //private void OnLobbyMemberJoinedCallback(Lobby arg1, Friend arg2)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //private void OnLobbyEnteredCallback(Lobby obj)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
+    //{
+    //    throw new NotImplementedException();
+    //}
+    #endregion
 
     // Update is called once per frame
     void Update()
     {
         //SteamClient.RunCallbacks();
+        try
+        {
+            if (activeSocketServer)
+            {
+                socketManager.Receive();
+            }
+            if (activeSocketConnection)
+            {
+                connectionManager.Receive();
+            }
+        }
+        catch
+        {
+            Debug.Log("Error receiving data");
+        }
     }
 
     private void CreateSocketServer()
@@ -257,6 +324,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private void GameClose()
     {
-        //handle save and close
+        LeaveSocketServer();
     }
 }
