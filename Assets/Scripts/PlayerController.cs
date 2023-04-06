@@ -5,26 +5,72 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] private CharacterController controller;
-	[SerializeField] private float movementSpeed;
+	private static readonly float SPRINT_TIME = 3.0f;
+	private static readonly float SPRINT_COOLDOWN = 6.0f;
+	private static readonly float TRIP_TIME = 1.0f;
+	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
+	private static readonly float MOVEMENT_SPEED = 6.66f;
+	private static readonly float SPRINT_MOD = 1.5f;
+	private static readonly float TRIP_MOD = 0.5f;
+
+	private CharacterController controller;
+	private Vector3 movement;
+
+	private bool sprinting = false;
+	private bool tripped = false;
+	private float sprintTimer = 0.0f;
+	private float sprintCooldownTimer = 0.0f;
+	private float tripTimer = 0.0f;
+
 
 	private void OnValidate()
 	{
-		if(controller == null) { controller = GetComponent<CharacterController>(); }
+		controller = GetComponent<CharacterController>();
 	}
 
 	private void FixedUpdate()
 	{
-		Vector3 movement = Vector3.zero;
+		if (sprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime))
+		{
+			tripped = true;
+			sprinting = false;
+			sprintTimer = 0.0f;
+			tripTimer = TRIP_TIME;
+		}
+	}
 
-		if(Input.GetKey(KeyCode.W)) { movement.z += movementSpeed; }
-		if(Input.GetKey(KeyCode.S)) { movement.z -= movementSpeed; }
-		if(Input.GetKey(KeyCode.A)) { movement.x -= movementSpeed; }
-		if(Input.GetKey(KeyCode.D)) { movement.x += movementSpeed; }
+	private void Update()
+	{
+		movement = Vector3.zero;
 
-		movement *= Time.fixedDeltaTime;
+		float vertInput = Input.GetAxis("Vertical");
+		float HoriInput = Input.GetAxis("Horizontal");
 
-		//TODO: rotate with camera
+		sprintTimer -= Time.deltaTime;
+		sprintCooldownTimer -= Time.deltaTime;
+		tripTimer -= Time.deltaTime;
+
+		tripped = tripTimer > 0.0f;
+
+		if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
+		{
+			sprinting = true;
+			sprintTimer = SPRINT_TIME;
+			sprintCooldownTimer = SPRINT_COOLDOWN;
+		}
+
+		if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
+		{
+			if(sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
+			sprinting = false;
+			sprintTimer = 0.0f;
+		}
+
+		movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
+		movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
+		movement.y = 0.0f;
+
+		movement *= tripped ? TRIP_MOD : 1.0f;
 
 		controller.Move(movement);
 
