@@ -69,15 +69,20 @@ public class MenuHandler : MonoBehaviour
 	{
 		string name = lobbyName.text;
 
-		if(name.Length == 0) { return; }
+		if (name.Length == 0) { return; }
 
-		Dictionary<string, string> lobbyData = new Dictionary<string, string>
-			{
-				{ "Name", name },
-				{ "Count", "1" }
-			};
+		Dictionary<string, string> lobbyData = new Dictionary<string, string> {
+			{ "Name", name },
+		};
 
-		await NetworkManager.Instance.CreateLobby(lobbyData);
+		await NetworkManager.Instance.CreateLobby(lobbyData, 4);
+	}
+
+	public void JoinLobby()
+	{
+		{
+
+		}
 	}
 
 	public async void FillLobbyList()
@@ -89,19 +94,27 @@ public class MenuHandler : MonoBehaviour
 
 		List<Lobby> lobbies = await NetworkManager.Instance.GetLobbies();
 
-		if(lobbies == null) { return; }
+		if (lobbies == null || lobbies.Count == 0) { return; }
+
+		int count = 0;
+		foreach (Lobby lobby in lobbies)
+		{
+			string name = lobby.GetData("Name");
+			if(name == null || name.Length == 0) { continue; }
+			int playerCount = lobby.MemberCount;
+			int maxPlayers = lobby.MaxMembers;
+
+			GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
+
+			go.transform.GetChild(0).GetComponent<TMP_Text>().text = name;
+			go.transform.GetChild(1).GetComponent<TMP_Text>().text = $"{playerCount}/{maxPlayers}";
+
+			++count;
+		}
 
 		float lobbyHeight = lobbyPrefab.GetComponent<RectTransform>().rect.height;
 		float lobbyListHeight = 800;
-		float size = Mathf.Max(lobbyHeight * lobbies.Count, lobbyListHeight);
+		float size = Mathf.Max(lobbyHeight * count, lobbyListHeight);
 		lobbyList.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
-
-		foreach(Lobby lobby in lobbies)
-		{
-			//TODO: get meta data
-			//lobby.GetData();
-
-			Instantiate(lobbyPrefab, lobbyList.transform);
-		}
 	}
 }
