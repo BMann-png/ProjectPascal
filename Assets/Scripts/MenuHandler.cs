@@ -15,12 +15,18 @@ public class MenuHandler : MonoBehaviour
 	[SerializeField] private GameObject lobbyPrefab;
 	[SerializeField] private TMP_InputField lobbyName;
 
+	private SceneLoader sceneLoader;
+	private LobbyHandler lobbyHandler;
+
 	public void Awake()
 	{
 		mainMenu.SetActive(true);
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(false);
 		createLobby.SetActive(false);
+
+		sceneLoader = FindFirstObjectByType<SceneLoader>();
+		lobbyHandler = FindFirstObjectByType<LobbyHandler>();
 	}
 
 	public void GoToMainMenu()
@@ -49,7 +55,7 @@ public class MenuHandler : MonoBehaviour
 		createLobby.SetActive(false);
 	}
 
-	public void GotoCreateLobby()
+	public void GoToCreateLobby()
 	{
 		mainMenu.SetActive(false);
 		lobbyBrowser.SetActive(false);
@@ -75,12 +81,17 @@ public class MenuHandler : MonoBehaviour
 			{ "Name", name },
 		};
 
-		await NetworkManager.Instance.CreateLobby(lobbyData, 4);
-	}
+		bool result = await NetworkManager.Instance.CreateLobby(lobbyData, 4);
 
-	public void JoinLobby()
-	{
-
+		if(result)
+		{
+			lobbyHandler.SetLobby(NetworkManager.Instance.currentLobby);
+			sceneLoader.LoadScene("Lobby");
+		}
+		else
+		{
+			//TODO: Failure to join message
+		}
 	}
 
 	public async void FillLobbyList()
@@ -99,13 +110,9 @@ public class MenuHandler : MonoBehaviour
 		{
 			string name = lobby.GetData("Name");
 			if(name == null || name.Length == 0) { continue; }
-			int playerCount = lobby.MemberCount;
-			int maxPlayers = lobby.MaxMembers;
 
 			GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
-
-			go.transform.GetChild(0).GetComponent<TMP_Text>().text = name;
-			go.transform.GetChild(1).GetComponent<TMP_Text>().text = $"{playerCount}/{maxPlayers}";
+			go.GetComponent<LobbyEntry>().CreateLobby(lobby);
 
 			++count;
 		}

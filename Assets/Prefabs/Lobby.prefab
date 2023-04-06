@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 97551010930200255}
   - component: {fileID: 97551010930200252}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 97551011585558900}
   - component: {fileID: 97551011585558901}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: PlayerCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 97551012190657979}
   - component: {fileID: 97551012190657976}
   - component: {fileID: 97551012190657977}
+  - component: {fileID: 8136875058341162084}
   m_Layer: 5
   m_Name: Lobby
   m_TagString: Untagged
@@ -392,4 +393,30 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 97551012190657976}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8136875058341162084}
+        m_TargetAssemblyTypeName: LobbyEntry, Assembly-CSharp
+        m_MethodName: JoinLobby
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8136875058341162084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97551012190657983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1437f76e2a70340ad61263a06ac1e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lobbyName: {fileID: 97551010930200252}
+  playerCount: {fileID: 97551011585558901}
