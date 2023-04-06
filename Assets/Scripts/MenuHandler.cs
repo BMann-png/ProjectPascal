@@ -80,9 +80,7 @@ public class MenuHandler : MonoBehaviour
 
 	public void JoinLobby()
 	{
-		{
 
-		}
 	}
 
 	public async void FillLobbyList()
