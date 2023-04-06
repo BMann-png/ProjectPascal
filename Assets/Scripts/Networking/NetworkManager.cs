@@ -24,8 +24,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private bool activeSocketServer;
     private bool activeSocketConnection;
 
-
-    private List<Lobby> activeLobbies;
+	private List<Lobby> activeLobbies;
     public Lobby currentLobby;
     private Lobby hostedLobby;
 
@@ -69,122 +68,95 @@ public class NetworkManager : Singleton<NetworkManager>
         //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    #region Obsolete
-    //public async Task<bool> CreateLobby()
-    //{
-    //    try
-    //    {
-    //        var createLobbyOutput = await SteamMatchmaking.CreateLobbyAsync(2);
-    //        if (!createLobbyOutput.HasValue)
-    //        {
-    //            Debug.Log("Lobby created but not correctly instantiated");
-    //            throw new Exception();
-    //        }
+	public async Task<List<Lobby>> GetLobbies()
+	{
+		try
+		{
+			activeLobbies.Clear();
+			activeLobbies = (await SteamMatchmaking.LobbyList.WithMaxResults(20).RequestAsync()).ToList();
+		}
+		catch (Exception e)
+		{
+			Debug.Log("Error fetching multiplayer lobbies");
+			Debug.Log(e.ToString());
+		}
 
-    //        hostedLobby = createLobbyOutput.Value;
-    //        hostedLobby.SetPublic();
-    //        hostedLobby.SetJoinable(true);
-    //        //Set Lobby Data
+		return activeLobbies;
+	}
 
-    //        currentLobby = hostedLobby;
+	#region Obsolete
+	
 
-    //        return true;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.Log("Failed to created lobby");
-    //        Debug.Log(e.ToString());
+	//private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //        return false;
-    //    }
-    //}
+	//private void OnDlcInstalledCallback(AppId obj)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //public async Task<bool> RefreshLobbyBrowser()
-    //{
-    //    try
-    //    {
-    //        activeLobbies.Clear();
-    //        activeLobbies = (await SteamMatchmaking.LobbyList.WithMaxResults(20).RequestAsync()).ToList();
-    //        return true;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.Log("Error fetching multiplayer lobbies");
-    //        Debug.Log(e.ToString());
-    //        return false;
-    //    }
-    //}
+	///// <summary>
+	///// 
+	///// </summary>
+	///// <param name="lobby"></param>
+	///// <param name="id"></param>
+	//[Obsolete("This is deprecated, please use JoinSocketServer instead.")]
+	//async private void OnGameLobbyJoinRequestedCallback(Lobby lobby, SteamId id)
+	//{
+	//    RoomEnter joinedLobby = await lobby.Join();
 
-    //private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    //{
-    //    throw new NotImplementedException();
-    //}
+	//    if (joinedLobby == RoomEnter.Success)
+	//    {
+	//        currentLobby = lobby;
+	//        //AcceptP2P(OpponentSteamId);
+	//        SceneManager.LoadScene("Scene to load");
+	//    }
+	//    else
+	//    {
+	//        Debug.Log("failed to join lobby");
+	//    }
+	//}
 
-    //private void OnDlcInstalledCallback(AppId obj)
-    //{
-    //    throw new NotImplementedException();
-    //}
+	//private void OnLobbyMemberLeaveCallback(Lobby arg1, Friend arg2)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <param name="lobby"></param>
-    ///// <param name="id"></param>
-    //[Obsolete("This is deprecated, please use JoinSocketServer instead.")]
-    //async private void OnGameLobbyJoinRequestedCallback(Lobby lobby, SteamId id)
-    //{
-    //    RoomEnter joinedLobby = await lobby.Join();
+	//private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //    if (joinedLobby == RoomEnter.Success)
-    //    {
-    //        currentLobby = lobby;
-    //        //AcceptP2P(OpponentSteamId);
-    //        SceneManager.LoadScene("Scene to load");
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("failed to join lobby");
-    //    }
-    //}
+	//private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //private void OnLobbyMemberLeaveCallback(Lobby arg1, Friend arg2)
-    //{
-    //    throw new NotImplementedException();
-    //}
+	//private void OnLobbyMemberJoinedCallback(Lobby arg1, Friend arg2)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
-    //{
-    //    throw new NotImplementedException();
-    //}
+	//private void OnLobbyEnteredCallback(Lobby obj)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
-    //{
-    //    throw new NotImplementedException();
-    //}
+	//private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
+	//{
+	//    throw new NotImplementedException();
+	//}
 
-    //private void OnLobbyMemberJoinedCallback(Lobby arg1, Friend arg2)
-    //{
-    //    throw new NotImplementedException();
-    //}
+	//private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
+	//{
+	//    throw new NotImplementedException();
+	//}
+	#endregion
 
-    //private void OnLobbyEnteredCallback(Lobby obj)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
-    //{
-    //    throw new NotImplementedException();
-    //}
-    #endregion
-
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
         //SteamClient.RunCallbacks();
         try
@@ -204,7 +176,40 @@ public class NetworkManager : Singleton<NetworkManager>
         }
     }
 
-    private void CreateSocketServer()
+	public async Task<bool> CreateLobby(Dictionary<string, string> data)
+	{
+	    try
+	    {
+	        var createLobbyOutput = await SteamMatchmaking.CreateLobbyAsync(2);
+	        if (!createLobbyOutput.HasValue)
+	        {
+	            Debug.Log("Lobby created but not correctly instantiated");
+	            throw new Exception();
+	        }
+
+	        hostedLobby = createLobbyOutput.Value;
+	        hostedLobby.SetPublic();
+	        hostedLobby.SetJoinable(true);
+
+			foreach(var item in data)
+			{
+				hostedLobby.SetData(item.Key, item.Value);
+			}
+
+			currentLobby = hostedLobby;
+
+	        return true;
+	    }
+	    catch (Exception e)
+	    {
+	        Debug.Log("Failed to created lobby");
+	        Debug.Log(e.ToString());
+
+	        return false;
+	    }
+	}
+
+	public void CreateSocketServer()
     {
         socketManager = SteamNetworkingSockets.CreateRelaySocket<Pascal.SocketManager>(0);
         connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(PlayerId);

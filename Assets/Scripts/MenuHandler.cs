@@ -1,21 +1,26 @@
+using Steamworks.Data;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 public class MenuHandler : MonoBehaviour
 {
 	[SerializeField] private GameObject mainMenu;
 	[SerializeField] private GameObject lobbyBrowser;
 	[SerializeField] private GameObject settings;
+	[SerializeField] private GameObject createLobby;
 	[SerializeField] private GameObject lobbyList;
 	[SerializeField] private GameObject lobbyPrefab;
+	[SerializeField] private TMP_InputField lobbyName;
 
 	public void Awake()
 	{
 		mainMenu.SetActive(true);
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(false);
+		createLobby.SetActive(false);
 	}
 
 	public void GoToMainMenu()
@@ -23,6 +28,7 @@ public class MenuHandler : MonoBehaviour
 		mainMenu.SetActive(true);
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(false);
+		createLobby.SetActive(false);
 	}
 
 	public void GoToLobbyBrowser()
@@ -32,6 +38,7 @@ public class MenuHandler : MonoBehaviour
 		mainMenu.SetActive(false);
 		lobbyBrowser.SetActive(true);
 		settings.SetActive(false);
+		createLobby.SetActive(false);
 	}
 
 	public void GoToSettings()
@@ -39,6 +46,15 @@ public class MenuHandler : MonoBehaviour
 		mainMenu.SetActive(false);
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(true);
+		createLobby.SetActive(false);
+	}
+
+	public void GotoCreateLobby()
+	{
+		mainMenu.SetActive(false);
+		lobbyBrowser.SetActive(false);
+		settings.SetActive(false);
+		createLobby.SetActive(true);
 	}
 
 	public void ExitGame()
@@ -49,22 +65,42 @@ public class MenuHandler : MonoBehaviour
 		Application.Quit();
 	}
 
-	public void FillLobbyList()
+	async public void CreateLobby()
+	{
+		string name = lobbyName.text;
+
+		if(name.Length == 0) { return; }
+
+		Dictionary<string, string> lobbyData = new Dictionary<string, string>
+			{
+				{ "Name", name },
+				{ "Count", "1" }
+			};
+
+		await NetworkManager.Instance.CreateLobby(lobbyData);
+	}
+
+	public async void FillLobbyList()
 	{
 		foreach (Transform child in lobbyList.transform)
 		{
 			Destroy(child.gameObject);
 		}
 
-		int lobbyCount = 20;
+		List<Lobby> lobbies = await NetworkManager.Instance.GetLobbies();
+
+		if(lobbies == null) { return; }
 
 		float lobbyHeight = lobbyPrefab.GetComponent<RectTransform>().rect.height;
 		float lobbyListHeight = 800;
-		float size = Mathf.Max(lobbyHeight * lobbyCount, lobbyListHeight);
+		float size = Mathf.Max(lobbyHeight * lobbies.Count, lobbyListHeight);
 		lobbyList.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
 
-		for (int i = 0; i < lobbyCount; ++i)
+		foreach(Lobby lobby in lobbies)
 		{
+			//TODO: get meta data
+			//lobby.GetData();
+
 			Instantiate(lobbyPrefab, lobbyList.transform);
 		}
 	}
