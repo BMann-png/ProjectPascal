@@ -1,5 +1,6 @@
 using Steamworks;
 using Steamworks.Data;
+using Steamworks.ServerList;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -113,7 +114,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
 		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
-		//SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
+		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
 		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
 		//SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
 		//SceneManager.sceneLoaded += OnSceneLoaded;
@@ -156,13 +157,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
 	{
-		if (friend.IsMe) { return; } //ignore yourself joining
+		if (friend.IsMe) { return; } //ignore yourself leaving
 		FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
 	}
 
-	//private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
+	//private void OnLobbyMemberDisconnectedCallback(Lobby lobby, Friend friend)
 	//{
-	//    throw new NotImplementedException();
+	//	if (friend.IsMe) { return; } //ignore yourself disconnected
+	//	FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
 	//}
 
 	//private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
@@ -172,7 +174,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
 	{
-		if(friend.IsMe) { return; } //ignore yourself joining
+		if (friend.IsMe) { return; } //ignore yourself joining
 		FindFirstObjectByType<LobbyHandler>().PlayerJoined(friend);
 	}
 
