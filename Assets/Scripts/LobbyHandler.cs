@@ -27,6 +27,10 @@ public class LobbyHandler : MonoBehaviour
 
 	public void SetUpLobby()
 	{
+		foreach (GameObject player in players) { Destroy(player); }
+
+		players.Clear();
+
 		List<Friend> pls = NetworkManager.Instance.currentLobby.Members.ToList();
 
 		int i = 1;
