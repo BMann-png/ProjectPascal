@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -109,7 +110,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
 		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
-		//SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
+		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
 		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
 		//SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
@@ -153,10 +154,11 @@ public class NetworkManager : Singleton<NetworkManager>
 	//    }
 	//}
 
-	//private void OnLobbyMemberLeaveCallback(Lobby arg1, Friend arg2)
-	//{
-	//    throw new NotImplementedException();
-	//}
+	private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
+	{
+		if (friend.IsMe) { return; } //ignore yourself joining
+		FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
+	}
 
 	//private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
 	//{
@@ -168,10 +170,11 @@ public class NetworkManager : Singleton<NetworkManager>
 	//    throw new NotImplementedException();
 	//}
 
-	//private void OnLobbyMemberJoinedCallback(Lobby arg1, Friend arg2)
-	//{
-	//    throw new NotImplementedException();
-	//}
+	private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
+	{
+		if(friend.IsMe) { return; } //ignore yourself joining
+		FindFirstObjectByType<LobbyHandler>().PlayerJoined(friend);
+	}
 
 	//private void OnLobbyEnteredCallback(Lobby obj)
 	//{
