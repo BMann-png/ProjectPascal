@@ -26,9 +26,12 @@ public class LobbyEntry : MonoBehaviour
 		playerCount.text = $"{lobby.MemberCount}/{lobby.MaxMembers}";
 	}
 
-	public void JoinLobby()
+	public async void JoinLobby()
 	{
-		NetworkManager.Instance.JoinLobby(lobby);
-		sceneLoader.LoadScene("Lobby");
+		bool success = await NetworkManager.Instance.JoinLobby(lobby);
+		if (success)
+		{
+			sceneLoader.LoadScene("Lobby");
+		}
 	}
 }

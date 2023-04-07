@@ -258,10 +258,12 @@ public class NetworkManager : Singleton<NetworkManager>
 		return activeLobbies;
 	}
 
-	public void JoinLobby(Lobby lobby)
+	public async Task<bool> JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
-		currentLobby.Join();
+		RoomEnter result = await currentLobby.Join();
+
+		return result == RoomEnter.Success;
 	}
 
 	public void LeaveLobby()
