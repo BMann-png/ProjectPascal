@@ -1,24 +1,59 @@
+using Steamworks;
 using Steamworks.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+
+//TODO: Level select
+//TODO: Load Level
 
 public class LobbyHandler : MonoBehaviour
 {
-	private Lobby lobby;
+	[SerializeField] private GameObject player;
+	[SerializeField] private Transform[] spawnPoints;
+
+	List<GameObject> players = new List<GameObject>();
+
+	private SceneLoader sceneLoader;
 
 	private void Awake()
 	{
-		DontDestroyOnLoad(gameObject);
+		sceneLoader = FindFirstObjectByType<SceneLoader>();
+
+		SetUpLobby();
 	}
 
-	public void SetLobby(Lobby lobby)
+	public void SetUpLobby()
 	{
-		this.lobby = lobby;
+		foreach (GameObject player in players) { Destroy(player); }
+
+		players.Clear();
+
+		List<Friend> pls = NetworkManager.Instance.currentLobby.Members.ToList();
+
+		int i = 1;
+		foreach(Friend pl in pls)
+		{
+			if(pl.IsMe) { players.Add(Instantiate(player, spawnPoints[0].position, spawnPoints[0].rotation)); }
+			else { players.Add(Instantiate(player, spawnPoints[i].position, spawnPoints[i++].rotation)); }
+		}
+	}
+
+	public void PlayerJoined(Friend player)
+	{
+		SetUpLobby();
+	}
+
+	public void PlayerLeft(Friend player)
+	{
+		SetUpLobby();
 	}
 
 	public void LeaveLobby()
 	{
-		lobby.Leave();
+		NetworkManager.Instance.LeaveLobby();
+		sceneLoader.LoadScene("MainMenu");
 	}
 }

@@ -1,12 +1,15 @@
 using Steamworks;
 using Steamworks.Data;
+using Steamworks.ServerList;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +17,44 @@ using UnityEngine.SceneManagement;
 //TODO: Set owner
 //TODO: Invite Friends
 //TODO: Public vs private lobbies
+
+public struct TransformPacket
+{
+	public TransformPacket(Transform t)
+	{
+		transform = t.position.x;
+		transform += (int)(t.position.y * 10000.0f);
+		transform += (int)(t.position.z * 100000000.0f);
+		transform += (int)(t.rotation.y * 1000000000000.0f);
+		transform += (int)(t.rotation.z * 10000000000000000.0f);
+	}
+
+	public float transform;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+public struct ActionPacket
+{
+	[FieldOffset(0)] public byte type;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+public struct DataPacket
+{
+	[FieldOffset(0)] public byte data0;
+	[FieldOffset(1)] public byte data1;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 6)]
+public struct Packet
+{
+	[FieldOffset(0)] public byte type;
+	[FieldOffset(1)] public byte id;
+
+	[FieldOffset(2)] public TransformPacket position;
+	[FieldOffset(2)] public ActionPacket action;
+	[FieldOffset(2)] public DataPacket data;
+}
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -34,6 +75,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	protected override void Awake()
 	{
+		base.Awake();
+
 		try
 		{
 			SteamClient.Init(480, true);
@@ -58,15 +101,15 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 	}
 
-	void Start()
+	private void Start()
 	{
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
 		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
-		//SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
+		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
 		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
-		//SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
+		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
 		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
 		//SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
 		//SceneManager.sceneLoaded += OnSceneLoaded;
@@ -107,14 +150,16 @@ public class NetworkManager : Singleton<NetworkManager>
 	//    }
 	//}
 
-	//private void OnLobbyMemberLeaveCallback(Lobby arg1, Friend arg2)
-	//{
-	//    throw new NotImplementedException();
-	//}
+	private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
+	{
+		if (friend.IsMe) { return; } //ignore yourself leaving
+		FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
+	}
 
-	//private void OnLobbyMemberDisconnectedCallback(Lobby arg1, Friend arg2)
+	//private void OnLobbyMemberDisconnectedCallback(Lobby lobby, Friend friend)
 	//{
-	//    throw new NotImplementedException();
+	//	if (friend.IsMe) { return; } //ignore yourself disconnected
+	//	FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
 	//}
 
 	//private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
@@ -122,10 +167,11 @@ public class NetworkManager : Singleton<NetworkManager>
 	//    throw new NotImplementedException();
 	//}
 
-	//private void OnLobbyMemberJoinedCallback(Lobby arg1, Friend arg2)
-	//{
-	//    throw new NotImplementedException();
-	//}
+	private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
+	{
+		if (friend.IsMe) { return; } //ignore yourself joining
+		FindFirstObjectByType<LobbyHandler>().PlayerJoined(friend);
+	}
 
 	//private void OnLobbyEnteredCallback(Lobby obj)
 	//{
@@ -176,7 +222,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			hostedLobby = createLobbyOutput.Value;
 			hostedLobby.SetPublic();
-			//hostedLobby.SetPrivate();
 			hostedLobby.SetJoinable(true);
 
 			foreach (var item in data)
@@ -211,6 +256,19 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 
 		return activeLobbies;
+	}
+
+	public async Task<bool> JoinLobby(Lobby lobby)
+	{
+		currentLobby = lobby;
+		RoomEnter result = await currentLobby.Join();
+
+		return result == RoomEnter.Success;
+	}
+
+	public void LeaveLobby()
+	{
+		currentLobby.Leave();
 	}
 
 	public void CreateSocketServer()
@@ -334,5 +392,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void GameClose()
 	{
 		LeaveSocketServer();
+		LeaveLobby();
 	}
 }
