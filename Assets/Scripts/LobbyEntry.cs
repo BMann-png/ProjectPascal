@@ -9,14 +9,7 @@ public class LobbyEntry : MonoBehaviour
 	[SerializeField] private TMP_Text lobbyName;
 	[SerializeField] private TMP_Text playerCount;
 
-	static SceneLoader sceneLoader;
-
 	private Lobby lobby;
-
-	private void Awake()
-	{
-		if(sceneLoader == null) { sceneLoader = FindFirstObjectByType<SceneLoader>(); }
-	}
 
 	public void CreateLobby(Lobby lobby)
 	{
@@ -31,7 +24,7 @@ public class LobbyEntry : MonoBehaviour
 		bool success = await NetworkManager.Instance.JoinLobby(lobby);
 		if (success)
 		{
-			sceneLoader.LoadScene("Lobby");
+			SceneLoader.Instance.LoadScene("Lobby");
 		}
 	}
 }

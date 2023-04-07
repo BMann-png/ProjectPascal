@@ -16,12 +16,8 @@ public class LobbyHandler : MonoBehaviour
 
 	List<GameObject> players = new List<GameObject>();
 
-	private SceneLoader sceneLoader;
-
 	private void Awake()
 	{
-		sceneLoader = FindFirstObjectByType<SceneLoader>();
-
 		SetUpLobby();
 	}
 
@@ -54,6 +50,6 @@ public class LobbyHandler : MonoBehaviour
 	public void LeaveLobby()
 	{
 		NetworkManager.Instance.LeaveLobby();
-		sceneLoader.LoadScene("MainMenu");
+		SceneLoader.Instance.LoadScene("MainMenu");
 	}
 }

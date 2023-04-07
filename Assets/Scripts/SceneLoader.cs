@@ -5,14 +5,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static SceneLoader;
 
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : Singleton<SceneLoader>
 {
 	public delegate void OnSceneLoad();
 
 	OnSceneLoad onSceneLoad;
 
-	private void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
+
 		DontDestroyOnLoad(gameObject);
 		SceneManager.sceneLoaded += SceneLoaded;
 	}

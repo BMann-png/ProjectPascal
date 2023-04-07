@@ -1,59 +1,95 @@
 using Steamworks;
 using Steamworks.Data;
-using Steamworks.ServerList;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 //TODO: Set owner
 //TODO: Invite Friends
 //TODO: Public vs private lobbies
 
+enum PacketType
+{
+	Transform,
+	Action,
+	Health,
+	Inventory,
+	GameTrigger,
+	SceneLoad,
+	GameSpawn
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 4, Size = 20)]
 public struct TransformPacket
 {
 	public TransformPacket(Transform t)
 	{
-		transform = t.position.x;
-		transform += (int)(t.position.y * 10000.0f);
-		transform += (int)(t.position.z * 100000000.0f);
-		transform += (int)(t.rotation.y * 1000000000000.0f);
-		transform += (int)(t.rotation.z * 10000000000000000.0f);
+		xPos = t.position.x;
+		yPos = t.position.y;
+		zPos = t.position.z;
+		yRot = t.rotation.y;
+		zRot = t.rotation.z;
+
+		//transform = t.position.x;
+		//transform += (int)(t.position.y * 10000.0f);
+		//transform += (int)(t.position.z * 100000000.0f);
+		//transform += (int)(t.rotation.y * 1000000000000.0f);
+		//transform += (int)(t.rotation.z * 10000000000000000.0f);
 	}
 
-	public float transform;
+	[FieldOffset(0)] public float xPos;
+	[FieldOffset(4)] public float yPos;
+	[FieldOffset(8)] public float zPos;
+	[FieldOffset(12)] public float yRot;
+	[FieldOffset(16)] public float zRot;
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
 public struct ActionPacket
 {
-	[FieldOffset(0)] public byte type;
+	//public ActionPacket(byte type)
+	//{
+	//
+	//}
+
+	[FieldOffset(0)] public byte data;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 3)]
+public struct InventoryPacket
+{
+	[FieldOffset(0)] public byte primary;
+	[FieldOffset(1)] public byte secondary;
+	[FieldOffset(2)] public byte mission;
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
-public struct DataPacket
+public struct SpawnPacket
 {
-	[FieldOffset(0)] public byte data0;
-	[FieldOffset(1)] public byte data1;
+	[FieldOffset(0)] public byte type;
+	[FieldOffset(1)] public byte spawn;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 6)]
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 22)]
 public struct Packet
 {
+	//public Packet(PacketType type, byte id, Transform transform)
+	//{
+	//	this.type = (byte)type;
+	//	this.id = id;
+	//	this.transform = new TransformPacket(transform);
+	//}
+
 	[FieldOffset(0)] public byte type;
 	[FieldOffset(1)] public byte id;
 
-	[FieldOffset(2)] public TransformPacket position;
+	[FieldOffset(2)] public TransformPacket transform;
 	[FieldOffset(2)] public ActionPacket action;
-	[FieldOffset(2)] public DataPacket data;
+	[FieldOffset(2)] public InventoryPacket inventory;
+	[FieldOffset(2)] public SpawnPacket spawn;
 }
 
 public class NetworkManager : Singleton<NetworkManager>
@@ -66,12 +102,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private Pascal.SocketManager socketManager;
 	private Pascal.ConnectionManager connectionManager;
-	private bool activeSocketServer;
+	public bool activeSocketServer { get; private set; }
 	private bool activeSocketConnection;
 
 	private List<Lobby> activeLobbies;
 	public Lobby currentLobby;
 	private Lobby hostedLobby;
+
+	private IntPtr message;
 
 	protected override void Awake()
 	{
@@ -84,6 +122,8 @@ public class NetworkManager : Singleton<NetworkManager>
 			{
 				throw new System.Exception("Client is not valid");
 			}
+
+			message = Marshal.AllocHGlobal(22);
 
 			PlayerName = SteamClient.Name;
 			PlayerId = SteamClient.SteamId;
@@ -231,6 +271,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			currentLobby = hostedLobby;
 
+			CreateSocketServer();
+
 			return true;
 		}
 		catch (Exception e)
@@ -263,6 +305,8 @@ public class NetworkManager : Singleton<NetworkManager>
 		currentLobby = lobby;
 		RoomEnter result = await currentLobby.Join();
 
+		JoinSocketServer();
+
 		return result == RoomEnter.Success;
 	}
 
@@ -281,7 +325,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void JoinSocketServer()
 	{
-		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(PlayerId);
+		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(currentLobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
 	}
@@ -328,23 +372,31 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 	}
 
-	public bool SendMessage(byte[] message)
+	public bool SendMessage(Packet packet)
 	{
+		int size;
+
+		switch (packet.type)
+		{
+			case 0: size = 22; break;   //Transform
+			case 1: size = 3; break;    //Action
+			case 2: size = 3; break;    //Health
+			case 3: size = 5; break;    //Inventory
+			case 4: size = 2; break;    //Game Trigger
+			case 5: size = 2; break;    //Scene Load
+			case 6: size = 4; break;    //Game Spawn
+			default: return false;
+		}
+
 		try
 		{
-			int messageSize = message.Length;
-			IntPtr intPtrMessage = System.Runtime.InteropServices.Marshal.AllocHGlobal(messageSize);
-			System.Runtime.InteropServices.Marshal.Copy(message, 0, intPtrMessage, messageSize);
+			Marshal.StructureToPtr(packet, message, true);
 
 			for (int k = 0; k < 5; k++)
 			{
-				Result result = connectionManager.Connection.SendMessage(intPtrMessage, messageSize, SendType.Reliable);
+				Result result = connectionManager.Connection.SendMessage(message, size, SendType.Reliable);
 
-				if (result == Result.OK)
-				{
-					System.Runtime.InteropServices.Marshal.FreeHGlobal(intPtrMessage);
-					return true;
-				}
+				if (result == Result.OK) { return true; }
 			}
 
 			return false;
@@ -357,16 +409,23 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 	}
 
-	public void ProcessMessage(IntPtr messageIntPtr, int dataBlockSize)
+	public void ProcessMessage(IntPtr message, int dataBlockSize)
 	{
 		try
 		{
-			byte[] message = new byte[dataBlockSize];
-			System.Runtime.InteropServices.Marshal.Copy(messageIntPtr, message, 0, dataBlockSize);
-			string messageString = System.Text.Encoding.UTF8.GetString(message);
+			Packet packet = Marshal.PtrToStructure<Packet>(message);
 
-			// Do something with received message
-
+			switch (packet.type)
+			{
+				case 0: GameManager.Instance.ReceiveTransform(packet.id, packet.transform); break;  //Transform
+				case 1: GameManager.Instance.Action(packet.id, packet.action); break;  //Action
+				case 2: GameManager.Instance.Health(packet.id, packet.action); break;  //Health
+				case 3: GameManager.Instance.Inventory(packet.id, packet.inventory); break;  //Inventory
+				case 4: GameManager.Instance.GameTrigger(packet.id); break;  //Game Trigger
+				case 5: GameManager.Instance.LoadLevel(packet.id); break;  //Scene Load
+				case 6: GameManager.Instance.Spawn(packet.id, packet.spawn); break;  //Game Spawn
+				default: break;
+			}
 		}
 		catch
 		{
@@ -393,5 +452,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	{
 		LeaveSocketServer();
 		LeaveLobby();
+
+		Marshal.FreeHGlobal(message);
 	}
 }

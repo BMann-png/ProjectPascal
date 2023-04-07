@@ -15,7 +15,6 @@ public class MenuHandler : MonoBehaviour
 	[SerializeField] private GameObject lobbyPrefab;
 	[SerializeField] private TMP_InputField lobbyName;
 
-	private SceneLoader sceneLoader;
 	private LobbyHandler lobbyHandler;
 
 	public void Awake()
@@ -25,7 +24,6 @@ public class MenuHandler : MonoBehaviour
 		settings.SetActive(false);
 		createLobby.SetActive(false);
 
-		sceneLoader = FindFirstObjectByType<SceneLoader>();
 		lobbyHandler = FindFirstObjectByType<LobbyHandler>();
 	}
 
@@ -85,7 +83,7 @@ public class MenuHandler : MonoBehaviour
 
 		if(result)
 		{
-			sceneLoader.LoadScene("Lobby");
+			SceneLoader.Instance.LoadScene("Lobby");
 		}
 		else
 		{
