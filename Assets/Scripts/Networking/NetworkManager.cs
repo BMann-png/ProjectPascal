@@ -18,15 +18,18 @@ using UnityEngine.SceneManagement;
 //TODO: Invite Friends
 //TODO: Public vs private lobbies
 
-[StructLayout(LayoutKind.Explicit, Pack = 4, Size = 20)]
 public struct TransformPacket
 {
-	//TODO: Potentially use Halfs
-	[FieldOffset(0)] public float xPos;
-	[FieldOffset(4)] public float yPos;
-	[FieldOffset(8)] public float zPos;
-	[FieldOffset(12)] public float yRot;
-	[FieldOffset(16)] public float zRot;
+	public TransformPacket(Transform t)
+	{
+		transform = t.position.x;
+		transform += (int)(t.position.y * 10000.0f);
+		transform += (int)(t.position.z * 100000000.0f);
+		transform += (int)(t.rotation.y * 1000000000000.0f);
+		transform += (int)(t.rotation.z * 10000000000000000.0f);
+	}
+
+	public float transform;
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
@@ -36,20 +39,13 @@ public struct ActionPacket
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
-public struct InventoryPacket
-{
-	[FieldOffset(0)] public byte primary;
-	[FieldOffset(1)] public byte secondary;
-}
-
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
 public struct DataPacket
 {
-	[FieldOffset(0)] public byte health;
-	[FieldOffset(1)] public byte mission;
+	[FieldOffset(0)] public byte data0;
+	[FieldOffset(1)] public byte data1;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 22)]
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 6)]
 public struct Packet
 {
 	[FieldOffset(0)] public byte type;
@@ -57,7 +53,6 @@ public struct Packet
 
 	[FieldOffset(2)] public TransformPacket position;
 	[FieldOffset(2)] public ActionPacket action;
-	[FieldOffset(2)] public InventoryPacket inventory;
 	[FieldOffset(2)] public DataPacket data;
 }
 
