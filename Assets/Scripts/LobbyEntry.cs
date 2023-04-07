@@ -17,7 +17,7 @@ public class LobbyEntry : MonoBehaviour
 	private void Awake()
 	{
 		if(sceneLoader == null) { sceneLoader = FindFirstObjectByType<SceneLoader>(); }
-		if(lobbyHandler == null) { lobbyHandler= FindFirstObjectByType<LobbyHandler>(); }
+		if(lobbyHandler == null) { lobbyHandler = FindFirstObjectByType<LobbyHandler>(); }
 	}
 
 	public void CreateLobby(Lobby lobby)
@@ -30,8 +30,8 @@ public class LobbyEntry : MonoBehaviour
 
 	public void JoinLobby()
 	{
-		lobby.Join();
-		lobbyHandler.SetLobby(lobby);
+		NetworkManager.Instance.JoinLobby(lobby);
+		sceneLoader.SetOnLoad(lobbyHandler.SetUpLobby);
 		sceneLoader.LoadScene("Lobby");
 	}
 }

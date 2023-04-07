@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
@@ -14,6 +15,49 @@ using UnityEngine.SceneManagement;
 //TODO: Set owner
 //TODO: Invite Friends
 //TODO: Public vs private lobbies
+
+[StructLayout(LayoutKind.Explicit, Pack = 4, Size = 20)]
+public struct TransformPacket
+{
+	//TODO: Potentially use Halfs
+	[FieldOffset(0)] public float xPos;
+	[FieldOffset(4)] public float yPos;
+	[FieldOffset(8)] public float zPos;
+	[FieldOffset(12)] public float yRot;
+	[FieldOffset(16)] public float zRot;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+public struct ActionPacket
+{
+	[FieldOffset(0)] public byte type;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+public struct InventoryPacket
+{
+	[FieldOffset(0)] public byte primary;
+	[FieldOffset(1)] public byte secondary;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+public struct DataPacket
+{
+	[FieldOffset(0)] public byte health;
+	[FieldOffset(1)] public byte mission;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 22)]
+public struct Packet
+{
+	[FieldOffset(0)] public byte type;
+	[FieldOffset(1)] public byte id;
+
+	[FieldOffset(2)] public TransformPacket position;
+	[FieldOffset(2)] public ActionPacket action;
+	[FieldOffset(2)] public InventoryPacket inventory;
+	[FieldOffset(2)] public DataPacket data;
+}
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -176,7 +220,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			hostedLobby = createLobbyOutput.Value;
 			hostedLobby.SetPublic();
-			//hostedLobby.SetPrivate();
 			hostedLobby.SetJoinable(true);
 
 			foreach (var item in data)
@@ -211,6 +254,17 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 
 		return activeLobbies;
+	}
+
+	public void JoinLobby(Lobby lobby)
+	{
+		currentLobby = lobby;
+		currentLobby.Join();
+	}
+
+	public void LeaveLobby()
+	{
+		currentLobby.Leave();
 	}
 
 	public void CreateSocketServer()
@@ -334,5 +388,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void GameClose()
 	{
 		LeaveSocketServer();
+		LeaveLobby();
 	}
 }

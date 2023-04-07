@@ -85,7 +85,6 @@ public class MenuHandler : MonoBehaviour
 
 		if(result)
 		{
-			lobbyHandler.SetLobby(NetworkManager.Instance.currentLobby);
 			sceneLoader.LoadScene("Lobby");
 		}
 		else

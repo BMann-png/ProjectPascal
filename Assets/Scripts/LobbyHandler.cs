@@ -2,23 +2,33 @@ using Steamworks.Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+//TODO: spawn player models based on player count
 
 public class LobbyHandler : MonoBehaviour
 {
-	private Lobby lobby;
+	private SceneLoader sceneLoader;
 
 	private void Awake()
 	{
+		sceneLoader = FindFirstObjectByType<SceneLoader>();
 		DontDestroyOnLoad(gameObject);
 	}
 
-	public void SetLobby(Lobby lobby)
+	public void SetUpLobby()
 	{
-		this.lobby = lobby;
+		GameObject.Find("Leave").GetComponent<Button>().onClick.AddListener(LeaveLobby);
 	}
 
 	public void LeaveLobby()
 	{
-		lobby.Leave();
+		NetworkManager.Instance.LeaveLobby();
+		sceneLoader.LoadScene("MainMenu");
+	}
+
+	public void SpawnPlayer()
+	{
+
 	}
 }
