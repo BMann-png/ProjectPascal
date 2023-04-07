@@ -78,6 +78,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	protected override void Awake()
 	{
+		base.Awake();
+
 		try
 		{
 			SteamClient.Init(480, true);
@@ -102,7 +104,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 	}
 
-	void Start()
+	private void Start()
 	{
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;

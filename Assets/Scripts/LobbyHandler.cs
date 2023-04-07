@@ -4,31 +4,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//TODO: spawn player models based on player count
+//TODO: Get notified when a player joins
+//TODO: Level select
+//TODO: Load Level
 
 public class LobbyHandler : MonoBehaviour
 {
+	[SerializeField] private GameObject player;
+	[SerializeField] private Transform[] spawnPoints;
+
 	private SceneLoader sceneLoader;
 
 	private void Awake()
 	{
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
-		DontDestroyOnLoad(gameObject);
+		SetUpLobby();
 	}
 
 	public void SetUpLobby()
 	{
-		GameObject.Find("Leave").GetComponent<Button>().onClick.AddListener(LeaveLobby);
+		int count = NetworkManager.Instance.currentLobby.MemberCount;
+
+		for (int i = 0; i < count; ++i)
+		{
+			Instantiate(player, spawnPoints[i].position, spawnPoints[i].rotation);
+		}
 	}
 
 	public void LeaveLobby()
 	{
 		NetworkManager.Instance.LeaveLobby();
 		sceneLoader.LoadScene("MainMenu");
-	}
-
-	public void SpawnPlayer()
-	{
-
 	}
 }
