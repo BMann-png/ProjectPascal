@@ -15,16 +15,12 @@ public class MenuHandler : MonoBehaviour
 	[SerializeField] private GameObject lobbyPrefab;
 	[SerializeField] private TMP_InputField lobbyName;
 
-	private LobbyHandler lobbyHandler;
-
 	public void Awake()
 	{
 		mainMenu.SetActive(true);
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(false);
 		createLobby.SetActive(false);
-
-		lobbyHandler = FindFirstObjectByType<LobbyHandler>();
 	}
 
 	public void GoToMainMenu()
@@ -69,26 +65,9 @@ public class MenuHandler : MonoBehaviour
 		Application.Quit();
 	}
 
-	async public void CreateLobby()
+	public void CreateLobby()
 	{
-		string name = lobbyName.text;
-
-		if (name.Length == 0) { return; }
-
-		Dictionary<string, string> lobbyData = new Dictionary<string, string> {
-			{ "Name", name },
-		};
-
-		bool result = await NetworkManager.Instance.CreateLobby(lobbyData, 4);
-
-		if(result)
-		{
-			SceneLoader.Instance.LoadScene("Lobby");
-		}
-		else
-		{
-			//TODO: Failure to join message
-		}
+		GameManager.Instance.CreateLobby(lobbyName.text);
 	}
 
 	public async void FillLobbyList()

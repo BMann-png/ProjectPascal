@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7710098097953584501}
   - component: {fileID: 7710098097953584500}
   - component: {fileID: 7710098097953584503}
+  - component: {fileID: 4090558769519962813}
   m_Layer: 3
   m_Name: LobbyPlayer
   m_TagString: Untagged
@@ -83,3 +84,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4090558769519962813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7710098097953584521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ddd41cc299be3742aaced4fdbaf224c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  type: 0

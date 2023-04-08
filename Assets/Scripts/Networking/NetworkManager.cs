@@ -47,7 +47,7 @@ public struct TransformPacket
 	[FieldOffset(16)] public float zRot;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 1)]
 public struct ActionPacket
 {
 	//public ActionPacket(byte type)
@@ -58,7 +58,7 @@ public struct ActionPacket
 	[FieldOffset(0)] public byte data;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 3)]
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 3)]
 public struct InventoryPacket
 {
 	[FieldOffset(0)] public byte primary;
@@ -66,14 +66,13 @@ public struct InventoryPacket
 	[FieldOffset(2)] public byte mission;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 2)]
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 1)]
 public struct SpawnPacket
 {
-	[FieldOffset(0)] public byte type;
-	[FieldOffset(1)] public byte spawn;
+	[FieldOffset(0)] public byte spawn;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 2, Size = 22)]
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 22)]
 public struct Packet
 {
 	//public Packet(PacketType type, byte id, Transform transform)
@@ -110,6 +109,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	private Lobby hostedLobby;
 
 	private IntPtr message;
+	private bool cleanedUp = false;
 
 	protected override void Awake()
 	{
@@ -193,7 +193,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
 	{
 		if (friend.IsMe) { return; } //ignore yourself leaving
-		FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
+		GameManager.Instance.PlayerLeft(friend);
 	}
 
 	//private void OnLobbyMemberDisconnectedCallback(Lobby lobby, Friend friend)
@@ -210,7 +210,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
 	{
 		if (friend.IsMe) { return; } //ignore yourself joining
-		FindFirstObjectByType<LobbyHandler>().PlayerJoined(friend);
+		GameManager.Instance.PlayerJoined(friend);
 	}
 
 	//private void OnLobbyEnteredCallback(Lobby obj)
@@ -313,6 +313,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	public void LeaveLobby()
 	{
 		currentLobby.Leave();
+		LeaveSocketServer();
 	}
 
 	public void CreateSocketServer()
@@ -332,18 +333,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void LeaveSocketServer()
 	{
-		activeSocketServer = false;
-		activeSocketConnection = false;
-
-		try
-		{
-			connectionManager.Close();
-			socketManager.Close();
-		}
-		catch
-		{
-			Debug.Log("Error closing managers");
-		}
+		if (activeSocketConnection) { connectionManager.Close(); activeSocketConnection = false; }
+		if (activeSocketServer) { socketManager.Close(); activeSocketServer = false; }
 	}
 
 	public void RelayMessageReceived(IntPtr message, int size, uint connectionId)
@@ -384,7 +375,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 3: size = 5; break;    //Inventory
 			case 4: size = 2; break;    //Game Trigger
 			case 5: size = 2; break;    //Scene Load
-			case 6: size = 4; break;    //Game Spawn
+			case 6: size = 3; break;    //Game Spawn
 			default: return false;
 		}
 
@@ -450,9 +441,13 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void GameClose()
 	{
-		LeaveSocketServer();
-		LeaveLobby();
+		if (!cleanedUp)
+		{
+			cleanedUp = true;
+			LeaveLobby();
+			LeaveSocketServer();
 
-		Marshal.FreeHGlobal(message);
+			Marshal.FreeHGlobal(message);
+		}
 	}
 }
