@@ -16,4 +16,12 @@ public class Entity : MonoBehaviour
 										//Type 7 - 
 										//Type 8 - 
 										//Type 9 - 
+
+	public void SetTransform(TransformPacket tp)
+	{
+		transform.position = new Vector3(tp.xPos, tp.yPos, tp.zPos);
+		transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, tp.yRot, tp.zRot));
+	}
+
+	//TODO: Actions, Health, Inventory
 }
