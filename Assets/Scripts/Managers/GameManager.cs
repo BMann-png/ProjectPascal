@@ -74,38 +74,11 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (isServer)
 		{
-			Packet packet = new Packet();
-			packet.type = 5;
-			packet.id = level;
+			ScenePacket packet = new ScenePacket(level);
 
 			NetworkManager.Instance.SendMessage(packet);
-			LoadLevel(level);
+			LoadLevel(packet);
 		}
-	}
-
-	public void LoadLevel(byte level)
-	{
-		for(int i = 0; i < tempPlayers.Length; ++i)
-		{
-			if (entities[i] != null)
-			{
-				tempPlayers[i].id = entities[i].id;
-				tempPlayers[i].type = entities[i].type;
-			}
-		}
-
-			string scene;
-		switch (level)
-		{
-			default:
-			case 0: scene = "c1m1_Naptime"; break;
-			case 1: scene = "c1m2_Library"; break;
-			case 2: scene = "c1m3_Playground"; break;
-			case 3: scene = "c1m4_Cellar"; break;
-			case 4: scene = "c1m5_Corruption"; break;
-		}
-
-		SceneLoader.Instance.LoadScene(scene);
 	}
 
 	public void OnLevelLoad(Transform[] playerSpawnPoints, Transform[] enemySpawnPoints)
@@ -182,7 +155,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
 
-				if (steamId == 0)
+				if (steamId == 0 || steamId == NetworkManager.Instance.PlayerId.Value)
 				{
 					if (thisPlayer == 255)
 					{
@@ -215,8 +188,24 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
+	//TODO: Leaving the lobby as an owner causes problems, asign ownership BEFORE leaving
 	public void LeaveLobby()
 	{
+		Lobby lobby = NetworkManager.Instance.currentLobby;
+
+		if (lobby.MemberCount > 1)
+		{
+			for (byte i = 0; i < 4; ++i)
+			{
+				ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
+
+				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
+				{
+					//TODO: Assign 
+				}
+			}
+		}
+
 		isServer = false;
 		thisPlayer = 255;
 	}
@@ -267,35 +256,65 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	public void GameTrigger(byte trigger)
+	public void ReceiveTransform(TransformPacket transform)
 	{
-
-	}
-
-	public void ReceiveTransform(byte id, TransformPacket transform)
-	{
-		if (id != thisPlayer)
+		if (transform.id != thisPlayer)
 		{
-			entities[id].SetTransform(transform);
+			entities[transform.id].SetTransform(transform);
 		}
 	}
 
-	public void Action(byte id, ActionPacket action)
+	public void Action(ActionPacket action)
 	{
 
 	}
 
-	public void Health(byte id, ActionPacket health)
+	public void Health(HealthPacket health)
 	{
 
 	}
 
-	public void Inventory(byte id, InventoryPacket inventory)
+	public void Inventory(InventoryPacket inventory)
 	{
 
 	}
 
-	public void Spawn(byte id, SpawnPacket spawn)
+	public void GameTrigger(GameTriggerPacket packet)
+	{
+
+	}
+
+	public void LoadLevel(ScenePacket packet)
+	{
+		for (int i = 0; i < tempPlayers.Length; ++i)
+		{
+			if (entities[i] != null)
+			{
+				tempPlayers[i].id = entities[i].id;
+				tempPlayers[i].type = entities[i].type;
+			}
+		}
+
+		string scene;
+		switch (packet.id)
+		{
+			default:
+			case 0: scene = "c1m1_Naptime"; break;
+			case 1: scene = "c1m2_Library"; break;
+			case 2: scene = "c1m3_Playground"; break;
+			case 3: scene = "c1m4_Cellar"; break;
+			case 4: scene = "c1m5_Corruption"; break;
+		}
+
+		SceneLoader.Instance.LoadScene(scene);
+	}
+
+	public void Spawn(SpawnPacket packet)
+	{
+
+	}
+
+	public void OwnerChange(OwnerPacket packet)
 	{
 
 	}

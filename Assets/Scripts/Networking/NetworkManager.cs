@@ -2,6 +2,7 @@ using Steamworks;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -11,22 +12,21 @@ using UnityEngine;
 //TODO: Invite Friends
 //TODO: Public vs private lobbies
 
-enum PacketType
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class Packet
 {
-	Transform,
-	Action,
-	Health,
-	Inventory,
-	GameTrigger,
-	SceneLoad,
-	GameSpawn
+	public byte type;
+	public byte id;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 4, Size = 20)]
-public struct TransformPacket
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class TransformPacket : Packet
 {
-	public TransformPacket(Transform t)
+	public TransformPacket(byte id, Transform t)
 	{
+		type = 0;
+		this.id = id;
+
 		xPos = t.position.x;
 		yPos = t.position.y;
 		zPos = t.position.z;
@@ -40,55 +40,98 @@ public struct TransformPacket
 		//transform += (int)(t.rotation.z * 10000000000000000.0f);
 	}
 
-	[FieldOffset(0)] public float xPos;
-	[FieldOffset(4)] public float yPos;
-	[FieldOffset(8)] public float zPos;
-	[FieldOffset(12)] public float yRot;
-	[FieldOffset(16)] public float zRot;
+	public float xPos;
+	public float yPos;
+	public float zPos;
+	public float yRot;
+	public float zRot;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 1)]
-public struct ActionPacket
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class ActionPacket : Packet
 {
-	//public ActionPacket(byte type)
-	//{
-	//
-	//}
+	public ActionPacket(byte id, byte data)
+	{
+		type = 1;
+		this.id = id;
+		this.data = data;
+	}
 
-	[FieldOffset(0)] public byte data;
+	public byte data;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 3)]
-public struct InventoryPacket
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class HealthPacket : Packet
 {
-	[FieldOffset(0)] public byte primary;
-	[FieldOffset(1)] public byte secondary;
-	[FieldOffset(2)] public byte mission;
+	public HealthPacket(byte id, byte data)
+	{
+		type = 2;
+		this.id = id;
+		this.data = data;
+	}
+
+	public byte data;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 1)]
-public struct SpawnPacket
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class InventoryPacket : Packet
 {
-	[FieldOffset(0)] public byte spawn;
+	public InventoryPacket(byte id, byte slot, byte data)
+	{
+		type = 3;
+		this.id = id;
+		this.slot = slot;
+		this.data = data;
+	}
+
+	public byte slot;
+	public byte data;
 }
 
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 22)]
-public struct Packet
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class GameTriggerPacket : Packet
 {
-	//public Packet(PacketType type, byte id, Transform transform)
-	//{
-	//	this.type = (byte)type;
-	//	this.id = id;
-	//	this.transform = new TransformPacket(transform);
-	//}
+	public GameTriggerPacket(byte id)
+	{
+		type = 4;
+		this.id = id;
+	}
+}
 
-	[FieldOffset(0)] public byte type;
-	[FieldOffset(1)] public byte id;
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class ScenePacket : Packet
+{
+	public ScenePacket(byte id)
+	{
+		type = 5;
+		this.id = id;
+	}
+}
 
-	[FieldOffset(2)] public TransformPacket transform;
-	[FieldOffset(2)] public ActionPacket action;
-	[FieldOffset(2)] public InventoryPacket inventory;
-	[FieldOffset(2)] public SpawnPacket spawn;
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class SpawnPacket : Packet
+{
+	public SpawnPacket(byte id, byte spawn)
+	{
+		type = 6;
+		this.id = id;
+		this.spawn = spawn;
+	}
+
+	public byte spawn;
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public class OwnerPacket : Packet
+{
+	public OwnerPacket(byte id, ulong steamId)
+	{
+		type = 7;
+		this.id = id;
+		this.steamId = steamId;
+	}
+
+	public ulong steamId;
 }
 
 public class NetworkManager : Singleton<NetworkManager>
@@ -369,13 +412,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 		switch (packet.type)
 		{
-			case 0: size = 22; break;   //Transform
-			case 1: size = 3; break;    //Action
-			case 2: size = 3; break;    //Health
-			case 3: size = 5; break;    //Inventory
-			case 4: size = 2; break;    //Game Trigger
-			case 5: size = 2; break;    //Scene Load
-			case 6: size = 3; break;    //Game Spawn
+			case 0: size = 22; break;	//Transform
+			case 1: size = 3; break;	//Action
+			case 2: size = 3; break;	//Health
+			case 3: size = 5; break;	//Inventory
+			case 4: size = 2; break;	//Game Trigger
+			case 5: size = 2; break;	//Scene Load
+			case 6: size = 3; break;	//Game Spawn
+			case 7: size = 10; break;	//Owner Change
 			default: return false;
 		}
 
@@ -408,13 +452,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			switch (packet.type)
 			{
-				case 0: GameManager.Instance.ReceiveTransform(packet.id, packet.transform); break;  //Transform
-				case 1: GameManager.Instance.Action(packet.id, packet.action); break;  //Action
-				case 2: GameManager.Instance.Health(packet.id, packet.action); break;  //Health
-				case 3: GameManager.Instance.Inventory(packet.id, packet.inventory); break;  //Inventory
-				case 4: GameManager.Instance.GameTrigger(packet.id); break;  //Game Trigger
-				case 5: GameManager.Instance.LoadLevel(packet.id); break;  //Scene Load
-				case 6: GameManager.Instance.Spawn(packet.id, packet.spawn); break;  //Game Spawn
+				case 0: GameManager.Instance.ReceiveTransform((TransformPacket)packet); break;  //Transform
+				case 1: GameManager.Instance.Action((ActionPacket)packet); break;               //Action
+				case 2: GameManager.Instance.Health((HealthPacket)packet); break;               //Health
+				case 3: GameManager.Instance.Inventory((InventoryPacket)packet); break;         //Inventory
+				case 4: GameManager.Instance.GameTrigger((GameTriggerPacket)packet); break;     //Game Trigger
+				case 5: GameManager.Instance.LoadLevel((ScenePacket)packet); break;             //Scene Load
+				case 6: GameManager.Instance.Spawn((SpawnPacket)packet); break;                 //Game Spawn
+				case 7: GameManager.Instance.OwnerChange((OwnerPacket)packet); break;           //Owner Change
 				default: break;
 			}
 		}
