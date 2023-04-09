@@ -167,6 +167,7 @@ public class GameManager : Singleton<GameManager>
 			entities[0] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
 			entities[0].id = 0;
 			entities[0].type = 0;
+			entities[0].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 
 			thisPlayer = 0;
 
@@ -190,14 +191,26 @@ public class GameManager : Singleton<GameManager>
 						entities[thisPlayer] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[thisPlayer].position, playerSpawnPoints[thisPlayer].rotation).GetComponent<Entity>();
 						entities[thisPlayer].id = thisPlayer;
 						entities[thisPlayer].type = thisPlayer;
+						entities[thisPlayer].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					}
 
 					continue;
 				}
 
+				string steamName = "";
+				foreach (Friend f in members)
+				{
+					if(f.Id.Value == steamId)
+					{
+						steamName = f.Name;
+						break;
+					}
+				}
+
 				entities[i] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation).GetComponent<Entity>();
 				entities[i].id = i;
 				entities[i].type = i;
+				entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
 			}
 		}
 	}
@@ -224,6 +237,7 @@ public class GameManager : Singleton<GameManager>
 				entities[i] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation).GetComponent<Entity>();
 				entities[i].id = i;
 				entities[i].type = i;
+				entities[i].GetComponent<LobbyPlayer>().name.text = player.Name;
 
 				lobby.SetData("Player" + i, player.Id.Value.ToString());
 				break;

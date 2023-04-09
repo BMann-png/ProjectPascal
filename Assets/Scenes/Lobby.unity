@@ -794,7 +794,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424581f5ecf854f42b8680c1ee6e2045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 7710098097953584521, guid: 2db0c05ceb18f8e45a2e3aeeeb5f76ea, type: 3}
   spawnPoints:
   - {fileID: 1384926045}
   - {fileID: 688109611}
