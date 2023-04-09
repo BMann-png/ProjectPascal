@@ -197,6 +197,12 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
+	public void LeaveLobby()
+	{
+		isServer = false;
+		thisPlayer = 255;
+	}
+
 	//Callbacks
 	public void PlayerJoined(Friend player) //This is called before OnJoinLobby
 	{
