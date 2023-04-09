@@ -214,7 +214,7 @@ public class GameManager : Singleton<GameManager>
 				entities[i].id = i;
 				entities[i].type = i;
 
-				lobby.SetData("Player" + thisPlayer, player.Id.Value.ToString());
+				lobby.SetData("Player" + i, player.Id.Value.ToString());
 				break;
 			}
 		}
