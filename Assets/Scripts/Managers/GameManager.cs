@@ -129,10 +129,10 @@ public class GameManager : Singleton<GameManager>
 
 		Dictionary<string, string> lobbyData = new Dictionary<string, string> {
 			{ "Name", lobbyName },
-			{ "PlayerInfo0", "44" },
-			{ "PlayerInfo1", "44" },
-			{ "PlayerInfo2", "44" },
-			{ "PlayerInfo3", "44" },
+			{ "PlayerInfo0", "4" },
+			{ "PlayerInfo1", "4" },
+			{ "PlayerInfo2", "4" },
+			{ "PlayerInfo3", "4" },
 			{ "PlayerSteam0", "0" },
 			{ "PlayerSteam1", "0" },
 			{ "PlayerSteam2", "0" },
@@ -179,13 +179,12 @@ public class GameManager : Singleton<GameManager>
 				string playerInfo = lobby.GetData("PlayerInfo" + i);
 
 				byte id = (byte)(playerInfo[0] - '0');
-				byte spawn = (byte)(playerInfo[1] - '0');
 
-				if (id == 4 || spawn == 4) { if (playerNum == 255) { playerNum = i; } continue; }
+				if (id == 4) { if (playerNum == 255) { playerNum = i; } continue; }
 
 				taken[i] = true;
 
-				entities[id] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[spawn].position, playerSpawnPoints[spawn].rotation).GetComponent<Entity>();
+				entities[id] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[id].position, playerSpawnPoints[id].rotation).GetComponent<Entity>();
 				entities[id].id = id;
 				entities[id].type = id;
 			}
@@ -196,7 +195,7 @@ public class GameManager : Singleton<GameManager>
 			entities[thisPlayer].id = thisPlayer;
 			entities[thisPlayer].type = thisPlayer;
 
-			lobby.SetData("PlayerInfo" + playerNum, "" + thisPlayer + thisPlayer);
+			lobby.SetData("PlayerInfo" + playerNum, "" + thisPlayer);
 			lobby.SetData("PlayerSteam" + playerNum, "" + NetworkManager.Instance.PlayerId.Value.ToString());
 
 			Packet packet = new Packet();
@@ -231,7 +230,7 @@ public class GameManager : Singleton<GameManager>
 				entities[index] = null;
 
 				lobby.SetData("PlayerSteam" + i, "0");
-				lobby.SetData("PlayerInfo" + i, "44");
+				lobby.SetData("PlayerInfo" + i, "4");
 				
 				break;
 			}
@@ -278,7 +277,7 @@ public class GameManager : Singleton<GameManager>
 
 				if ((byte)(playerInfo[0] - '0') == id)
 				{
-					byte spawnPoint = (byte)(playerInfo[1] - '0');
+					byte spawnPoint = (byte)(playerInfo[0] - '0');
 					entities[id] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[spawnPoint].position, playerSpawnPoints[spawnPoint].rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					entities[id].type = id;
