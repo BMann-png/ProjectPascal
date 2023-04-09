@@ -65,17 +65,24 @@ public class GameManager : Singleton<GameManager>
 
 	public void SelectLevel(TMP_Dropdown change)
 	{
-		level = (byte)change.value;
+		if (isServer)
+		{
+			level = (byte)change.value;
+		}
 	}
 
+	//TODO: only show level select and start game if owner
 	public void StartGame()
 	{
-		Packet packet = new Packet();
-		packet.type = 5;
-		packet.id = level;
+		if (isServer)
+		{
+			Packet packet = new Packet();
+			packet.type = 5;
+			packet.id = level;
 
-		NetworkManager.Instance.SendMessage(packet);
-		LoadLevel(level);
+			NetworkManager.Instance.SendMessage(packet);
+			LoadLevel(level);
+		}
 	}
 
 	public void LoadLevel(byte level)
