@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour
 	private float sprintCooldownTimer = 0.0f;
 	private float tripTimer = 0.0f;
 
-
 	private void Awake()
 	{
 		controller = GetComponent<CharacterController>();
@@ -41,12 +40,15 @@ public class PlayerController : MonoBehaviour
 			tripTimer = TRIP_TIME;
 		}
 
-		Packet packet = new Packet();
-		packet.type = 0;
-		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform);
+		if (movement.sqrMagnitude > 0.0f)
+		{
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform);
 
-		NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	private void Update()

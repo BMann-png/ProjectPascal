@@ -22,8 +22,6 @@ struct TempEntity
 	public byte type;
 }
 
-//TODO: Associate a steamID with an entity
-
 public class GameManager : Singleton<GameManager>
 {
 	private bool isServer;

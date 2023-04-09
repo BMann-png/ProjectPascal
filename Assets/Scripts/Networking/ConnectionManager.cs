@@ -11,7 +11,6 @@ namespace Pascal
         public override void OnMessage(IntPtr data, int size, long messageNum, long recvTime, int channel)
         {
             NetworkManager.Instance.ProcessMessage(data, size);
-            Debug.Log("Message received");
         }
     }
 }
