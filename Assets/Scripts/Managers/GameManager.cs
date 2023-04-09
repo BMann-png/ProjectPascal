@@ -121,11 +121,11 @@ public class GameManager : Singleton<GameManager>
 			{
 				if (e.id == thisPlayer)
 				{
-					entities[e.id] = Instantiate(prefabManager.Player, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
+					entities[e.id] = Instantiate(prefabManager.Player, playerSpawnPoints[e.id].position, playerSpawnPoints[e.id].rotation).GetComponent<Entity>();
 				}
 				else
 				{
-					entities[e.id] = Instantiate(prefabManager.NetworkPlayer, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
+					entities[e.id] = Instantiate(prefabManager.NetworkPlayer, playerSpawnPoints[e.id].position, playerSpawnPoints[e.id].rotation).GetComponent<Entity>();
 				}
 
 				entities[e.id].id = e.id;
@@ -262,7 +262,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void ReceiveTransform(byte id, TransformPacket transform)
 	{
-		if (id == thisPlayer)
+		if (id != thisPlayer)
 		{
 			entities[id].SetTransform(transform);
 		}
