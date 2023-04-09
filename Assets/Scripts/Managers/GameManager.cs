@@ -133,14 +133,10 @@ public class GameManager : Singleton<GameManager>
 
 		Dictionary<string, string> lobbyData = new Dictionary<string, string> {
 			{ "Name", lobbyName },
-			{ "PlayerInfo0", "4" },
-			{ "PlayerInfo1", "4" },
-			{ "PlayerInfo2", "4" },
-			{ "PlayerInfo3", "4" },
-			{ "PlayerSteam0", "0" },
-			{ "PlayerSteam1", "0" },
-			{ "PlayerSteam2", "0" },
-			{ "PlayerSteam3", "0" },
+			{ "Player0", "0" },
+			{ "Player1", "0" },
+			{ "Player2", "0" },
+			{ "Player3", "0" },
 		};
 
 		bool result = await NetworkManager.Instance.CreateLobby(lobbyData, 4);
@@ -169,46 +165,35 @@ public class GameManager : Singleton<GameManager>
 
 			thisPlayer = 0;
 
-			NetworkManager.Instance.currentLobby.SetData("PlayerInfo0", "0");
-			NetworkManager.Instance.currentLobby.SetData("PlayerSteam0", NetworkManager.Instance.PlayerId.Value.ToString());
+			NetworkManager.Instance.currentLobby.SetData("Player0", NetworkManager.Instance.PlayerId.Value.ToString());
 		}
 		else
 		{
 			Lobby lobby = NetworkManager.Instance.currentLobby;
-
-			bool[] taken = new bool[4];
-			byte playerNum = 255;
+			IEnumerable<Friend> members = lobby.Members;
 
 			for (byte i = 0; i < 4; ++i)
 			{
-				string playerInfo = lobby.GetData("PlayerInfo" + i);
+				ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
 
-				byte id = (byte)(playerInfo[0] - '0');
+				if (steamId == 0)
+				{
+					if (thisPlayer == 255)
+					{
+						thisPlayer = i;
 
-				if (id == 4) { if (playerNum == 255) { playerNum = i; } continue; }
+						entities[thisPlayer] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[thisPlayer].position, playerSpawnPoints[thisPlayer].rotation).GetComponent<Entity>();
+						entities[thisPlayer].id = thisPlayer;
+						entities[thisPlayer].type = thisPlayer;
+					}
 
-				taken[i] = true;
+					continue;
+				}
 
-				entities[id] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[id].position, playerSpawnPoints[id].rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].type = id;
+				entities[i] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation).GetComponent<Entity>();
+				entities[i].id = i;
+				entities[i].type = i;
 			}
-
-			for (byte i = 0; i < 4; ++i) { if (taken[i] == false) { thisPlayer = i; break; } }
-
-			entities[thisPlayer] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[thisPlayer].position, playerSpawnPoints[thisPlayer].rotation).GetComponent<Entity>();
-			entities[thisPlayer].id = thisPlayer;
-			entities[thisPlayer].type = thisPlayer;
-
-			lobby.SetData("PlayerInfo" + playerNum, "" + thisPlayer);
-			lobby.SetData("PlayerSteam" + playerNum, "" + NetworkManager.Instance.PlayerId.Value.ToString());
-
-			Packet packet = new Packet();
-			packet.type = 6;
-			packet.id = thisPlayer;
-			packet.spawn.spawn = thisPlayer;
-
-			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -216,6 +201,23 @@ public class GameManager : Singleton<GameManager>
 	public void PlayerJoined(Friend player) //This is called before OnJoinLobby
 	{
 		//TODO: Send message of player joining
+
+		Lobby lobby = NetworkManager.Instance.currentLobby;
+
+		for (byte i = 0; i < 4; ++i)
+		{
+			ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
+
+			if (steamId == 0)
+			{
+				entities[i] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation).GetComponent<Entity>();
+				entities[i].id = i;
+				entities[i].type = i;
+
+				lobby.SetData("Player" + thisPlayer, player.Id.Value.ToString());
+				break;
+			}
+		}
 	}
 
 	public void PlayerLeft(Friend player)
@@ -226,16 +228,14 @@ public class GameManager : Singleton<GameManager>
 
 		for (int i = 0; i < 4; ++i)
 		{
-			string playerSteam = lobby.GetData("PlayerSteam" + i);
+			ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
 
-			if (ulong.Parse(playerSteam) == player.Id.Value)
+			if (steamId == player.Id.Value)
 			{
-				int index = lobby.GetData("PlayerInfo" + i)[0] - '0';
-				Destroy(entities[index].gameObject);
-				entities[index] = null;
+				Destroy(entities[i].gameObject);
+				entities[i] = null;
 
-				lobby.SetData("PlayerSteam" + i, "0");
-				lobby.SetData("PlayerInfo" + i, "4");
+				if (isServer) { lobby.SetData("Player" + i, "0"); }
 				
 				break;
 			}
@@ -272,27 +272,6 @@ public class GameManager : Singleton<GameManager>
 
 	public void Spawn(byte id, SpawnPacket spawn)
 	{
-		if(inLobby)
-		{
-			Lobby lobby = NetworkManager.Instance.currentLobby;
 
-			for (int i = 0; i < 4; ++i)
-			{
-				string playerInfo = lobby.GetData("PlayerInfo" + i);
-
-				if ((byte)(playerInfo[0] - '0') == id)
-				{
-					byte spawnPoint = (byte)(playerInfo[0] - '0');
-					entities[id] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[spawnPoint].position, playerSpawnPoints[spawnPoint].rotation).GetComponent<Entity>();
-					entities[id].id = id;
-					entities[id].type = id;
-					break;
-				}
-			}
-		}
-		else
-		{
-			//Spawn enemy
-		}
 	}
 }
