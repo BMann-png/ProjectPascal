@@ -45,8 +45,6 @@ public class GameManager : Singleton<GameManager>
 
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 
-		isServer = NetworkManager.Instance.activeSocketServer;
-
 		tempPlayers = new TempEntity[4] {
 			new TempEntity(255, 255),
 			new TempEntity(255, 255),
@@ -84,11 +82,14 @@ public class GameManager : Singleton<GameManager>
 	{
 		for(int i = 0; i < tempPlayers.Length; ++i)
 		{
-			tempPlayers[i].id = entities[i].id;
-			tempPlayers[i].type = entities[i].type;
+			if (entities[i] != null)
+			{
+				tempPlayers[i].id = entities[i].id;
+				tempPlayers[i].type = entities[i].type;
+			}
 		}
 
-		string scene;
+			string scene;
 		switch (level)
 		{
 			default:
@@ -109,17 +110,20 @@ public class GameManager : Singleton<GameManager>
 
 		foreach (TempEntity e in tempPlayers)
 		{
-			if (e.id == thisPlayer)
+			if (e.id != 255)
 			{
-				entities[e.id] = Instantiate(prefabManager.Player, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
-			}
-			else
-			{
-				entities[e.id] = Instantiate(prefabManager.NetworkPlayer, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
-			}
+				if (e.id == thisPlayer)
+				{
+					entities[e.id] = Instantiate(prefabManager.Player, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
+				}
+				else
+				{
+					entities[e.id] = Instantiate(prefabManager.NetworkPlayer, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
+				}
 
-			entities[e.id].id = e.id;
-			entities[e.id].type = e.type;
+				entities[e.id].id = e.id;
+				entities[e.id].type = e.type;
+			}
 		}
 	}
 
@@ -143,6 +147,7 @@ public class GameManager : Singleton<GameManager>
 
 		if (result)
 		{
+			isServer = true;
 			SceneLoader.Instance.LoadScene("Lobby");
 		}
 		else
@@ -164,7 +169,7 @@ public class GameManager : Singleton<GameManager>
 
 			thisPlayer = 0;
 
-			NetworkManager.Instance.currentLobby.SetData("PlayerInfo0", "00");
+			NetworkManager.Instance.currentLobby.SetData("PlayerInfo0", "0");
 			NetworkManager.Instance.currentLobby.SetData("PlayerSteam0", NetworkManager.Instance.PlayerId.Value.ToString());
 		}
 		else

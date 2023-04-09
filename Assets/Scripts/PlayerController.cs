@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 	private float tripTimer = 0.0f;
 
 
-	private void OnValidate()
+	private void Awake()
 	{
 		controller = GetComponent<CharacterController>();
 	}
