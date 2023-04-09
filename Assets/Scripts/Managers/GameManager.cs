@@ -126,7 +126,7 @@ public class GameManager : Singleton<GameManager>
 		}
 		else
 		{
-			//TODO: Failure to join message
+			//TODO: Failure to create lobby message
 		}
 	}
 
@@ -188,7 +188,6 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	//TODO: Leaving the lobby as an owner causes problems, asign ownership BEFORE leaving
 	public void LeaveLobby()
 	{
 		Lobby lobby = NetworkManager.Instance.currentLobby;
@@ -201,13 +200,14 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
 				{
-					//TODO: Assign 
+					NetworkManager.Instance.SendMessage(new OwnerPacket(steamId));
 				}
 			}
 		}
 
-		isServer = false;
 		thisPlayer = 255;
+		isServer = false;
+		inLobby = false;
 	}
 
 	//Callbacks
@@ -249,8 +249,8 @@ public class GameManager : Singleton<GameManager>
 				Destroy(entities[i].gameObject);
 				entities[i] = null;
 
-				if (isServer) { lobby.SetData("Player" + i, "0"); }
-				
+				lobby.SetData("Player" + i, "0");
+
 				break;
 			}
 		}
@@ -316,6 +316,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void OwnerChange(OwnerPacket packet)
 	{
-
+		if(packet.steamId == NetworkManager.Instance.PlayerId.Value)
+		{
+			isServer = true;
+			//TODO: enable level select and start button
+		}
 	}
 }

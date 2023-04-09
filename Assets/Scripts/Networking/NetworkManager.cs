@@ -124,10 +124,10 @@ public class SpawnPacket : Packet
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public class OwnerPacket : Packet
 {
-	public OwnerPacket(byte id, ulong steamId)
+	public OwnerPacket(ulong steamId)
 	{
 		type = 7;
-		this.id = id;
+		id = 0;
 		this.steamId = steamId;
 	}
 
@@ -412,14 +412,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 		switch (packet.type)
 		{
-			case 0: size = 22; break;	//Transform
-			case 1: size = 3; break;	//Action
-			case 2: size = 3; break;	//Health
-			case 3: size = 5; break;	//Inventory
-			case 4: size = 2; break;	//Game Trigger
-			case 5: size = 2; break;	//Scene Load
-			case 6: size = 3; break;	//Game Spawn
-			case 7: size = 10; break;	//Owner Change
+			case 0: size = 22; break;   //Transform
+			case 1: size = 3; break;    //Action
+			case 2: size = 3; break;    //Health
+			case 3: size = 5; break;    //Inventory
+			case 4: size = 2; break;    //Game Trigger
+			case 5: size = 2; break;    //Scene Load
+			case 6: size = 3; break;    //Game Spawn
+			case 7: size = 10; break;   //Owner Change
 			default: return false;
 		}
 

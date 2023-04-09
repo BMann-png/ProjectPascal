@@ -42,9 +42,7 @@ public class PlayerController : MonoBehaviour
 
 		if (movement.sqrMagnitude > 0.0f)
 		{
-			Packet packet = new TransformPacket(entity.id, transform);
-
-			NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.SendMessage(new TransformPacket(entity.id, transform));
 		}
 	}
 
@@ -82,12 +80,5 @@ public class PlayerController : MonoBehaviour
 		movement *= tripped ? TRIP_MOD : 1.0f;
 
 		controller.Move(movement);
-
-		SendUpdate();
-	}
-
-	private void SendUpdate()
-	{
-		//TODO: send player transform
 	}
 }
