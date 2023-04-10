@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -44,4 +45,14 @@ public class Entity : MonoBehaviour
 	}
 
 	//TODO: Actions, Health, Inventory
+
+	const byte RUN_FLAG = 0b00000001;
+
+	public void DoAction(ActionPacket packet)
+	{
+		if ((packet.data & RUN_FLAG) == RUN_FLAG)
+		{
+			//do thing
+		}
+	}
 }
