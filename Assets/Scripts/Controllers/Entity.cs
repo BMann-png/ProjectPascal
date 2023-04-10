@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-	[HideInInspector] public byte id;   //ID of 255 is invalid
+	[HideInInspector] public byte id;   //ID 0-3 is a player
+										//ID 4-38 is an enemy
+										//ID of 255 is invalid
 	[HideInInspector] public byte type; //Type decides what model/kind of entity this is
 										//Type 0 - Player model 1
 										//Type 1 - Player model 2
@@ -28,8 +30,11 @@ public class Entity : MonoBehaviour
 
 	private void Update()
 	{
-		transform.position = Vector3.Lerp(transform.position, targetPosition, 0.5f);
-		transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, 0.5f);
+		if (GameManager.Instance.thisPlayer != id || (id > 3 && !GameManager.Instance.IsServer))
+		{
+			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
+			transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, 0.3f);
+		}
 	}
 
 	public void SetTransform(TransformPacket tp)

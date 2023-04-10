@@ -35,7 +35,7 @@ public class GameManager : Singleton<GameManager>
 
 	private PrefabManager prefabManager;
 
-	private byte thisPlayer = 255;
+	public byte thisPlayer { get; private set; } = 255;
 
 	protected override void Awake()
 	{
