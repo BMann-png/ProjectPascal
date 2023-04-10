@@ -17,10 +17,25 @@ public class Entity : MonoBehaviour
 										//Type 8 - 
 										//Type 9 - 
 
+	private Vector3 targetPosition;
+	private Vector3 targetRotation;
+
+	private void Awake()
+	{
+		targetPosition = transform.position;
+		targetRotation = transform.eulerAngles;
+	}
+
+	private void Update()
+	{
+		transform.position = Vector3.Lerp(transform.position, targetPosition, 0.5f);
+		transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, 0.5f);
+	}
+
 	public void SetTransform(TransformPacket tp)
 	{
-		transform.position = new Vector3(tp.xPos, tp.yPos, tp.zPos);
-		transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, tp.yRot, tp.zRot));
+		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
+		targetRotation = new Vector3(transform.rotation.x, tp.yRot, tp.zRot);
 	}
 
 	//TODO: Actions, Health, Inventory
