@@ -408,24 +408,21 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	public bool SendMessage(Packet packet)
 	{
-		int size;
-
-		switch (packet.type)
-		{
-			case 0: size = 22; break;   //Transform
-			case 1: size = 3; break;    //Action
-			case 2: size = 3; break;    //Health
-			case 3: size = 5; break;    //Inventory
-			case 4: size = 2; break;    //Game Trigger
-			case 5: size = 2; break;    //Scene Load
-			case 6: size = 3; break;    //Game Spawn
-			case 7: size = 10; break;   //Owner Change
-			default: return false;
-		}
-
 		try
 		{
-			Marshal.StructureToPtr(packet, message, true);
+			int size;
+			switch (packet.type)
+			{
+				case 0: Marshal.StructureToPtr(packet as TransformPacket, message, true); size = 22; break;   //Transform
+				case 1: Marshal.StructureToPtr(packet as ActionPacket, message, true); size = 3; break;    //Action
+				case 2: Marshal.StructureToPtr(packet as HealthPacket, message, true); size = 3; break;    //Health
+				case 3: Marshal.StructureToPtr(packet as InventoryPacket, message, true); size = 5; break;    //Inventory
+				case 4: Marshal.StructureToPtr(packet as GameTriggerPacket, message, true); size = 2; break;    //Game Trigger
+				case 5: Marshal.StructureToPtr(packet as ScenePacket, message, true); size = 2; break;    //Scene Load
+				case 6: Marshal.StructureToPtr(packet as SpawnPacket, message, true); size = 3; break;    //Game Spawn
+				case 7: Marshal.StructureToPtr(packet as OwnerPacket, message, true); size = 10; break;   //Owner Change
+				default: return false;
+			}
 
 			for (int k = 0; k < 5; k++)
 			{
@@ -452,14 +449,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			switch (packet.type)
 			{
-				case 0: GameManager.Instance.ReceiveTransform((TransformPacket)packet); break;  //Transform
-				case 1: GameManager.Instance.Action((ActionPacket)packet); break;               //Action
-				case 2: GameManager.Instance.Health((HealthPacket)packet); break;               //Health
-				case 3: GameManager.Instance.Inventory((InventoryPacket)packet); break;         //Inventory
-				case 4: GameManager.Instance.GameTrigger((GameTriggerPacket)packet); break;     //Game Trigger
-				case 5: GameManager.Instance.LoadLevel((ScenePacket)packet); break;             //Scene Load
-				case 6: GameManager.Instance.Spawn((SpawnPacket)packet); break;                 //Game Spawn
-				case 7: GameManager.Instance.OwnerChange((OwnerPacket)packet); break;           //Owner Change
+				case 0: GameManager.Instance.ReceiveTransform(packet as TransformPacket); break;  //Transform
+				case 1: GameManager.Instance.Action(packet as ActionPacket); break;               //Action
+				case 2: GameManager.Instance.Health(packet as HealthPacket); break;               //Health
+				case 3: GameManager.Instance.Inventory(packet as InventoryPacket); break;         //Inventory
+				case 4: GameManager.Instance.GameTrigger(packet as GameTriggerPacket); break;     //Game Trigger
+				case 5: GameManager.Instance.LoadLevel(packet as ScenePacket); break;             //Scene Load
+				case 6: GameManager.Instance.Spawn(packet as SpawnPacket); break;                 //Game Spawn
+				case 7: GameManager.Instance.OwnerChange(packet as OwnerPacket); break;           //Owner Change
 				default: break;
 			}
 		}
