@@ -42,7 +42,12 @@ public class PlayerController : MonoBehaviour
 
 		if (movement.sqrMagnitude > 0.0f)
 		{
-			NetworkManager.Instance.SendMessage(new TransformPacket(entity.id, transform));
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 

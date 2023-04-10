@@ -74,7 +74,9 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (IsServer)
 		{
-			ScenePacket packet = new ScenePacket(level);
+			Packet packet = new Packet();
+			packet.type = 5;
+			packet.id = level;
 
 			NetworkManager.Instance.SendMessage(packet);
 			LoadLevel(packet);
@@ -200,7 +202,11 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
 				{
-					NetworkManager.Instance.SendMessage(new OwnerPacket(steamId));
+					Packet packet = new Packet();
+					packet.type = 7;
+					packet.owner = new OwnerPacket(steamId);
+
+					NetworkManager.Instance.SendMessage(packet);
 				}
 			}
 		}
@@ -256,35 +262,35 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	public void ReceiveTransform(TransformPacket transform)
+	public void ReceiveTransform(Packet transform)
 	{
 		if (transform.id != thisPlayer)
 		{
-			entities[transform.id].SetTransform(transform);
+			entities[transform.id].SetTransform(transform.transform);
 		}
 	}
 
-	public void Action(ActionPacket action)
+	public void Action(Packet action)
 	{
 
 	}
 
-	public void Health(HealthPacket health)
+	public void Health(Packet health)
 	{
 
 	}
 
-	public void Inventory(InventoryPacket inventory)
+	public void Inventory(Packet inventory)
 	{
 
 	}
 
-	public void GameTrigger(GameTriggerPacket packet)
+	public void GameTrigger(Packet packet)
 	{
 
 	}
 
-	public void LoadLevel(ScenePacket packet)
+	public void LoadLevel(Packet packet)
 	{
 		for (int i = 0; i < tempPlayers.Length; ++i)
 		{
@@ -309,14 +315,14 @@ public class GameManager : Singleton<GameManager>
 		SceneLoader.Instance.LoadScene(scene);
 	}
 
-	public void Spawn(SpawnPacket packet)
+	public void Spawn(Packet packet)
 	{
 
 	}
 
-	public void OwnerChange(OwnerPacket packet)
+	public void OwnerChange(Packet packet)
 	{
-		if(packet.steamId == NetworkManager.Instance.PlayerId.Value)
+		if(packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
 			IsServer = true;
 			//TODO: enable level select and start button

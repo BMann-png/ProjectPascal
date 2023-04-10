@@ -13,20 +13,10 @@ using UnityEngine;
 //TODO: Public vs private lobbies
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public abstract class Packet
+public struct TransformPacket
 {
-	public byte type;
-	public byte id;
-}
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class TransformPacket : Packet
-{
-	public TransformPacket(byte id, Transform t)
+	public TransformPacket(Transform t)
 	{
-		type = 0;
-		this.id = id;
-
 		xPos = t.position.x;
 		yPos = t.position.y;
 		zPos = t.position.z;
@@ -48,12 +38,10 @@ public class TransformPacket : Packet
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class ActionPacket : Packet
+public struct ActionPacket
 {
 	public ActionPacket(byte id, byte data)
 	{
-		type = 1;
-		this.id = id;
 		this.data = data;
 	}
 
@@ -61,12 +49,10 @@ public class ActionPacket : Packet
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class HealthPacket : Packet
+public struct HealthPacket
 {
 	public HealthPacket(byte id, byte data)
 	{
-		type = 2;
-		this.id = id;
 		this.data = data;
 	}
 
@@ -74,12 +60,10 @@ public class HealthPacket : Packet
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class InventoryPacket : Packet
+public struct InventoryPacket
 {
 	public InventoryPacket(byte id, byte slot, byte data)
 	{
-		type = 3;
-		this.id = id;
 		this.slot = slot;
 		this.data = data;
 	}
@@ -89,32 +73,10 @@ public class InventoryPacket : Packet
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class GameTriggerPacket : Packet
-{
-	public GameTriggerPacket(byte id)
-	{
-		type = 4;
-		this.id = id;
-	}
-}
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class ScenePacket : Packet
-{
-	public ScenePacket(byte id)
-	{
-		type = 5;
-		this.id = id;
-	}
-}
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class SpawnPacket : Packet
+public struct SpawnPacket
 {
 	public SpawnPacket(byte id, byte spawn)
 	{
-		type = 6;
-		this.id = id;
 		this.spawn = spawn;
 	}
 
@@ -122,16 +84,28 @@ public class SpawnPacket : Packet
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class OwnerPacket : Packet
+public struct OwnerPacket
 {
 	public OwnerPacket(ulong steamId)
 	{
-		type = 7;
-		id = 0;
 		this.steamId = steamId;
 	}
 
 	public ulong steamId;
+}
+
+[StructLayout(LayoutKind.Explicit, Pack = 1)]
+public struct Packet
+{
+	[FieldOffset(0)] public byte type;
+	[FieldOffset(1)] public byte id;
+
+	[FieldOffset(2)] public TransformPacket transform;
+	[FieldOffset(2)] public ActionPacket action;
+	[FieldOffset(2)] public HealthPacket health;
+	[FieldOffset(2)] public InventoryPacket inventory;
+	[FieldOffset(2)] public SpawnPacket spawn;
+	[FieldOffset(2)] public OwnerPacket owner;
 }
 
 public class NetworkManager : Singleton<NetworkManager>
@@ -408,21 +382,23 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	public bool SendMessage(Packet packet)
 	{
+		int size;
+		switch (packet.type)
+		{
+			case 0: size = 22; break;   //Transform
+			case 1: size = 3; break;    //Action
+			case 2: size = 3; break;    //Health
+			case 3: size = 5; break;    //Inventory
+			case 4: size = 2; break;    //Game Trigger
+			case 5: size = 2; break;    //Scene Load
+			case 6: size = 3; break;    //Game Spawn
+			case 7: size = 10; break;   //Owner Change
+			default: return false;
+		}
+
 		try
 		{
-			int size;
-			switch (packet.type)
-			{
-				case 0: Marshal.StructureToPtr(packet as TransformPacket, message, true); size = 22; break;   //Transform
-				case 1: Marshal.StructureToPtr(packet as ActionPacket, message, true); size = 3; break;    //Action
-				case 2: Marshal.StructureToPtr(packet as HealthPacket, message, true); size = 3; break;    //Health
-				case 3: Marshal.StructureToPtr(packet as InventoryPacket, message, true); size = 5; break;    //Inventory
-				case 4: Marshal.StructureToPtr(packet as GameTriggerPacket, message, true); size = 2; break;    //Game Trigger
-				case 5: Marshal.StructureToPtr(packet as ScenePacket, message, true); size = 2; break;    //Scene Load
-				case 6: Marshal.StructureToPtr(packet as SpawnPacket, message, true); size = 3; break;    //Game Spawn
-				case 7: Marshal.StructureToPtr(packet as OwnerPacket, message, true); size = 10; break;   //Owner Change
-				default: return false;
-			}
+			Marshal.StructureToPtr(packet, message, true);
 
 			for (int k = 0; k < 5; k++)
 			{
@@ -449,14 +425,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			switch (packet.type)
 			{
-				case 0: GameManager.Instance.ReceiveTransform(packet as TransformPacket); break;  //Transform
-				case 1: GameManager.Instance.Action(packet as ActionPacket); break;               //Action
-				case 2: GameManager.Instance.Health(packet as HealthPacket); break;               //Health
-				case 3: GameManager.Instance.Inventory(packet as InventoryPacket); break;         //Inventory
-				case 4: GameManager.Instance.GameTrigger(packet as GameTriggerPacket); break;     //Game Trigger
-				case 5: GameManager.Instance.LoadLevel(packet as ScenePacket); break;             //Scene Load
-				case 6: GameManager.Instance.Spawn(packet as SpawnPacket); break;                 //Game Spawn
-				case 7: GameManager.Instance.OwnerChange(packet as OwnerPacket); break;           //Owner Change
+				case 0: GameManager.Instance.ReceiveTransform(packet); break;  //Transform
+				case 1: GameManager.Instance.Action(packet); break;               //Action
+				case 2: GameManager.Instance.Health(packet); break;               //Health
+				case 3: GameManager.Instance.Inventory(packet); break;         //Inventory
+				case 4: GameManager.Instance.GameTrigger(packet); break;     //Game Trigger
+				case 5: GameManager.Instance.LoadLevel(packet); break;             //Scene Load
+				case 6: GameManager.Instance.Spawn(packet); break;                 //Game Spawn
+				case 7: GameManager.Instance.OwnerChange(packet); break;           //Owner Change
 				default: break;
 			}
 		}
