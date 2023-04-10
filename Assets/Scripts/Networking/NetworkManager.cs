@@ -13,7 +13,7 @@ using UnityEngine;
 //TODO: Public vs private lobbies
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public class Packet
+public abstract class Packet
 {
 	public byte type;
 	public byte id;

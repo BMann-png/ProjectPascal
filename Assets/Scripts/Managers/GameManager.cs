@@ -24,7 +24,7 @@ struct TempEntity
 
 public class GameManager : Singleton<GameManager>
 {
-	private bool isServer;
+	public bool IsServer { get; private set; }
 	private bool inLobby;
 	private byte level;
 
@@ -55,7 +55,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if(isServer && !inLobby)
+		if(IsServer && !inLobby)
 		{
 			//TODO: Run the game
 		}
@@ -63,7 +63,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void SelectLevel(TMP_Dropdown change)
 	{
-		if (isServer)
+		if (IsServer)
 		{
 			level = (byte)change.value;
 		}
@@ -72,7 +72,7 @@ public class GameManager : Singleton<GameManager>
 	//TODO: only show level select and start game if owner
 	public void StartGame()
 	{
-		if (isServer)
+		if (IsServer)
 		{
 			ScenePacket packet = new ScenePacket(level);
 
@@ -121,7 +121,7 @@ public class GameManager : Singleton<GameManager>
 
 		if (result)
 		{
-			isServer = true;
+			IsServer = true;
 			SceneLoader.Instance.LoadScene("Lobby");
 		}
 		else
@@ -135,7 +135,7 @@ public class GameManager : Singleton<GameManager>
 		playerSpawnPoints = spawnPoints;
 		inLobby = true;
 
-		if (isServer)
+		if (IsServer)
 		{
 			entities[0] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
 			entities[0].id = 0;
@@ -206,7 +206,7 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		thisPlayer = 255;
-		isServer = false;
+		IsServer = false;
 		inLobby = false;
 	}
 
@@ -318,7 +318,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if(packet.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
-			isServer = true;
+			IsServer = true;
 			//TODO: enable level select and start button
 		}
 	}
