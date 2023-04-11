@@ -10,10 +10,18 @@ using UnityEngine.UI;
 public class LobbyHandler : MonoBehaviour
 {
 	[SerializeField] private Transform[] spawnPoints;
+	[SerializeField] private GameObject startButton;
+	[SerializeField] private GameObject levelSelect;
 
 	private void Awake()
 	{
 		GameManager.Instance.OnJoinLobby(spawnPoints);
+
+		if(!GameManager.Instance.IsServer)
+		{
+			startButton.SetActive(false);
+			levelSelect.SetActive(false);
+		}
 	}
 
 	public void LeaveLobby()
@@ -31,5 +39,19 @@ public class LobbyHandler : MonoBehaviour
 	public void SelectLevel(TMP_Dropdown change)
 	{
 		GameManager.Instance.SelectLevel(change);
+	}
+
+	public void CheckOwner()
+	{
+		if (!GameManager.Instance.IsServer)
+		{
+			startButton.SetActive(false);
+			levelSelect.SetActive(false);
+		}
+		else
+		{
+			startButton.SetActive(true);
+			levelSelect.SetActive(true);
+		}
 	}
 }
