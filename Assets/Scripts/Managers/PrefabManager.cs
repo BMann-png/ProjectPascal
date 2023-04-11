@@ -12,10 +12,9 @@ public class PrefabManager : MonoBehaviour
 
 	[SerializeField] private GameObject lobbyPlayer;
 	public GameObject LobbyPlayer { get => lobbyPlayer; }
-
+  
 	[SerializeField] private GameObject enemy;
 	public GameObject Enemy { get => enemy; }
-
 	private void Awake()
 	{
 		DontDestroyOnLoad(gameObject);
