@@ -219,6 +219,14 @@ public class GameManager : Singleton<GameManager>
 		inLobby = false;
 	}
 
+	public void Shoot(Vector3 position, Quaternion rotation, byte type)
+	{
+		entities[39] = Instantiate(prefabManager.Projectile, position, rotation).GetComponent<Entity>();
+		entities[39].id = 39;
+		entities[39].type = 16;
+		entities[39].GetComponent<Projectile>().SetSpeed(10);
+	}
+
 	//Callbacks
 	public void PlayerJoined(Friend player) //This is called before OnJoinLobby
 	{

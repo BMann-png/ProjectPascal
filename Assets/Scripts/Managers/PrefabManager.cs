@@ -15,6 +15,10 @@ public class PrefabManager : MonoBehaviour
   
 	[SerializeField] private GameObject enemy;
 	public GameObject Enemy { get => enemy; }
+
+	[SerializeField] private GameObject projectile;
+	public GameObject Projectile { get => projectile; }
+
 	private void Awake()
 	{
 		DontDestroyOnLoad(gameObject);

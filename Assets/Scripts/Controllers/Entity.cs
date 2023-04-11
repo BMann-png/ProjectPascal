@@ -9,18 +9,25 @@ public class Entity : MonoBehaviour
                                         //ID 4-38 is an enemy
                                         //ID of 255 is invalid
     [HideInInspector] public byte type; //Type decides what model/kind of entity this is
-                                        //Type 0 - Player model 1
-                                        //Type 1 - Player model 2
-                                        //Type 2 - Player model 3
-                                        //Type 3 - Player model 4
-                                        //Type 4 - Common enemy
-                                        //Type 5 - 
-                                        //Type 6 - 
-                                        //Type 7 - 
-                                        //Type 8 - 
-                                        //Type 9 - 
+										//Type 0 - Player model 1
+										//Type 1 - Player model 2
+										//Type 2 - Player model 3
+										//Type 3 - Player model 4
+										//Type 4 - Common
+										//Type 5 - Spitter
+										//Type 6 - Alarmer
+										//Type 7 - Lurker
+										//Type 8 - Hurler
+										//Type 9 - Snatcher
+										//Type 10 - Currupted Common
+										//Type 11 - Currupted Spitter
+										//Type 12 - Currupted Alarmer
+										//Type 13 - Currupted Lurker
+										//Type 14 - Currupted Hurler
+										//Type 15 - Currupted Snatcher
+										//Type 16 - Projectile
 
-    private Vector3 targetPosition;
+	private Vector3 targetPosition;
     private Vector3 targetRotation;
 
     private void Awake()

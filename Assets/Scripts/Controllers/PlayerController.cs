@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_MOD = 1.5f;
 	private static readonly float TRIP_MOD = 0.5f;
 
+	[SerializeField] private Transform shoot;
+
 	private CharacterController controller;
 	private Entity entity;
 	private Vector3 movement;
@@ -85,5 +87,15 @@ public class PlayerController : MonoBehaviour
 		movement *= tripped ? TRIP_MOD : 1.0f;
 
 		controller.Move(movement);
+
+		if(Input.GetKeyDown(KeyCode.Mouse0))
+		{
+			Shoot();
+		}
+	}
+
+	private void Shoot()
+	{
+		GameManager.Instance.Shoot(shoot.position, shoot.rotation, 0);
 	}
 }
