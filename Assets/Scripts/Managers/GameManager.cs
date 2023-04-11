@@ -85,6 +85,8 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnLevelLoad(Transform[] playerSpawnPoints, Transform[] enemySpawnPoints)
 	{
+		if(enemySpawnPoints == null) { return } //TODO: temp
+
 		this.playerSpawnPoints = playerSpawnPoints;
 		this.enemySpawnPoints = enemySpawnPoints;
 
