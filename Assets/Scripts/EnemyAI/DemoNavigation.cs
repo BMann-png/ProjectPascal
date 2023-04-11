@@ -20,6 +20,7 @@ public class DemoNavigation : MonoBehaviour
     private void Start()
     {
 		nodes = FindObjectsByType<NavigationNode>(FindObjectsSortMode.None);
+		entity = GetComponent<Entity>();
         targetMovement = nodes[0].transform.position;
     }
 
