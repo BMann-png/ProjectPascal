@@ -87,7 +87,9 @@ public class DemoNavigation : MonoBehaviour
                 changedColor = true;
 
                 Packet packet = new Packet();
-
+                packet.type = 1;
+                packet.id = 29;
+                packet.action = new ActionPacket((byte)index);
                 NetworkManager.Instance.SendMessage(packet);
             }
         }
