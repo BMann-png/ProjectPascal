@@ -4,45 +4,61 @@ using UnityEngine;
 
 public class DemoNavigation : MonoBehaviour
 {
-    [SerializeField] NavigationNode[] nodes;
     [SerializeField] Material[] Colors;
-    private enum AIState 
+    private enum AIState
     {
         PATROL,
         IDLE,
         ACTION
-    }
-    private AIState activeState;
+	}
+	private AIState activeState;
+    private NavigationNode[] nodes;
     private Vector3 targetMovement;
+	private Entity entity;
     private int index = 0;
 
     private void Start()
     {
+		nodes = FindObjectsByType<NavigationNode>(FindObjectsSortMode.None);
+		entity = GetComponent<Entity>();
         targetMovement = nodes[0].transform.position;
     }
 
-    // Update is called once per frame
-    private void Update()
+	private void FixedUpdate()
+	{
+		Packet packet = new Packet();
+		packet.type = 0;
+		packet.id = entity.id;
+		packet.transform = new TransformPacket(transform);
+		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	// Update is called once per frame
+	private void Update()
     {
-        switch (activeState)
+        if (GameManager.Instance.IsServer)
         {
-            case AIState.PATROL:
-                Patrol();
-                if (Random.Range(0, 500) == 0)
-                {
-                    activeState = AIState.IDLE;
-                }
-                break;
-            case AIState.IDLE:
-                Idle();
-                break;
-            case AIState.ACTION:
-                Action();
-                break;
-            default:
-                break;
+            switch (activeState)
+            {
+                case AIState.PATROL:
+                    Patrol();
+                    if (Random.Range(0, 500) == 0)
+                    {
+                        activeState = AIState.IDLE;
+                    }
+                    break;
+                case AIState.IDLE:
+                    Idle();
+                    break;
+                case AIState.ACTION:
+                    Action();
+                    break;
+                default:
+                    break;
+            }
         }
     }
+
     private void Patrol()
     {
         transform.position += (targetMovement - transform.position).normalized * Time.deltaTime;
@@ -64,17 +80,31 @@ public class DemoNavigation : MonoBehaviour
 
     private void Action()
     {
-        bool changedColour = false;
-        Material newColour;
-        while (!changedColour){
-            newColour = Colors[Random.Range(0, Colors.Length)];
-            if (newColour.color != gameObject.GetComponent<MeshRenderer>().material.color)
+        bool changedColor = false;
+        Material newColor;
+        while (!changedColor)
+        {
+            var index = Random.Range(0, Colors.Length);
+
+            newColor = Colors[index];
+            if (newColor.color != GetComponent<MeshRenderer>().material.color)
             {
-                gameObject.GetComponent<MeshRenderer>().material.color = newColour.color;
-                changedColour = true;
+                GetComponent<MeshRenderer>().material = newColor;
+                changedColor = true;
+
+                Packet packet = new Packet();
+                packet.type = 1;
+                packet.id = entity.id;
+                packet.action = new ActionPacket((byte)index);
+                NetworkManager.Instance.SendMessage(packet);
             }
         }
 
         activeState = AIState.PATROL;
+    }
+
+    public void ChangeColor(int index)
+    {
+        GetComponent<MeshRenderer>().material = Colors[index];
     }
 }

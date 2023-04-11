@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -85,7 +84,9 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnLevelLoad(Transform[] playerSpawnPoints, Transform[] enemySpawnPoints)
 	{
-		if(enemySpawnPoints == null) { return; } //TODO: temp
+		entities[4] = Instantiate(prefabManager.Enemy, enemySpawnPoints[0].position, enemySpawnPoints[0].rotation).GetComponent<Entity>();
+		entities[4].id = 4;
+		entities[4].type = 4;
 
 		this.playerSpawnPoints = playerSpawnPoints;
 		this.enemySpawnPoints = enemySpawnPoints;
@@ -274,7 +275,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void Action(Packet action)
 	{
-
+		if (action.id != thisPlayer)
+		{
+			entities[action.id].DoAction(action.action);
+		}
 	}
 
 	public void Health(Packet health)
@@ -307,7 +311,7 @@ public class GameManager : Singleton<GameManager>
 		switch (packet.id)
 		{
 			default:
-			case 0: scene = "AITest"; break; //case 0: scene = "c1m1_Naptime"; break;
+			case 0: scene = "c1m1_Naptime"; break;
 			case 1: scene = "c1m2_Library"; break;
 			case 2: scene = "c1m3_Playground"; break;
 			case 3: scene = "c1m4_Cellar"; break;

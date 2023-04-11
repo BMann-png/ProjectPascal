@@ -40,7 +40,7 @@ public struct TransformPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct ActionPacket
 {
-	public ActionPacket(byte id, byte data)
+	public ActionPacket(byte data)
 	{
 		this.data = data;
 	}
@@ -51,7 +51,7 @@ public struct ActionPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HealthPacket
 {
-	public HealthPacket(byte id, byte data)
+	public HealthPacket(byte data)
 	{
 		this.data = data;
 	}
@@ -62,7 +62,7 @@ public struct HealthPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct InventoryPacket
 {
-	public InventoryPacket(byte id, byte slot, byte data)
+	public InventoryPacket(byte slot, byte data)
 	{
 		this.slot = slot;
 		this.data = data;
@@ -75,7 +75,7 @@ public struct InventoryPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct SpawnPacket
 {
-	public SpawnPacket(byte id, byte spawn)
+	public SpawnPacket(byte spawn)
 	{
 		this.spawn = spawn;
 	}
