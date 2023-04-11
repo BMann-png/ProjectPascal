@@ -84,10 +84,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnLevelLoad(Transform[] playerSpawnPoints, Transform[] enemySpawnPoints)
 	{
-		entities[29] = Instantiate(prefabManager.Enemy, Vector3.zero, Quaternion.identity).GetComponent<Entity>();
-		entities[29].id = 29;
-		entities[29].type = 4;
-		if (enemySpawnPoints == null || enemySpawnPoints.Length == 0) { return; } //TODO: temp
+		//entities[29] = Instantiate(prefabManager.Enemy, Vector3.zero, Quaternion.identity).GetComponent<Entity>();
+		//entities[29].id = 29;
+		//entities[29].type = 4;
+		//if (enemySpawnPoints == null || enemySpawnPoints.Length == 0) { return; } //TODO: temp
 
 		this.playerSpawnPoints = playerSpawnPoints;
 		this.enemySpawnPoints = enemySpawnPoints;
