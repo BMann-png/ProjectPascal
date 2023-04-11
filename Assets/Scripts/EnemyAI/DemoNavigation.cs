@@ -94,7 +94,7 @@ public class DemoNavigation : MonoBehaviour
 
                 Packet packet = new Packet();
                 packet.type = 1;
-                packet.id = 29;
+                packet.id = entity.id;
                 packet.action = new ActionPacket((byte)index);
                 NetworkManager.Instance.SendMessage(packet);
             }

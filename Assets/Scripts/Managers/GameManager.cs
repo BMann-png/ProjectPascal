@@ -276,7 +276,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void Action(Packet action)
 	{
-
+		if (action.id != thisPlayer)
+		{
+			entities[action.id].DoAction(action.action);
+		}
 	}
 
 	public void Health(Packet health)
