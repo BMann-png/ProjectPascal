@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Entity))]
 public class PlayerController : MonoBehaviour
 {
 	private static readonly float SPRINT_TIME = 3.0f;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
 	private static readonly float TRIP_MOD = 0.5f;
 
 	private CharacterController controller;
+	private Entity entity;
 	private Vector3 movement;
 
 	private bool sprinting = false;
@@ -22,10 +24,10 @@ public class PlayerController : MonoBehaviour
 	private float sprintCooldownTimer = 0.0f;
 	private float tripTimer = 0.0f;
 
-
-	private void OnValidate()
+	private void Awake()
 	{
 		controller = GetComponent<CharacterController>();
+		entity = GetComponent<Entity>();
 	}
 
 	private void FixedUpdate()
@@ -36,6 +38,16 @@ public class PlayerController : MonoBehaviour
 			sprinting = false;
 			sprintTimer = 0.0f;
 			tripTimer = TRIP_TIME;
+		}
+
+		if (movement.sqrMagnitude > 0.0f)
+		{
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -73,12 +85,5 @@ public class PlayerController : MonoBehaviour
 		movement *= tripped ? TRIP_MOD : 1.0f;
 
 		controller.Move(movement);
-
-		SendUpdate();
-	}
-
-	private void SendUpdate()
-	{
-		//TODO: send player transform
 	}
 }
