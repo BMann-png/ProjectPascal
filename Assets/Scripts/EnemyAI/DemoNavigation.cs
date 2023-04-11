@@ -4,25 +4,36 @@ using UnityEngine;
 
 public class DemoNavigation : MonoBehaviour
 {
-    [SerializeField] NavigationNode[] nodes;
     [SerializeField] Material[] Colors;
     private enum AIState
     {
         PATROL,
         IDLE,
         ACTION
-    }
-    private AIState activeState;
+	}
+	private AIState activeState;
+    private NavigationNode[] nodes;
     private Vector3 targetMovement;
+	private Entity entity;
     private int index = 0;
 
     private void Start()
     {
+		nodes = FindObjectsByType<NavigationNode>(FindObjectsSortMode.None);
         targetMovement = nodes[0].transform.position;
     }
 
-    // Update is called once per frame
-    private void Update()
+	private void FixedUpdate()
+	{
+		Packet packet = new Packet();
+		packet.type = 0;
+		packet.id = entity.id;
+		packet.transform = new TransformPacket(transform);
+		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	// Update is called once per frame
+	private void Update()
     {
         if (GameManager.Instance.IsServer)
         {
@@ -44,12 +55,6 @@ public class DemoNavigation : MonoBehaviour
                 default:
                     break;
             }
-
-            Packet packet = new Packet();
-            packet.type = 0;
-            packet.id = 29;
-            packet.transform = new TransformPacket(transform);
-            NetworkManager.Instance.SendMessage(packet);
         }
     }
 
