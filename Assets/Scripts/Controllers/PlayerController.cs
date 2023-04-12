@@ -96,8 +96,6 @@ public class PlayerController : MonoBehaviour
 
 	private void Shoot()
 	{
-		Quaternion rot = Camera.main.transform.rotation;
-		rot.eulerAngles += new Vector3(90.0f, 0.0f, 0.0f);
-		GameManager.Instance.Shoot(shoot.position, rot, 0);
+		GameManager.Instance.Shoot(0);
 	}
 }

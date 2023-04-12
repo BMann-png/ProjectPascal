@@ -238,19 +238,31 @@ public class GameManager : Singleton<GameManager>
 		inLobby = false;
 	}
 
-	public void Shoot(Vector3 position, Quaternion rotation, byte type)
+	public void Shoot(byte type)
 	{
-		byte id = projectileIndices.Pop();
+		if(IsServer)
+		{
+			byte id = projectileIndices.Pop();
 
-		entities[id] = Instantiate(prefabManager.Projectile, position, rotation).GetComponent<Entity>();
-		entities[id].id = id;
-		entities[id].type = 16;
-		entities[id].GetComponent<Projectile>().SetSpeed(100);
+			Entity entity = entities[thisPlayer];
 
-		Packet packet = new Packet();
-		packet.id = id;
-		packet.type = 6;
-		packet.spawn = new SpawnPacket(thisPlayer);
+			entities[id] = Instantiate(prefabManager.Projectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+			entities[id].id = id;
+			entities[id].type = 16;
+			entities[id].GetComponent<Projectile>().SetSpeed(100);
+
+			Packet packet = new Packet();
+			packet.id = id;
+			packet.type = 6;
+			packet.spawn = new SpawnPacket(thisPlayer);
+		}
+		else
+		{
+			Packet packet = new Packet();
+			packet.id = 255;
+			packet.type = 6;
+			packet.spawn = new SpawnPacket(thisPlayer);
+		}
 	}
 
 	public void Destroy(Entity obj)
@@ -384,12 +396,31 @@ public class GameManager : Singleton<GameManager>
 		switch (packet.type)
 		{
 			case 16:
-				Entity entity = entities[packet.spawn.spawn];
+				if(IsServer)
+				{
+					byte id = projectileIndices.Pop();
 
-				entities[packet.id] = Instantiate(prefabManager.Projectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
-				entities[packet.id].id = packet.id;
-				entities[packet.id].type = 16;
-				entities[packet.id].GetComponent<Projectile>().SetSpeed(100);
+					Entity entity = entities[thisPlayer];
+
+					entities[id] = Instantiate(prefabManager.Projectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+					entities[id].id = id;
+					entities[id].type = 16;
+					entities[id].GetComponent<Projectile>().SetSpeed(100);
+
+					Packet newPacket = new Packet();
+					newPacket.id = id;
+					newPacket.type = 6;
+					newPacket.spawn = new SpawnPacket(thisPlayer);
+				}
+				else if(packet.id != 255)
+				{
+					Entity entity = entities[packet.spawn.spawn];
+
+					entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+					entities[packet.id].id = packet.id;
+					entities[packet.id].type = 16;
+					entities[packet.id].GetComponent<Projectile>().SetSpeed(100);
+				}
 				break;
 		}
 	}

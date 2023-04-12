@@ -19,6 +19,9 @@ public class PrefabManager : MonoBehaviour
 	[SerializeField] private GameObject projectile;
 	public GameObject Projectile { get => projectile; }
 
+	[SerializeField] private GameObject networkProjectile;
+	public GameObject NetworkProjectile { get => networkProjectile; }
+
 	private void Awake()
 	{
 		DontDestroyOnLoad(gameObject);
