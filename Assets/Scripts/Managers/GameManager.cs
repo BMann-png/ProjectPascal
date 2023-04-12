@@ -7,6 +7,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
 struct TempEntity
@@ -29,6 +30,9 @@ public class GameManager : Singleton<GameManager>
 
 	private TempEntity[] tempPlayers;
 	private Entity[] entities;
+	private Stack<byte> enemyIndices = new Stack<byte>(35);
+	private Stack<byte> objectiveIndices = new Stack<byte>(10);
+	private Stack<byte> projectileIndices = new Stack<byte>(206);
 	private Transform[] playerSpawnPoints;
 	private Transform[] enemySpawnPoints;
 
@@ -50,11 +54,26 @@ public class GameManager : Singleton<GameManager>
 		};
 
 		entities = new Entity[256];
+
+		for (byte i = 4; i < 39; ++i)
+		{
+			enemyIndices.Push(i);
+		}
+
+		for (byte i = 39; i < 49; ++i)
+		{
+			objectiveIndices.Push(i);
+		}
+
+		for (byte i = 49; i < 255; ++i)
+		{
+			projectileIndices.Push(i);
+		}
 	}
 
 	private void Update()
 	{
-		if(IsServer && !inLobby)
+		if (IsServer && !inLobby)
 		{
 			//TODO: Run the game
 		}
@@ -68,7 +87,6 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	//TODO: only show level select and start game if owner
 	public void StartGame()
 	{
 		if (IsServer)
@@ -178,7 +196,7 @@ public class GameManager : Singleton<GameManager>
 				string steamName = "";
 				foreach (Friend f in members)
 				{
-					if(f.Id.Value == steamId)
+					if (f.Id.Value == steamId)
 					{
 						steamName = f.Name;
 						break;
@@ -205,6 +223,7 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
 				{
+					//TODO: Reveal level select and start
 					Packet packet = new Packet();
 					packet.type = 7;
 					packet.owner = new OwnerPacket(steamId);
@@ -221,10 +240,41 @@ public class GameManager : Singleton<GameManager>
 
 	public void Shoot(Vector3 position, Quaternion rotation, byte type)
 	{
-		entities[39] = Instantiate(prefabManager.Projectile, position, rotation).GetComponent<Entity>();
-		entities[39].id = 39;
-		entities[39].type = 16;
-		entities[39].GetComponent<Projectile>().SetSpeed(100);
+		byte id = projectileIndices.Pop();
+
+		entities[id] = Instantiate(prefabManager.Projectile, position, rotation).GetComponent<Entity>();
+		entities[id].id = id;
+		entities[id].type = 16;
+		entities[id].GetComponent<Projectile>().SetSpeed(100);
+
+		Packet packet = new Packet();
+		packet.id = id;
+		packet.type = 16;
+		packet.spawn = new SpawnPacket(thisPlayer);
+	}
+
+	public void Destroy(Entity obj)
+	{
+		if(obj.id > 3 && obj.id < 39)
+		{
+			enemyIndices.Push(obj.id);
+		}
+		else if(obj.id > 38 && obj.id < 49)
+		{
+			objectiveIndices.Push(obj.id);
+		}
+		else if(obj.id > 48 && obj.id < 255)
+		{
+			projectileIndices.Push(obj.id);
+		}
+
+		Packet packet = new Packet();
+		packet.id = obj.id;
+		packet.type = 7;
+
+		NetworkManager.Instance.SendMessage(packet);
+
+		Destroy(obj.gameObject);
 	}
 
 	//Callbacks
@@ -331,12 +381,40 @@ public class GameManager : Singleton<GameManager>
 
 	public void Spawn(Packet packet)
 	{
+		switch (packet.type)
+		{
+			case 16:
+				Entity entity = entities[packet.spawn.spawn];
 
+				entities[packet.id] = Instantiate(prefabManager.Projectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+				entities[packet.id].id = packet.id;
+				entities[packet.id].type = 16;
+				entities[packet.id].GetComponent<Projectile>().SetSpeed(100);
+				break;
+		}
+	}
+
+	public void Despawn(Packet packet)
+	{
+		if (packet.id > 3 && packet.id < 39)
+		{
+			enemyIndices.Push(packet.id);
+		}
+		else if (packet.id > 38 && packet.id < 49)
+		{
+			objectiveIndices.Push(packet.id);
+		}
+		else if (packet.id > 48 && packet.id < 255)
+		{
+			projectileIndices.Push(packet.id);
+		}
+
+		Destroy(entities[packet.id].gameObject);
 	}
 
 	public void OwnerChange(Packet packet)
 	{
-		if(packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
+		if (packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
 			IsServer = true;
 			//TODO: enable level select and start button

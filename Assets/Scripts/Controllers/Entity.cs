@@ -7,6 +7,8 @@ public class Entity : MonoBehaviour
 {
     [HideInInspector] public byte id;   //ID 0-3 is a player
                                         //ID 4-38 is an enemy
+										//ID 39-48 is an objective
+										//ID 49-254 is a projectile
                                         //ID of 255 is invalid
     [HideInInspector] public byte type; //Type decides what model/kind of entity this is
 										//Type 0 - Player model 1
