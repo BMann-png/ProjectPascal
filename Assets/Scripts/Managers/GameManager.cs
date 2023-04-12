@@ -240,13 +240,13 @@ public class GameManager : Singleton<GameManager>
 
 	public void Shoot(byte type)
 	{
-		if(IsServer)
+		if (IsServer)
 		{
 			byte id = projectileIndices.Pop();
 
 			Entity entity = entities[thisPlayer];
 
-			entities[id] = Instantiate(prefabManager.Projectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+			entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 			entities[id].id = id;
 			entities[id].type = 16;
 			entities[id].GetComponent<Projectile>().SetSpeed(100);
@@ -267,15 +267,15 @@ public class GameManager : Singleton<GameManager>
 
 	public void Destroy(Entity obj)
 	{
-		if(obj.id > 3 && obj.id < 39)
+		if (obj.id > 3 && obj.id < 39)
 		{
 			enemyIndices.Push(obj.id);
 		}
-		else if(obj.id > 38 && obj.id < 49)
+		else if (obj.id > 38 && obj.id < 49)
 		{
 			objectiveIndices.Push(obj.id);
 		}
-		else if(obj.id > 48 && obj.id < 255)
+		else if (obj.id > 48 && obj.id < 255)
 		{
 			projectileIndices.Push(obj.id);
 		}
@@ -396,13 +396,13 @@ public class GameManager : Singleton<GameManager>
 		switch (packet.type)
 		{
 			case 16:
-				if(IsServer)
+				if (IsServer && packet.id == 255)
 				{
 					byte id = projectileIndices.Pop();
 
-					Entity entity = entities[thisPlayer];
+					Entity entity = entities[packet.spawn.spawn];
 
-					entities[id] = Instantiate(prefabManager.Projectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+					entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					entities[id].type = 16;
 					entities[id].GetComponent<Projectile>().SetSpeed(100);
@@ -412,11 +412,11 @@ public class GameManager : Singleton<GameManager>
 					newPacket.type = 6;
 					newPacket.spawn = new SpawnPacket(thisPlayer);
 				}
-				else if(packet.id != 255)
+				else
 				{
 					Entity entity = entities[packet.spawn.spawn];
 
-					entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.transform.position, Quaternion.identity).GetComponent<Entity>();
+					entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 					entities[packet.id].id = packet.id;
 					entities[packet.id].type = 16;
 					entities[packet.id].GetComponent<Projectile>().SetSpeed(100);

@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_MOD = 1.5f;
 	private static readonly float TRIP_MOD = 0.5f;
 
-	[SerializeField] private Transform shoot;
-
 	private CharacterController controller;
 	private Entity entity;
 	private Vector3 movement;
@@ -79,11 +77,12 @@ public class PlayerController : MonoBehaviour
 
 		movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
 		movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
-		movement.y = 0.0f;
 
 		movement *= tripped ? TRIP_MOD : 1.0f;
 
 		controller.Move(movement);
+
+		entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90, transform.eulerAngles.y, 0);
 
 		if(Input.GetKeyDown(KeyCode.Mouse0))
 		{

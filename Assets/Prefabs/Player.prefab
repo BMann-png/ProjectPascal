@@ -179,6 +179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   type: 0
+  shoot: {fileID: 8236124805398159326}
 --- !u!1 &8291552485053260462
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,6 +31,9 @@ public class Entity : MonoBehaviour
 
 	private Vector3 targetPosition;
     private Vector3 targetRotation;
+	private float xRot;
+
+	public Transform shoot;
 
     private void Awake()
     {
@@ -50,7 +53,12 @@ public class Entity : MonoBehaviour
     public void SetTransform(TransformPacket tp)
     {
         targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
-        targetRotation = new Vector3(transform.rotation.x, tp.yRot, tp.zRot);
+        targetRotation = new Vector3(transform.rotation.x, tp.yRot, transform.rotation.z);
+
+		if (shoot != null)
+		{
+			shoot.eulerAngles = new Vector3(tp.xRot, transform.eulerAngles.y, 0);
+		}
     }
 
     //TODO: Actions, Health, Inventory

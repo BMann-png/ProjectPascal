@@ -20,8 +20,8 @@ public struct TransformPacket
 		xPos = t.position.x;
 		yPos = t.position.y;
 		zPos = t.position.z;
+		xRot = Camera.main.transform.eulerAngles.z;
 		yRot = t.rotation.y;
-		zRot = t.rotation.z;
 
 		//transform = t.position.x;
 		//transform += (int)(t.position.y * 10000.0f);
@@ -33,8 +33,8 @@ public struct TransformPacket
 	public float xPos;
 	public float yPos;
 	public float zPos;
+	public float xRot;
 	public float yRot;
-	public float zRot;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
