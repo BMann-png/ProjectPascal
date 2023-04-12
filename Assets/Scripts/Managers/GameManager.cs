@@ -224,7 +224,7 @@ public class GameManager : Singleton<GameManager>
 		entities[39] = Instantiate(prefabManager.Projectile, position, rotation).GetComponent<Entity>();
 		entities[39].id = 39;
 		entities[39].type = 16;
-		entities[39].GetComponent<Projectile>().SetSpeed(10);
+		entities[39].GetComponent<Projectile>().SetSpeed(100);
 	}
 
 	//Callbacks

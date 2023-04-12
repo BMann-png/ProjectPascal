@@ -57,7 +57,7 @@ public class Entity : MonoBehaviour
 
     public void DoAction(ActionPacket packet)
     {
-        GetComponent<DemoNavigation>().ChangeColor(packet.data);
+        GetComponent<EnemyController>().ChangeColor(packet.data);
         //if ((packet.data & RUN_FLAG) == RUN_FLAG)
         //{
         //    //do thing

@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
+
+[RequireComponent(typeof(Entity))]
 public class Projectile : MonoBehaviour
 {
-	private static readonly float LIFETIME = 10.0f;
+	private static readonly float LIFETIME = 5.0f;
+	private static LayerMask ENEMY_MASK;
+	private static LayerMask GROUND_MASK;
 
 	private new Rigidbody rigidbody;
 	private Entity entity;
 	private float timer;
-
+	bool dealsDamage;
 
 	private void Awake()
 	{
-		rigidbody= GetComponent<Rigidbody>();
+		rigidbody = GetComponent<Rigidbody>();
 		entity = GetComponent<Entity>();
 		timer = LIFETIME;
+		ENEMY_MASK = LayerMask.GetMask("Enemy");
+		GROUND_MASK = LayerMask.GetMask("Ground");
 	}
 
 	private void FixedUpdate()
@@ -41,18 +47,20 @@ public class Projectile : MonoBehaviour
 
 	public void SetSpeed(float speed)
 	{
-		rigidbody.AddForce(Vector3.forward * speed, ForceMode.VelocityChange);
+		dealsDamage = true;
+		rigidbody.AddForce(transform.up * speed, ForceMode.VelocityChange);
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.layer == LayerMask.GetMask("Enemy"))
+		//TODO: Darts should stick if normal is within a range
+
+		if (dealsDamage && 1 << collision.gameObject.layer == ENEMY_MASK.value)
 		{
-			//collision.gameObject.GetComponent<EnemyController>().Damage();
-		}
-		else if(collision.gameObject.layer == LayerMask.GetMask("Ground"))
-		{
+			//TODO: Deal damage
 			Destroy(gameObject);
 		}
+
+		dealsDamage = false;
 	}
 }

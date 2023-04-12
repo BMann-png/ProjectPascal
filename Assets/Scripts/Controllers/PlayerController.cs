@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		movement = Vector3.zero;
+		movement = Vector3.down * Time.deltaTime;
 
 		float vertInput = Input.GetAxis("Vertical");
 		float HoriInput = Input.GetAxis("Horizontal");
@@ -96,6 +96,8 @@ public class PlayerController : MonoBehaviour
 
 	private void Shoot()
 	{
-		GameManager.Instance.Shoot(shoot.position, shoot.rotation, 0);
+		Quaternion rot = Camera.main.transform.rotation;
+		rot.eulerAngles += new Vector3(90.0f, 0.0f, 0.0f);
+		GameManager.Instance.Shoot(shoot.position, rot, 0);
 	}
 }
