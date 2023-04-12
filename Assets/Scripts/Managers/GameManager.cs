@@ -395,7 +395,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		switch (packet.type)
 		{
-			case 16:
+			case 6:
 				if (IsServer && packet.id == 255)
 				{
 					byte id = projectileIndices.Pop();
