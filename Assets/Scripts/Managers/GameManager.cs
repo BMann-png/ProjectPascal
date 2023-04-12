@@ -249,7 +249,7 @@ public class GameManager : Singleton<GameManager>
 
 		Packet packet = new Packet();
 		packet.id = id;
-		packet.type = 16;
+		packet.type = 6;
 		packet.spawn = new SpawnPacket(thisPlayer);
 	}
 

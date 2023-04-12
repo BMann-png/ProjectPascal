@@ -440,6 +440,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 		catch
 		{
+			Packet packet = Marshal.PtrToStructure<Packet>(message);
 			Debug.Log("Unable to process message from socket server");
 		}
 	}
