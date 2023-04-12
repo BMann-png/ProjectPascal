@@ -42,20 +42,17 @@ public class PlayerController : MonoBehaviour
 			tripTimer = TRIP_TIME;
 		}
 
-		if (movement.sqrMagnitude > 0.0f)
-		{
-			Packet packet = new Packet();
-			packet.type = 0;
-			packet.id = entity.id;
-			packet.transform = new TransformPacket(transform);
+		Packet packet = new Packet();
+		packet.type = 0;
+		packet.id = entity.id;
+		packet.transform = new TransformPacket(transform);
 
-			NetworkManager.Instance.SendMessage(packet);
-		}
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	private void Update()
 	{
-		movement = Vector3.down * Time.deltaTime;
+		movement = Vector3.down * 2.0f * Time.deltaTime;
 
 		float vertInput = Input.GetAxis("Vertical");
 		float HoriInput = Input.GetAxis("Horizontal");

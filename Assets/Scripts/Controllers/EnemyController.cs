@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour
 
 	private void Patrol()
 	{
-		Vector3 move = (direction * MOVEMENT_SPEED + Vector3.down) * Time.deltaTime;
+		Vector3 move = (direction * MOVEMENT_SPEED + Vector3.down * 2.0f) * Time.deltaTime;
 
 		controller.Move(move);
 
