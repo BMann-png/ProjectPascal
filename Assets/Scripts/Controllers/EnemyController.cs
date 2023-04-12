@@ -41,6 +41,7 @@ public class EnemyController : MonoBehaviour
 		targetMovement = nodes[0].transform.position;
 		direction = (targetMovement - transform.position).normalized;
 	}
+
 	private void FixedUpdate()
 	{
 		Packet packet = new Packet();
