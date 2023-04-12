@@ -1,0 +1,153 @@
+fileFormatVersion: 2
+guid: b38fcb874e792cf4c953901634c51720
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Bars
+    100002: Bars.002
+    100004: Bars.003
+    100006: Bars.006
+    100008: //RootNode
+    100010: Ext_PG_GroundBase_01_01
+    100012: Ext_PG_GroundFence_01_01
+    100014: Ext_PG_GroundFence_01_02
+    100016: Ext_PG_GroundFence_01_03
+    100018: Ext_PG_GroundFence_01_04
+    100020: Ext_PG_GroundFenceFiller_01_01
+    100022: Ext_PG_GroundFenceFiller_01_02
+    100024: Ext_PG_GroundStairs_01_01
+    100026: Ext_PGG_Fence_01_05
+    400000: Bars
+    400002: Bars.002
+    400004: Bars.003
+    400006: Bars.006
+    400008: //RootNode
+    400010: Ext_PG_GroundBase_01_01
+    400012: Ext_PG_GroundFence_01_01
+    400014: Ext_PG_GroundFence_01_02
+    400016: Ext_PG_GroundFence_01_03
+    400018: Ext_PG_GroundFence_01_04
+    400020: Ext_PG_GroundFenceFiller_01_01
+    400022: Ext_PG_GroundFenceFiller_01_02
+    400024: Ext_PG_GroundStairs_01_01
+    400026: Ext_PGG_Fence_01_05
+    2100000: No Name
+    2300000: Bars
+    2300002: Bars.002
+    2300004: Bars.003
+    2300006: Bars.006
+    2300008: Ext_PG_GroundBase_01_01
+    2300010: Ext_PG_GroundFence_01_01
+    2300012: Ext_PG_GroundFence_01_02
+    2300014: Ext_PG_GroundFence_01_03
+    2300016: Ext_PG_GroundFence_01_04
+    2300018: Ext_PG_GroundFenceFiller_01_01
+    2300020: Ext_PG_GroundFenceFiller_01_02
+    2300022: Ext_PG_GroundStairs_01_01
+    2300024: Ext_PGG_Fence_01_05
+    3300000: Bars
+    3300002: Bars.002
+    3300004: Bars.003
+    3300006: Bars.006
+    3300008: Ext_PG_GroundBase_01_01
+    3300010: Ext_PG_GroundFence_01_01
+    3300012: Ext_PG_GroundFence_01_02
+    3300014: Ext_PG_GroundFence_01_03
+    3300016: Ext_PG_GroundFence_01_04
+    3300018: Ext_PG_GroundFenceFiller_01_01
+    3300020: Ext_PG_GroundFenceFiller_01_02
+    3300022: Ext_PG_GroundStairs_01_01
+    3300024: Ext_PGG_Fence_01_05
+    4300000: Ext_PG_GroundFenceFiller_01_02
+    4300002: Ext_PG_GroundFence_01_02
+    4300004: Bars.006
+    4300006: Ext_PG_GroundBase_01_01
+    4300008: Ext_PGG_Fence_01_05
+    4300010: Ext_PG_GroundFence_01_04
+    4300012: Bars.003
+    4300014: Ext_PG_GroundFenceFiller_01_01
+    4300016: Ext_PG_GroundFence_01_01
+    4300018: Bars.002
+    4300020: Ext_PG_GroundStairs_01_01
+    4300022: Ext_PG_GroundFence_01_03
+    4300024: Bars
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
