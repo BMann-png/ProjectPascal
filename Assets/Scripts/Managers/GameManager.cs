@@ -255,6 +255,8 @@ public class GameManager : Singleton<GameManager>
 			packet.id = id;
 			packet.type = 6;
 			packet.spawn = new SpawnPacket(thisPlayer);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 		else
 		{
@@ -262,6 +264,8 @@ public class GameManager : Singleton<GameManager>
 			packet.id = 255;
 			packet.type = 6;
 			packet.spawn = new SpawnPacket(thisPlayer);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -410,6 +414,8 @@ public class GameManager : Singleton<GameManager>
 				newPacket.id = id;
 				newPacket.type = 6;
 				newPacket.spawn = new SpawnPacket(thisPlayer);
+
+				NetworkManager.Instance.SendMessage(newPacket);
 			}
 			else
 			{
