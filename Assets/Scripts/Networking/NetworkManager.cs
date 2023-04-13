@@ -20,7 +20,7 @@ public struct TransformPacket
 		xPos = t.position.x;
 		yPos = t.position.y;
 		zPos = t.position.z;
-		xRot = Camera.main.transform.eulerAngles.z;
+		xRot = Camera.main.transform.eulerAngles.x + 90.0f;
 		yRot = t.rotation.y;
 
 		//transform = t.position.x;

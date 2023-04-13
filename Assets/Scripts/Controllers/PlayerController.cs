@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
 		controller.Move(movement);
 
-		entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90, transform.eulerAngles.y, 0);
+		entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
 
 		if(Input.GetKeyDown(KeyCode.Mouse0))
 		{
