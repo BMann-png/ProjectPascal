@@ -46,9 +46,10 @@ public class Entity : MonoBehaviour
         if ((id < 4 && GameManager.Instance.thisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
         {
             transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
-            transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, 0.3f);
-        }
-    }
+			transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, 0.3f);
+
+		}
+	}
 
     public void SetTransform(TransformPacket tp)
     {
@@ -57,7 +58,7 @@ public class Entity : MonoBehaviour
 
 		if (shoot != null)
 		{
-			shoot.eulerAngles = new Vector3(tp.xRot, 0, 0);
+			shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0);
 		}
     }
 
