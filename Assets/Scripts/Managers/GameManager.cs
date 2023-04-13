@@ -393,35 +393,33 @@ public class GameManager : Singleton<GameManager>
 
 	public void Spawn(Packet packet)
 	{
-		switch (packet.type)
+		if(packet.id > 48 && packet.id <= 255)
 		{
-			case 6: //TODO: check for id between 49 - 254
-				if (IsServer && packet.id == 255)
-				{
-					byte id = projectileIndices.Pop();
+			if (IsServer && packet.id == 255)
+			{
+				byte id = projectileIndices.Pop();
 
-					Entity entity = entities[packet.spawn.spawn];
+				Entity entity = entities[packet.spawn.spawn];
 
-					entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
-					entities[id].id = id;
-					entities[id].type = 16;
-					entities[id].GetComponent<Projectile>().SetSpeed(100);
+				entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[id].id = id;
+				entities[id].type = 16;
+				entities[id].GetComponent<Projectile>().SetSpeed(100);
 
-					Packet newPacket = new Packet();
-					newPacket.id = id;
-					newPacket.type = 6;
-					newPacket.spawn = new SpawnPacket(thisPlayer);
-				}
-				else
-				{
-					Entity entity = entities[packet.spawn.spawn];
+				Packet newPacket = new Packet();
+				newPacket.id = id;
+				newPacket.type = 6;
+				newPacket.spawn = new SpawnPacket(thisPlayer);
+			}
+			else
+			{
+				Entity entity = entities[packet.spawn.spawn];
 
-					entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
-					entities[packet.id].id = packet.id;
-					entities[packet.id].type = 16;
-					entities[packet.id].GetComponent<Projectile>().SetSpeed(100);
-				}
-				break;
+				entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[packet.id].id = packet.id;
+				entities[packet.id].type = 16;
+				entities[packet.id].GetComponent<Projectile>().SetSpeed(100);
+			}
 		}
 	}
 

@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		movement = Vector3.down * 2.0f * Time.deltaTime;
+		movement = Vector3.down * 10.0f * Time.deltaTime;
 
 		float vertInput = Input.GetAxis("Vertical");
 		float HoriInput = Input.GetAxis("Horizontal");
