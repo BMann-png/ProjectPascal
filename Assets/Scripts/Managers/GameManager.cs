@@ -413,7 +413,7 @@ public class GameManager : Singleton<GameManager>
 				Packet newPacket = new Packet();
 				newPacket.id = id;
 				newPacket.type = 6;
-				newPacket.spawn = new SpawnPacket(thisPlayer);
+				newPacket.spawn = packet.spawn;
 
 				NetworkManager.Instance.SendMessage(newPacket);
 			}
