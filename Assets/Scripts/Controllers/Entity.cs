@@ -57,7 +57,7 @@ public class Entity : MonoBehaviour
 
 		if (shoot != null)
 		{
-			shoot.eulerAngles = new Vector3(tp.xRot, transform.eulerAngles.y, 0);
+			shoot.eulerAngles = new Vector3(tp.xRot, 0, 0);
 		}
     }
 
