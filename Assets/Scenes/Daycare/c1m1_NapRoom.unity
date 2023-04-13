@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 59211512}
   - component: {fileID: 59211511}
   - component: {fileID: 59211510}
-  - component: {fileID: 59211509}
   m_Layer: 0
   m_Name: Node
   m_TagString: Untagged
@@ -143,19 +142,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!135 &59211509
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 59211508}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &59211510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3096,7 +3082,6 @@ GameObject:
   - component: {fileID: 1153006362}
   - component: {fileID: 1153006361}
   - component: {fileID: 1153006360}
-  - component: {fileID: 1153006359}
   m_Layer: 0
   m_Name: Node (2)
   m_TagString: Untagged
@@ -3104,19 +3089,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!135 &1153006359
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153006358}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1153006360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4709,7 +4681,6 @@ GameObject:
   - component: {fileID: 1713518111}
   - component: {fileID: 1713518110}
   - component: {fileID: 1713518109}
-  - component: {fileID: 1713518108}
   m_Layer: 0
   m_Name: Node (1)
   m_TagString: Untagged
@@ -4717,19 +4688,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!135 &1713518108
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1713518107}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1713518109
 MonoBehaviour:
   m_ObjectHideFlags: 0

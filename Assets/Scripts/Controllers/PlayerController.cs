@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		movement = Vector3.zero;
+		movement = Vector3.down * 2.0f * Time.deltaTime;
 
 		float vertInput = Input.GetAxis("Vertical");
 		float HoriInput = Input.GetAxis("Horizontal");
@@ -80,7 +80,6 @@ public class PlayerController : MonoBehaviour
 
 		movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
 		movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
-		movement.y = 0.0f;
 
 		movement *= tripped ? TRIP_MOD : 1.0f;
 
