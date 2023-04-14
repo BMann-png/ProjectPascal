@@ -417,7 +417,7 @@ public class GameManager : Singleton<GameManager>
 
 				NetworkManager.Instance.SendMessage(newPacket);
 			}
-			else
+			else if (packet.id != 255)
 			{
 				Entity entity = entities[packet.spawn.spawn];
 
