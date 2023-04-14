@@ -51,21 +51,13 @@ public class Entity : MonoBehaviour
 
     public void SetTransform(TransformPacket tp)
     {
-		Vector3 pos = new Vector3();
-		pos.z = tp.position / 10000000000.0f;
-		pos.y = (tp.position - pos.z) / 100000.0f;
-		pos.x = tp.position - pos.y;
-
-		float yRot = tp.rotation / 100000.0f;
-		float xRot = tp.rotation - yRot;
-
-		targetPosition = pos;
-        targetRotation = yRot;
-		transform.eulerAngles = new Vector3(0.0f, yRot, 0.0f); //TODO: Lerp smoothly
+		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
+        targetRotation = tp.yRot;
+		transform.eulerAngles = new Vector3(0.0f, tp.yRot, 0.0f); //TODO: Lerp smoothly
 
 		if(shoot != null)
 		{
-			shoot.eulerAngles = new Vector3(xRot, yRot, 0.0f);
+			shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
 		}
     }
 
