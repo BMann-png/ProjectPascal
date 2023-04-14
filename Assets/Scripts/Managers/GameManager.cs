@@ -385,7 +385,7 @@ public class GameManager : Singleton<GameManager>
 		switch (packet.id)
 		{
 			default:
-			case 0: scene = "c1m1_Naptime"; break;
+			case 0: scene = "c1m1_NapRoom"; break;
 			case 1: scene = "c1m2_Library"; break;
 			case 2: scene = "c1m3_Playground"; break;
 			case 3: scene = "c1m4_Cellar"; break;
