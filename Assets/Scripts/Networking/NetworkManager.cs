@@ -17,24 +17,16 @@ public struct TransformPacket
 {
 	public TransformPacket(Transform t)
 	{
-		xPos = t.position.x;
-		yPos = t.position.y;
-		zPos = t.position.z;
-		xRot = Camera.main.transform.eulerAngles.x + 90.0f;
-		yRot = t.rotation.y;
+		position = t.position.x;
+		position += (int)(t.position.y * 100000.0f);
+		position += (int)(t.position.z * 10000000000.0f);
 
-		//transform = t.position.x;
-		//transform += (int)(t.position.y * 10000.0f);
-		//transform += (int)(t.position.z * 100000000.0f);
-		//transform += (int)(t.rotation.y * 1000000000000.0f);
-		//transform += (int)(t.rotation.z * 10000000000000000.0f);
+		rotation = Camera.main.transform.eulerAngles.x + 90.0f;
+		rotation += (int)(t.eulerAngles.y * 100000.0f);
 	}
 
-	public float xPos;
-	public float yPos;
-	public float zPos;
-	public float xRot;
-	public float yRot;
+	public float position;
+	public float rotation;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]

@@ -30,15 +30,14 @@ public class Entity : MonoBehaviour
 										//Type 16 - Projectile
 
 	private Vector3 targetPosition;
-    private Vector3 targetRotation;
-	private float xRot;
+    private float targetRotation;
 
 	public Transform shoot;
 
     private void Awake()
     {
         targetPosition = transform.position;
-        targetRotation = transform.eulerAngles;
+        targetRotation = transform.eulerAngles.y;
     }
 
     private void Update()
@@ -46,19 +45,27 @@ public class Entity : MonoBehaviour
         if ((id < 4 && GameManager.Instance.thisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
         {
             transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
-			transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, 0.3f);
-
+			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
 		}
 	}
 
     public void SetTransform(TransformPacket tp)
     {
-        targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
-        targetRotation = new Vector3(transform.rotation.x, tp.yRot, transform.rotation.z);
+		Vector3 pos = new Vector3();
+		pos.z = tp.position / 10000000000.0f;
+		pos.y = (tp.position - pos.z) / 100000.0f;
+		pos.x = tp.position - pos.y;
 
-		if (shoot != null)
+		float yRot = tp.rotation / 100000.0f;
+		float xRot = tp.rotation - yRot;
+
+		targetPosition = pos;
+        targetRotation = yRot;
+		transform.eulerAngles = new Vector3(0.0f, yRot, 0.0f); //TODO: Lerp smoothly
+
+		if(shoot != null)
 		{
-			shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0);
+			shoot.eulerAngles = new Vector3(xRot, yRot, 0.0f);
 		}
     }
 
