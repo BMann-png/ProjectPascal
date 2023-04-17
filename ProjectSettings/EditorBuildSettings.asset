@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/Scenes/Menus/MainMenu.unity
     guid: 7674f8d9d6b9d9e45a0b3cdf8b9c0007
   - enabled: 0
     path: Assets/Scenes/Daycare/c1m1_NapTime.unity
@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/Scenes/AITest.unity
     guid: 06c3d01a5c3b0fd4ba23d3bc4215b4fb
   - enabled: 1
-    path: Assets/Scenes/Lobby.unity
+    path: Assets/Scenes/Menus/Lobby.unity
     guid: 4975a78081d086f46bcedf6db5f63050
   - enabled: 1
     path: Assets/Scenes/Daycare/c1m1_NapRoom.unity
