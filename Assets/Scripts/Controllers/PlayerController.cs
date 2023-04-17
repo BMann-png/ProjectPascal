@@ -40,20 +40,17 @@ public class PlayerController : MonoBehaviour
 			tripTimer = TRIP_TIME;
 		}
 
-		if (movement.sqrMagnitude > 0.0f)
-		{
-			Packet packet = new Packet();
-			packet.type = 0;
-			packet.id = entity.id;
-			packet.transform = new TransformPacket(transform);
+		Packet packet = new Packet();
+		packet.type = 0;
+		packet.id = entity.id;
+		packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
 
-			NetworkManager.Instance.SendMessage(packet);
-		}
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	private void Update()
 	{
-		movement = Vector3.down * 2.0f * Time.deltaTime;
+		movement = Vector3.down * 10.0f * Time.deltaTime;
 
 		float vertInput = Input.GetAxis("Vertical");
 		float HoriInput = Input.GetAxis("Horizontal");
@@ -84,5 +81,17 @@ public class PlayerController : MonoBehaviour
 		movement *= tripped ? TRIP_MOD : 1.0f;
 
 		controller.Move(movement);
+
+		entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
+
+		if(Input.GetKeyDown(KeyCode.Mouse0))
+		{
+			Shoot();
+		}
+	}
+
+	private void Shoot()
+	{
+		GameManager.Instance.Shoot(0);
 	}
 }
