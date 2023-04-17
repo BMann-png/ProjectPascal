@@ -422,6 +422,7 @@ public class GameManager : Singleton<GameManager>
 				Entity entity = entities[packet.spawn.spawn];
 
 				//TODO: Check rotation of entity.shoot
+				//"(87.52, 295.93, 180.00)"
 				entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[packet.id].id = packet.id;
 				entities[packet.id].type = 16;
