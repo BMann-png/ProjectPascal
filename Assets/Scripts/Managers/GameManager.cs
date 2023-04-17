@@ -341,18 +341,12 @@ public class GameManager : Singleton<GameManager>
 
 	public void ReceiveTransform(Packet transform)
 	{
-		if (transform.id != thisPlayer)
-		{
-			entities[transform.id].SetTransform(transform.transform);
-		}
+		entities[transform.id].SetTransform(transform.transform);
 	}
 
 	public void Action(Packet action)
 	{
-		if (action.id != thisPlayer)
-		{
-			entities[action.id].DoAction(action.action);
-		}
+		entities[action.id].DoAction(action.action);
 	}
 
 	public void Health(Packet health)

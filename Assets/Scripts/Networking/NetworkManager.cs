@@ -52,6 +52,9 @@ public struct HealthPacket
 	}
 
 	public byte data;
+	//FOR PLAYERS:
+	//0 - sprint
+	//1 - stop sprint
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]

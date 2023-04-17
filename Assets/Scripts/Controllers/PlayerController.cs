@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_MOD = 1.5f;
 	private static readonly float TRIP_MOD = 0.5f;
 
+	public static readonly Vector3 SPRINT_SCALE = Vector3.one;
+	public static readonly Vector3 CRAWL_SCALE = new Vector3(1.0f, 0.5f, 1.0f);
+
 	private CharacterController controller;
 	private Entity entity;
 	private Vector3 movement;
@@ -28,6 +31,7 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
+		transform.localScale = CRAWL_SCALE;
 	}
 
 	private void FixedUpdate()
@@ -38,6 +42,14 @@ public class PlayerController : MonoBehaviour
 			sprinting = false;
 			sprintTimer = 0.0f;
 			tripTimer = TRIP_TIME;
+			transform.localScale = CRAWL_SCALE;
+
+			Packet action = new Packet();
+			action.type = 1;
+			action.id = entity.id;
+			action.action = new ActionPacket(1);
+
+			NetworkManager.Instance.SendMessage(action);
 		}
 
 		Packet packet = new Packet();
@@ -64,15 +76,31 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
 		{
 			sprinting = true;
+			transform.localScale = SPRINT_SCALE;
 			sprintTimer = SPRINT_TIME;
 			sprintCooldownTimer = SPRINT_COOLDOWN;
+
+			Packet packet = new Packet();
+			packet.type = 1;
+			packet.id = entity.id;
+			packet.action = new ActionPacket(0);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 
 		if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
 		{
 			if(sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
 			sprinting = false;
+			transform.localScale = CRAWL_SCALE;
 			sprintTimer = 0.0f;
+
+			Packet packet = new Packet();
+			packet.type = 1;
+			packet.id = entity.id;
+			packet.action = new ActionPacket(1);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 
 		movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);

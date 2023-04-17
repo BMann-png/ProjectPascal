@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 8291552484210884444}
   - component: {fileID: 8291552484210884445}
   - component: {fileID: 8291552484210884446}
-  - component: {fileID: 8291552484210884447}
   - component: {fileID: 7989531212208756394}
   m_Layer: 3
   m_Name: NetworkPlayer
@@ -112,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 8291552484210884512}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.08, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3937768741994702941}
@@ -169,20 +168,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &8291552484210884447
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8291552484210884512}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7989531212208756394
 MonoBehaviour:
   m_ObjectHideFlags: 0

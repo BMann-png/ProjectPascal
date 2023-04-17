@@ -235,6 +235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   type: 0
+  shoot: {fileID: 0}
 --- !u!114 &-2614088611639962923
 MonoBehaviour:
   m_ObjectHideFlags: 0

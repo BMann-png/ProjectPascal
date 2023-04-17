@@ -69,16 +69,21 @@ public class Entity : MonoBehaviour
 		}
     }
 
-    //TODO: Actions, Health, Inventory
-
-    const byte RUN_FLAG = 0b00000001;
+    //TODO: Health, Inventory
 
     public void DoAction(ActionPacket packet)
     {
-        GetComponent<EnemyController>().ChangeColor(packet.data);
-        //if ((packet.data & RUN_FLAG) == RUN_FLAG)
-        //{
-        //    //do thing
-        //}
+		if(id < 4)
+		{
+			switch(packet.data)
+			{
+				case 0: transform.localScale = PlayerController.SPRINT_SCALE; break;
+				case 1: transform.localScale = PlayerController.CRAWL_SCALE; break;
+			}
+		}
+		else if (id < 15)
+		{
+			GetComponent<EnemyController>().ChangeColor(packet.data);
+		}
     }
 }
