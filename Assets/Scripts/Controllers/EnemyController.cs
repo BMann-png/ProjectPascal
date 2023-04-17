@@ -47,7 +47,7 @@ public class EnemyController : MonoBehaviour
 		Packet packet = new Packet();
 		packet.type = 0;
 		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform);
+		packet.transform = new TransformPacket(transform, 0.0f);
 		NetworkManager.Instance.SendMessage(packet);
 	}
 

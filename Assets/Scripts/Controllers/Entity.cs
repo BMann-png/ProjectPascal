@@ -53,11 +53,19 @@ public class Entity : MonoBehaviour
     {
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
         targetRotation = tp.yRot;
-		transform.eulerAngles = new Vector3(0.0f, tp.yRot, 0.0f); //TODO: Lerp smoothly
 
-		if(shoot != null)
+		if(type == 16)
 		{
-			shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
+			transform.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f); //TODO: Lerp smoothly
+		}
+		else
+		{
+			transform.eulerAngles = new Vector3(0.0f, tp.yRot, 0.0f); //TODO: Lerp smoothly
+
+			if (shoot != null)
+			{
+				shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
+			}
 		}
     }
 

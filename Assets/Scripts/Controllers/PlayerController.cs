@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 		Packet packet = new Packet();
 		packet.type = 0;
 		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform);
+		packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
 
 		NetworkManager.Instance.SendMessage(packet);
 	}

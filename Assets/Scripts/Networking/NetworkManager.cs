@@ -15,13 +15,13 @@ using UnityEngine;
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct TransformPacket
 {
-	public TransformPacket(Transform t)
+	public TransformPacket(Transform t, float x)
 	{
 		xPos = t.position.x;
 		yPos = t.position.y;
 		zPos = t.position.z;
 
-		xRot = Camera.main.transform.eulerAngles.x + 90.0f;
+		xRot = x;
 		yRot = t.eulerAngles.y;
 	}
 
