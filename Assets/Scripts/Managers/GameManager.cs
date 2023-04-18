@@ -317,6 +317,7 @@ public class GameManager : Singleton<GameManager>
 				entities[i].id = i;
 				entities[i].type = i;
 				entities[i].GetComponent<LobbyPlayer>().name.text = player.Name;
+				entities[i].SetModel();
 
 				lobby.SetData("Player" + i, player.Id.Value.ToString());
 				break;
