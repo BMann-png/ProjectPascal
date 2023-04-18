@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    [HideInInspector] public byte id;   //ID 0-3 is a player
-                                        //ID 4-38 is an enemy
+	[HideInInspector] public byte id;   //ID 0-3 is a player
+										//ID 4-38 is an enemy
 										//ID 39-48 is an objective
 										//ID 49-254 is a projectile
-                                        //ID of 255 is invalid
-    [HideInInspector] public byte type; //Type decides what model/kind of entity this is
+										//ID of 255 is invalid
+	[HideInInspector] public byte type; //Type decides what model/kind of entity this is
 										//Type 0 - Player model 1
 										//Type 1 - Player model 2
 										//Type 2 - Player model 3
@@ -30,31 +30,32 @@ public class Entity : MonoBehaviour
 										//Type 16 - Projectile
 
 	private Vector3 targetPosition;
-    private float targetRotation;
+	private float targetRotation;
 
 	public Transform shoot;
+	[HideInInspector] public GameObject model;
 
-    private void Awake()
-    {
-        targetPosition = transform.position;
-        targetRotation = transform.eulerAngles.y;
-    }
+	private void Awake()
+	{
+		targetPosition = transform.position;
+		targetRotation = transform.eulerAngles.y;
+	}
 
-    private void Update()
-    {
-        if ((id < 4 && GameManager.Instance.thisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
-        {
-            transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
+	private void Update()
+	{
+		if ((id < 4 && GameManager.Instance.thisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
+		{
+			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
 		}
 	}
 
-    public void SetTransform(TransformPacket tp)
-    {
+	public void SetTransform(TransformPacket tp)
+	{
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
-        targetRotation = tp.yRot;
+		targetRotation = tp.yRot;
 
-		if(type == 16)
+		if (type == 16)
 		{
 			transform.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f); //TODO: Lerp smoothly
 		}
@@ -67,18 +68,55 @@ public class Entity : MonoBehaviour
 				shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
 			}
 		}
-    }
+	}
 
-    //TODO: Actions, Health, Inventory
+	public void SetModel()
+	{
+		//TODO: Check for existing model
 
-    const byte RUN_FLAG = 0b00000001;
+		if (id < 4)
+		{
+			model = Instantiate(GameManager.Instance.PrefabManager.PlayerModels[id], transform);
+		}
+		else if (id < 15)
+		{
+			model = Instantiate(GameManager.Instance.PrefabManager.EnemyModels[id - 4], transform);
+		}
+	}
 
-    public void DoAction(ActionPacket packet)
-    {
-        GetComponent<EnemyController>().ChangeColor(packet.data);
-        //if ((packet.data & RUN_FLAG) == RUN_FLAG)
-        //{
-        //    //do thing
-        //}
-    }
+	//TODO: Health, Inventory
+
+	public void DoAction(ActionPacket packet)
+	{
+		if (id < 4)
+		{
+			switch (packet.data)
+			{
+				case 0:
+					{
+						model.transform.localPosition = Vector3.zero;
+						model.transform.localRotation = Quaternion.identity;
+						CapsuleCollider collider = GetComponent<CapsuleCollider>();
+						collider.height = 2.2f;
+						collider.radius = 0.3f;
+						collider.center = Vector3.up * 1.1f;
+					}
+					break;
+				case 1:
+					{
+						model.transform.localPosition = new Vector3(0.0f, 0.25f, -1.0f);
+						model.transform.localRotation = Quaternion.AngleAxis(90, Vector3.right);
+						CapsuleCollider collider = GetComponent<CapsuleCollider>();
+						collider.height = 1.0f;
+						collider.radius = 0.5f;
+						collider.center = Vector3.up * 0.5f;
+					}
+					break;
+			}
+		}
+		else if (id < 15)
+		{
+			GetComponent<EnemyController>().ChangeColor(packet.data);
+		}
+	}
 }

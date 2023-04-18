@@ -114,6 +114,6 @@ public class EnemyController : MonoBehaviour
 
 	public void ChangeColor(byte index)
 	{
-		GetComponent<MeshRenderer>().material.color = colors[index];
+		GetComponentInChildren<MeshRenderer>().material.color = colors[index];
 	}
 }

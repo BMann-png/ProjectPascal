@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
 {
+	[SerializeField] private GameObject[] playerModels;
+	public GameObject[] PlayerModels { get => playerModels; }
+
+	[SerializeField] private GameObject[] enemyModels;
+	public GameObject[] EnemyModels { get => enemyModels; }
+
 	[SerializeField] private GameObject player;
 	public GameObject Player { get => player; }
 
