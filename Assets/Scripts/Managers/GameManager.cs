@@ -37,6 +37,7 @@ public class GameManager : Singleton<GameManager>
 	private Transform[] enemySpawnPoints;
 
 	private PrefabManager prefabManager;
+	public PrefabManager PrefabManager { get => prefabManager; }
 
 	public byte thisPlayer { get; private set; } = 255;
 
@@ -105,6 +106,7 @@ public class GameManager : Singleton<GameManager>
 		entities[4] = Instantiate(prefabManager.Enemy, enemySpawnPoints[0].position, enemySpawnPoints[0].rotation).GetComponent<Entity>();
 		entities[4].id = 4;
 		entities[4].type = 4;
+		entities[4].SetModel();
 
 		this.playerSpawnPoints = playerSpawnPoints;
 		this.enemySpawnPoints = enemySpawnPoints;
@@ -116,14 +118,16 @@ public class GameManager : Singleton<GameManager>
 				if (e.id == thisPlayer)
 				{
 					entities[e.id] = Instantiate(prefabManager.Player, playerSpawnPoints[e.id].position, playerSpawnPoints[e.id].rotation).GetComponent<Entity>();
+					entities[e.id].id = e.id;
+					entities[e.id].type = e.type;
 				}
 				else
 				{
 					entities[e.id] = Instantiate(prefabManager.NetworkPlayer, playerSpawnPoints[e.id].position, playerSpawnPoints[e.id].rotation).GetComponent<Entity>();
+					entities[e.id].id = e.id;
+					entities[e.id].type = e.type;
+					entities[e.id].SetModel();
 				}
-
-				entities[e.id].id = e.id;
-				entities[e.id].type = e.type;
 			}
 		}
 	}
@@ -164,6 +168,7 @@ public class GameManager : Singleton<GameManager>
 			entities[0].id = 0;
 			entities[0].type = 0;
 			entities[0].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
+			entities[0].SetModel();
 
 			thisPlayer = 0;
 
@@ -188,6 +193,7 @@ public class GameManager : Singleton<GameManager>
 						entities[thisPlayer].id = thisPlayer;
 						entities[thisPlayer].type = thisPlayer;
 						entities[thisPlayer].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
+						entities[thisPlayer].SetModel();
 					}
 
 					continue;
@@ -207,6 +213,7 @@ public class GameManager : Singleton<GameManager>
 				entities[i].id = i;
 				entities[i].type = i;
 				entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
+				entities[i].SetModel();
 			}
 		}
 	}
