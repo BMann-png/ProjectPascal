@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_MOD = 1.5f;
 	private static readonly float TRIP_MOD = 0.5f;
 
+	[SerializeField] private new Transform camera;
 	private CharacterController controller;
 	private Entity entity;
 	private Vector3 movement;
@@ -101,6 +102,8 @@ public class PlayerController : MonoBehaviour
 		controller.radius = 0.3f;
 		controller.center = Vector2.up * 1.1f;
 
+		camera.localPosition = Vector3.up * 1.85f;
+
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = entity.id;
@@ -117,6 +120,8 @@ public class PlayerController : MonoBehaviour
 		controller.height = 1.0f;
 		controller.radius = 0.5f;
 		controller.center = Vector2.up * 0.5f;
+
+		camera.localPosition = new Vector3(0.0f, 0.75f, 0.25f);
 
 		Packet packet = new Packet();
 		packet.type = 1;

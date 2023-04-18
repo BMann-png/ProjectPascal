@@ -33,7 +33,7 @@ public class Entity : MonoBehaviour
 	private float targetRotation;
 
 	public Transform shoot;
-	public GameObject model;
+	[HideInInspector] public GameObject model;
 
 	private void Awake()
 	{
