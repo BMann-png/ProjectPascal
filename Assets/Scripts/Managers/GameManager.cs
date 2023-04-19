@@ -243,7 +243,6 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
 				{
-					//TODO: Reveal levelNum select and start
 					Packet packet = new Packet();
 					packet.type = 7;
 					packet.owner = new OwnerPacket(steamId);
@@ -473,7 +472,6 @@ public class GameManager : Singleton<GameManager>
 		if (packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
 			IsServer = true;
-			//TODO: enable levelNum select and start button
 		}
 	}
 }

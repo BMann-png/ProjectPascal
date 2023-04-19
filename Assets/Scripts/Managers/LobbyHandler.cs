@@ -16,8 +16,16 @@ public class LobbyHandler : MonoBehaviour
 	private void Awake()
 	{
 		GameManager.Instance.OnJoinLobby(spawnPoints);
+	}
 
-		if(!GameManager.Instance.IsServer)
+	private void Update()
+	{
+		if (GameManager.Instance.IsServer)
+		{
+			startButton.SetActive(true);
+			levelSelect.SetActive(true);
+		}
+		else
 		{
 			startButton.SetActive(false);
 			levelSelect.SetActive(false);
