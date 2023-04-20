@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +6,8 @@ using static SceneLoader;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
+	[SerializeField] private GameObject loadingScreen;
+
 	public delegate void OnSceneLoad();
 
 	OnSceneLoad onSceneLoad;
@@ -19,10 +20,10 @@ public class SceneLoader : Singleton<SceneLoader>
 		SceneManager.sceneLoaded += SceneLoaded;
 	}
 
-	//TODO: Loading screen
 	//TODO: Wait for all players to load
 	public void LoadScene(string sceneName)
 	{
+		loadingScreen.SetActive(true);
 		SceneManager.LoadScene(sceneName);
 	}
 
@@ -34,5 +35,6 @@ public class SceneLoader : Singleton<SceneLoader>
 	public void SceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if(onSceneLoad != null) { onSceneLoad(); onSceneLoad = null; }
+		loadingScreen.SetActive(false);
 	}
 }
