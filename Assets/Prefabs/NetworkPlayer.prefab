@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8291552484210884444}
   - component: {fileID: 8915607943849850849}
   - component: {fileID: 4284465413645761073}
+  - component: {fileID: 1304654699830157109}
   m_Layer: 3
   m_Name: NetworkPlayer
   m_TagString: Untagged
@@ -64,6 +65,21 @@ MonoBehaviour:
   type: 0
   shoot: {fileID: 5097851527257588529}
   model: {fileID: 0}
+--- !u!114 &1304654699830157109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8291552484210884512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e3db2f3bbbab98498e7b3cb95d80913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  primaryWeapons: []
+  secondaryWeapons: []
+  pacifier: {fileID: 0}
 --- !u!1 &8759622194776314519
 GameObject:
   m_ObjectHideFlags: 0
