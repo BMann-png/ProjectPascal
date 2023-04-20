@@ -20,6 +20,7 @@ public class GameManager : Singleton<GameManager>
 
 	private byte[] tempPlayers;
 	private Entity[] entities;
+	private Transform[] lobbySpawnpoints;
 	private Stack<byte> enemyIndices = new Stack<byte>(30);
 	private Stack<byte> objectiveIndices = new Stack<byte>(10);
 	private Stack<byte> projectileIndices = new Stack<byte>(206);
@@ -190,6 +191,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnJoinLobby(Transform[] spawnPoints)
 	{
+		lobbySpawnpoints = spawnPoints;
 		inLobby = true;
 		PlayerCount = 1;
 
@@ -339,7 +341,10 @@ public class GameManager : Singleton<GameManager>
 
 			if (steamId == 0)
 			{
-				Transform transform = level.GetPlayerSpawn(i);
+				Transform transform;
+				if (inLobby) { transform = lobbySpawnpoints[i]; }
+				else { transform = level.GetPlayerSpawn(i); }
+
 				entities[i] = Instantiate(prefabManager.LobbyPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 				entities[i].id = i;
 				entities[i].GetComponent<LobbyPlayer>().name.text = player.Name;

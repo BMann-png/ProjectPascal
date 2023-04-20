@@ -29,7 +29,7 @@ public class Inventory : MonoBehaviour
 	{
 		if (entity.id == GameManager.Instance.ThisPlayer)
 		{
-			float scroll = Input.GetAxis("Scroll");
+			float scroll = Input.GetAxis("Mouse ScrollWheel");
 			if (scroll < 0.0f) { equippedItem = (byte)(++equippedItem % 3); }
 			else if (scroll > 0.0f) { equippedItem = (byte)(--equippedItem % 3); }
 
