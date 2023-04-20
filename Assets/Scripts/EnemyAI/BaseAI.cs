@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class BaseAI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] Perception playerPerception;
+    [SerializeField] Perception allyPerception;
+
+    BAIStateMachine stateMachine = new BAIStateMachine();
+
+    private void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
