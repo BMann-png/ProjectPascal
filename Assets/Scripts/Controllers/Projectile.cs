@@ -7,6 +7,8 @@ using static UnityEngine.EventSystems.EventTrigger;
 [RequireComponent(typeof(Entity))]
 public class Projectile : MonoBehaviour
 {
+	[SerializeField] private float speed = 100f;
+	
 	private static readonly float LIFETIME = 5.0f;
 	private static LayerMask ENEMY_MASK;
 	private static LayerMask GROUND_MASK;
@@ -45,7 +47,7 @@ public class Projectile : MonoBehaviour
 		}
     }
 
-	public void SetSpeed(float speed)
+	public void SetSpeed()
 	{
 		dealsDamage = true;
 		rigidbody.AddForce(transform.up * speed, ForceMode.VelocityChange);

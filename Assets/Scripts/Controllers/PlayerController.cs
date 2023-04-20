@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private new Transform camera;
 	private CharacterController controller;
 	private Entity entity;
+	private Weapon weapon;
 	private Vector3 movement;
 
 	private bool sprinting = false;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
+		weapon = GetComponent<Weapon>();
 	}
 
 	private void FixedUpdate()
@@ -133,6 +135,6 @@ public class PlayerController : MonoBehaviour
 
 	private void Shoot()
 	{
-		GameManager.Instance.Shoot(0);
+		weapon.Shoot();
 	}
 }

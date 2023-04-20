@@ -22,11 +22,11 @@ public class PrefabManager : MonoBehaviour
 	[SerializeField] private GameObject enemy;
 	public GameObject Enemy { get => enemy; }
 
-	[SerializeField] private GameObject projectile;
-	public GameObject Projectile { get => projectile; }
+	[SerializeField] private GameObject[] projectiles;
+	public GameObject[] Projectiles { get => projectiles; }
 
-	[SerializeField] private GameObject networkProjectile;
-	public GameObject NetworkProjectile { get => networkProjectile; }
+	[SerializeField] private GameObject[] networkProjectiles;
+	public GameObject[] NetworkProjectiles { get => networkProjectiles; }
 
 	private void Awake()
 	{
