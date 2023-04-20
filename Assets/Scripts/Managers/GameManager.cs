@@ -84,10 +84,6 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnLevelLoad(Transform[] playerSpawnPoints, Transform[] enemySpawnPoints)
 	{
-		entities[4] = Instantiate(prefabManager.Enemy, enemySpawnPoints[0].position, enemySpawnPoints[0].rotation).GetComponent<Entity>();
-		entities[4].id = 4;
-		entities[4].type = 4;
-
 		this.playerSpawnPoints = playerSpawnPoints;
 		this.enemySpawnPoints = enemySpawnPoints;
 
