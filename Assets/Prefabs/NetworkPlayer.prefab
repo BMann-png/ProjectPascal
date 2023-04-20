@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4284465413645761073}
   m_Layer: 3
   m_Name: NetworkPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  type: 0
   shoot: {fileID: 5097851527257588529}
   model: {fileID: 0}
 --- !u!1 &8759622194776314519

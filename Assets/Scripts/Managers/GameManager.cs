@@ -31,7 +31,8 @@ public class GameManager : Singleton<GameManager>
 	private PrefabManager prefabManager;
 	public PrefabManager PrefabManager { get => prefabManager; }
 
-	public byte thisPlayer { get; private set; } = 255;
+	public byte ThisPlayer { get; private set; } = 255;
+	public byte PlayerCount { get; private set; } = 0;
 
 	protected override void Awake()
 	{
@@ -123,6 +124,19 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
+	public void ChangeLevel(byte level)
+	{
+		if (IsServer)
+		{
+			Packet packet = new Packet();
+			packet.type = 5;
+			packet.id = level;
+
+			NetworkManager.Instance.SendMessage(packet);
+			LoadLevel(packet);
+		}
+	}
+
 	public void OnLevelLoad(LevelManager level)
 	{
 		this.level = level;
@@ -134,7 +148,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				Transform transform = level.GetPlayerSpawn(id);
 
-				if (id == thisPlayer)
+				if (id == ThisPlayer)
 				{
 					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
@@ -177,6 +191,7 @@ public class GameManager : Singleton<GameManager>
 	public void OnJoinLobby(Transform[] spawnPoints)
 	{
 		inLobby = true;
+		PlayerCount = 1;
 
 		if (IsServer)
 		{
@@ -185,7 +200,7 @@ public class GameManager : Singleton<GameManager>
 			entities[0].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 			entities[0].SetModel();
 
-			thisPlayer = 0;
+			ThisPlayer = 0;
 
 			NetworkManager.Instance.currentLobby.SetData("Player0", NetworkManager.Instance.PlayerId.Value.ToString());
 		}
@@ -200,14 +215,15 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId == 0 || steamId == NetworkManager.Instance.PlayerId.Value)
 				{
-					if (thisPlayer == 255)
+					if (ThisPlayer == 255)
 					{
-						thisPlayer = i;
+						ThisPlayer = i;
+						++PlayerCount;
 
-						entities[thisPlayer] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[thisPlayer].position, spawnPoints[thisPlayer].rotation).GetComponent<Entity>();
-						entities[thisPlayer].id = thisPlayer;
-						entities[thisPlayer].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
-						entities[thisPlayer].SetModel();
+						entities[ThisPlayer] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[ThisPlayer].position, spawnPoints[ThisPlayer].rotation).GetComponent<Entity>();
+						entities[ThisPlayer].id = ThisPlayer;
+						entities[ThisPlayer].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
+						entities[ThisPlayer].SetModel();
 					}
 
 					continue;
@@ -252,7 +268,8 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
-		thisPlayer = 255;
+		PlayerCount = 0;
+		ThisPlayer = 255;
 		IsServer = false;
 		inLobby = false;
 	}
@@ -263,7 +280,7 @@ public class GameManager : Singleton<GameManager>
 		{
 			byte id = projectileIndices.Pop();
 
-			Entity entity = entities[thisPlayer];
+			Entity entity = entities[ThisPlayer];
 
 			entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 			entities[id].id = id;
@@ -272,7 +289,7 @@ public class GameManager : Singleton<GameManager>
 			Packet packet = new Packet();
 			packet.id = id;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(thisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -281,7 +298,7 @@ public class GameManager : Singleton<GameManager>
 			Packet packet = new Packet();
 			packet.id = 255;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(thisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -327,6 +344,7 @@ public class GameManager : Singleton<GameManager>
 				entities[i].id = i;
 				entities[i].GetComponent<LobbyPlayer>().name.text = player.Name;
 				entities[i].SetModel();
+				++PlayerCount;
 
 				lobby.SetData("Player" + i, player.Id.Value.ToString());
 				break;
@@ -346,6 +364,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				Destroy(entities[i].gameObject);
 				entities[i] = null;
+				--PlayerCount;
 
 				lobby.SetData("Player" + i, "0");
 
@@ -400,6 +419,7 @@ public class GameManager : Singleton<GameManager>
 			case 4: scene = "c1m5_Corruption"; break;
 		}
 
+		//TODO: Scene transition
 		SceneLoader.Instance.LoadScene(scene);
 	}
 
