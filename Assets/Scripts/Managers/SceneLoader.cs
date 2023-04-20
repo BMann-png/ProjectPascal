@@ -19,6 +19,8 @@ public class SceneLoader : Singleton<SceneLoader>
 		SceneManager.sceneLoaded += SceneLoaded;
 	}
 
+	//TODO: Loading screen
+	//TODO: Wait for all players to load
 	public void LoadScene(string sceneName)
 	{
 		SceneManager.LoadScene(sceneName);
