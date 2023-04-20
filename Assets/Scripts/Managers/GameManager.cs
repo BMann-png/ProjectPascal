@@ -32,7 +32,7 @@ public class GameManager : Singleton<GameManager>
 	public PrefabManager PrefabManager { get => prefabManager; }
 
 	public byte ThisPlayer { get; private set; } = 255;
-	public byte PlayerCount { get; private set; } = 0;
+	public byte PlayerCount { get; private set; } = 0; //TODO: Take into account player deaths
 
 	protected override void Awake()
 	{
