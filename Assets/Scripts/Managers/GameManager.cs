@@ -396,7 +396,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (action.action.data == 255) //Loaded into level
 		{
-			if (++loadedPlayers == PlayerCount) { SceneLoader.SetLoadingScreen(false); }
+			if (++loadedPlayers == PlayerCount) { SceneLoader.SetLoadingScreen(false); Loading = false; }
 		}
 		else { entities[action.id].DoAction(action.action); }
 	}
