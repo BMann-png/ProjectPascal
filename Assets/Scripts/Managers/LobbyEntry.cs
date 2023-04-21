@@ -24,7 +24,7 @@ public class LobbyEntry : MonoBehaviour
 		bool success = await NetworkManager.Instance.JoinLobby(lobby);
 		if (success)
 		{
-			SceneLoader.Instance.LoadScene("Lobby");
+			GameManager.Instance.SceneLoader.LoadScene("Lobby");
 		}
 	}
 }

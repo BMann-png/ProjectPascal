@@ -4,11 +4,31 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-	[SerializeField] private Transform[] playerSpawnPoints;
-	[SerializeField] private Transform[] enemySpawnPoints;
+	private PlayerSpawner[] playerSpawners;
+	private EnemySpawner[] enemySpawners;
+
+	//TODO: Initial spawn and hidden spawn
 
 	private void Awake()
 	{
-		GameManager.Instance.OnLevelLoad(playerSpawnPoints, enemySpawnPoints);
+		playerSpawners = FindObjectsByType<PlayerSpawner>(FindObjectsSortMode.None);
+		enemySpawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+
+		GameManager.Instance.OnLevelLoad(this);
+	}
+
+	public Transform GetPlayerSpawn(int index)
+	{
+		return playerSpawners[index].transform;
+	}
+
+	public Transform GetEnemySpawn(int index)
+	{
+		return enemySpawners[index].transform;
+	}
+
+	public byte RandomEnemySpawn()
+	{
+		return (byte)Random.Range(0, enemySpawners.Length);
 	}
 }
