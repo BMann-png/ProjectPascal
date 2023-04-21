@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8915607943849850849}
   - component: {fileID: 4284465413645761073}
   - component: {fileID: 1304654699830157109}
+  - component: {fileID: -7362634808297774626}
   m_Layer: 3
   m_Name: NetworkPlayer
   m_TagString: Untagged
@@ -80,6 +81,21 @@ MonoBehaviour:
   primaryWeapons: []
   secondaryWeapons: []
   pacifier: {fileID: 0}
+--- !u!114 &-7362634808297774626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8291552484210884512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60b638b9368aa1140bd16b9393242700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  healthVal: 0
+  decayRate: 0
 --- !u!1 &8759622194776314519
 GameObject:
   m_ObjectHideFlags: 0
