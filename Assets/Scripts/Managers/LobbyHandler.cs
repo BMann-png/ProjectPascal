@@ -36,7 +36,7 @@ public class LobbyHandler : MonoBehaviour
 	{
 		GameManager.Instance.LeaveLobby();
 		NetworkManager.Instance.LeaveLobby();
-		SceneLoader.Instance.LoadScene("MainMenu");
+		GameManager.Instance.SceneLoader.LoadScene("MainMenu");
 	}
 
 	public void StartGame()

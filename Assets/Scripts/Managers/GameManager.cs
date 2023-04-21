@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TMPro;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -32,40 +34,37 @@ public class GameManager : Singleton<GameManager>
 	private PrefabManager prefabManager;
 	public PrefabManager PrefabManager { get => prefabManager; }
 
+	private SceneLoader sceneLoader;
+	public SceneLoader SceneLoader { get => sceneLoader; }
+
+	public bool Loading { get; private set; } = false;
+
 	public byte ThisPlayer { get; private set; } = 255;
-	public byte PlayerCount { get; private set; } = 0; //TODO: Take into account player deaths
+	public byte PlayerCount { get; private set; } = 0;
+	public byte PlayerDeaths { get; private set; } = 0;
+	private byte loadedPlayers = 0;
 
 	protected override void Awake()
 	{
 		base.Awake();
 
 		prefabManager = FindFirstObjectByType<PrefabManager>();
+		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
 		tempPlayers = new byte[4] { 255, 255, 255, 255 };
 
 		entities = new Entity[256];
 
-		for (byte i = 4; i < 34; ++i)
-		{
-			enemyIndices.Push(i);
-		}
-
-		for (byte i = 44; i < 49; ++i)
-		{
-			objectiveIndices.Push(i);
-		}
-
-		for (byte i = 49; i < 255; ++i)
-		{
-			projectileIndices.Push(i);
-		}
+		for (byte i = 4; i < 34; ++i) { enemyIndices.Push(i); }
+		for (byte i = 44; i < 49; ++i) { objectiveIndices.Push(i); }
+		for (byte i = 49; i < 255; ++i) { projectileIndices.Push(i); }
 	}
 
 	private void Update()
 	{
 		if (IsServer && !inLobby)
 		{
-			if(enemyCount < MAX_ENEMY_COUNT)
+			if (enemyCount < MAX_ENEMY_COUNT)
 			{
 				byte id = enemyIndices.Pop();
 				byte spawn = level.RandomEnemySpawn();
@@ -84,7 +83,7 @@ public class GameManager : Singleton<GameManager>
 				++enemyCount;
 			}
 
-			if(specialCount < MAX_SPECIAL_COUNT)
+			if (specialCount < MAX_SPECIAL_COUNT)
 			{
 				byte spawn = level.RandomEnemySpawn();
 				Transform transform = level.GetEnemySpawn(spawn);
@@ -142,6 +141,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		this.level = level;
 		inLobby = false;
+		PlayerDeaths = 0;
 
 		foreach (byte id in tempPlayers)
 		{
@@ -162,6 +162,15 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 		}
+
+		if (++loadedPlayers == PlayerCount) { SceneLoader.SetLoadingScreen(false); Loading = false; }
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = ThisPlayer;
+		packet.action = new ActionPacket(255);
+
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	public async void CreateLobby(string lobbyName)
@@ -181,7 +190,7 @@ public class GameManager : Singleton<GameManager>
 		if (result)
 		{
 			IsServer = true;
-			SceneLoader.Instance.LoadScene("Lobby");
+			SceneLoader.LoadScene("Lobby");
 		}
 		else
 		{
@@ -380,12 +389,16 @@ public class GameManager : Singleton<GameManager>
 
 	public void ReceiveTransform(Packet transform)
 	{
-		entities[transform.id].SetTransform(transform.transform);
+		if (!Loading) { entities[transform.id].SetTransform(transform.transform); }
 	}
 
 	public void Action(Packet action)
 	{
-		entities[action.id].DoAction(action.action);
+		if (action.action.data == 255) //Loaded into level
+		{
+			if (++loadedPlayers == PlayerCount) { SceneLoader.SetLoadingScreen(false); }
+		}
+		else { entities[action.id].DoAction(action.action); }
 	}
 
 	public void Health(Packet health)
@@ -424,24 +437,26 @@ public class GameManager : Singleton<GameManager>
 			case 4: scene = "c1m5_Corruption"; break;
 		}
 
-		//TODO: Scene transition
-		SceneLoader.Instance.LoadScene(scene);
+		Loading = true;
+		loadedPlayers = 0;
+		SceneLoader.SetLoadingScreen(true);
+		SceneLoader.LoadScene(scene);
 	}
 
 	public void Spawn(Packet packet)
 	{
-		if(packet.id < 4)
+		if (packet.id < 4)
 		{
 			//player
 		}
-		else if(packet.id < 44)
+		else if (packet.id < 44)
 		{
 			Transform transform = level.GetEnemySpawn(packet.spawn.spawn);
 			entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
 			entities[packet.id].id = packet.id;
 			entities[packet.id].SetModel();
 		}
-		else if(packet.id < 49)
+		else if (packet.id < 49)
 		{
 			//objective
 		}

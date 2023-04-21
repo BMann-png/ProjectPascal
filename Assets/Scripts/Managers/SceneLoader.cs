@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static SceneLoader;
 
-public class SceneLoader : Singleton<SceneLoader>
+public class SceneLoader : MonoBehaviour
 {
 	[SerializeField] private GameObject loadingScreen;
 
@@ -12,18 +12,21 @@ public class SceneLoader : Singleton<SceneLoader>
 
 	OnSceneLoad onSceneLoad;
 
-	protected override void Awake()
+	private void Awake()
 	{
-		base.Awake();
-
 		DontDestroyOnLoad(gameObject);
 		SceneManager.sceneLoaded += SceneLoaded;
+		loadingScreen.SetActive(false);
+	}
+
+	public void SetLoadingScreen(bool b)
+	{
+		loadingScreen.SetActive(b);
 	}
 
 	//TODO: Wait for all players to load
 	public void LoadScene(string sceneName)
 	{
-		loadingScreen.SetActive(true);
 		SceneManager.LoadScene(sceneName);
 	}
 
@@ -35,6 +38,5 @@ public class SceneLoader : Singleton<SceneLoader>
 	public void SceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if(onSceneLoad != null) { onSceneLoad(); onSceneLoad = null; }
-		loadingScreen.SetActive(false);
 	}
 }

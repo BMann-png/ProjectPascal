@@ -20,11 +20,14 @@ public class EnemyController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		Packet packet = new Packet();
-		packet.type = 0;
-		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform, 0.0f);
-		NetworkManager.Instance.SendMessage(packet);
+		if (!GameManager.Instance.Loading)
+		{
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform, 0.0f);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	private void Update()
