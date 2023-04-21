@@ -13,13 +13,17 @@ public class Projectile : MonoBehaviour
 
 	private new Rigidbody rigidbody;
 	private Entity entity;
+	private Damage damage;
+
 	private float timer;
-	bool dealsDamage;
+
+	bool hasDamage;
 
 	private void Awake()
 	{
 		rigidbody = GetComponent<Rigidbody>();
 		entity = GetComponent<Entity>();
+		hasDamage = TryGetComponent(out damage);
 		timer = LIFETIME;
 		ENEMY_MASK = LayerMask.GetMask("Enemy");
 		GROUND_MASK = LayerMask.GetMask("Ground");
@@ -47,23 +51,23 @@ public class Projectile : MonoBehaviour
 
 	public void SetSpeed(float speed)
 	{
-		dealsDamage = true;
 		rigidbody.AddForce(transform.up * speed, ForceMode.VelocityChange);
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
 		//TODO: Darts should stick if normal is within a range
+		if (!hasDamage) return;
 
-		if (dealsDamage && 1 << collision.gameObject.layer == ENEMY_MASK.value)
+		if (damage.dealsDamage && 1 << collision.gameObject.layer == ENEMY_MASK.value)
 		{
 			//TODO: Deal damage
-			Destroy(gameObject);
-			dealsDamage = false;
+			GameManager.Instance.Destroy(entity);
+			damage.dealsDamage = false;
 		}
 		else if (1 << collision.gameObject.layer == GROUND_MASK.value)
 		{
-			dealsDamage = false;
+			damage.dealsDamage = false;
 		}
 	}
 }
