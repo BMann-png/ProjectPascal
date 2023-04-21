@@ -516,7 +516,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void Despawn(Packet packet)
 	{
-		if (entities[packet.id].gameObject != null)
+		if (entities[packet.id] != null)
 		{
 			Destroy(entities[packet.id].gameObject);
 		}
