@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class BaseAI : MonoBehaviour
 {
     [SerializeField] Perception playerPerception;
     [SerializeField] Perception allyPerception;
 
-    [SerializeField] float aiRange = 0.0f;
+    [SerializeField] float attackRange = 0.0f;
 
     BAIStateMachine stateMachine = new BAIStateMachine();
 
@@ -15,11 +17,13 @@ public class BaseAI : MonoBehaviour
     RefValue<bool> isAgitated = new RefValue<bool>();
     RefValue<float> agentHealth = new RefValue<float>();
 
-    GameObject obsession;
+    public GameObject obsession;
+    public NavMeshAgent navMeshAgent;
 
     private void Start()
     {
         obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Length - 1)];
+        navMeshAgent = GetComponent<NavMeshAgent>();
 
         stateMachine.AddState(new AttackState(typeof(AttackState).Name, this));
         stateMachine.AddState(new IdleState(typeof(IdleState).Name, this));
@@ -31,10 +35,10 @@ public class BaseAI : MonoBehaviour
         stateMachine.AddTransition(typeof(IdleState).Name, new Transition(new Condition[]
             { new Condition<bool>(isAgitated, Predicate.Equal, true)}), typeof(MoveState).Name);
         stateMachine.AddTransition(typeof(IdleState).Name, new Transition(new Condition[]
-            { new Condition<float>(distanceToPlayer, Predicate.LessOrEqual, aiRange)}), typeof(AttackState).Name);
+            { new Condition<float>(distanceToPlayer, Predicate.LessOrEqual, attackRange)}), typeof(AttackState).Name);
 
         stateMachine.AddTransition(typeof(AttackState).Name, new Transition(new Condition[]
-            { new Condition<float>(distanceToPlayer, Predicate.Greater, aiRange)}), typeof(MoveState).Name);
+            { new Condition<float>(distanceToPlayer, Predicate.Greater, attackRange)}), typeof(MoveState).Name);
 
         //All States to the Death State
         stateMachine.AddTransition(typeof(AttackState).Name, new Transition(new Condition[]
@@ -49,6 +53,7 @@ public class BaseAI : MonoBehaviour
 
     private void Update()
     {
-        
+        distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
+
     }
 }
