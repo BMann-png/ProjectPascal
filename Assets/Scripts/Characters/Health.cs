@@ -13,7 +13,12 @@ public class Health : MonoBehaviour
 
     public int health { get { return healthVal; } set { healthVal = Mathf.Clamp(value, MIN_HEALTH, maxHealth); } }
 
-    private void FixedUpdate()
+	private void Awake()
+	{
+        health = maxHealth;
+	}
+
+	private void FixedUpdate()
     {
         health -= decayRate;
     }
@@ -27,5 +32,10 @@ public class Health : MonoBehaviour
         packet.health = new HealthPacket();
         packet.health.data = (byte)health;
         NetworkManager.Instance.SendMessage(packet);
+
+        if(health <= 0)
+        {
+            Debug.Log("Ded");
+        }
     }
 }
