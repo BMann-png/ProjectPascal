@@ -1,6 +1,5 @@
 using Steamworks;
 using Steamworks.Data;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,15 +85,22 @@ public class GameManager : Singleton<GameManager>
 
 			if (specialCount < MAX_SPECIAL_COUNT)
 			{
-				//TODO: Figure out what special to spawn
+				byte id = 255;
+				while(true)
+				{
+					id = (byte)Random.Range(0, 3);
+
+					if (specialsSpawned[id] == false) { id += 34; break; }
+				}
+
 				byte spawn = level.RandomEnemySpawn();
 				Transform transform = level.GetEnemySpawn(spawn);
-				entities[34] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[34].id = 34;
-				entities[34].SetModel();
+				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+				entities[id].id = id;
+				entities[id].SetModel();
 
 				Packet packet = new Packet();
-				packet.id = 34;
+				packet.id = id;
 				packet.type = 6;
 				packet.spawn = new SpawnPacket(spawn);
 
@@ -321,15 +327,23 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (IsServer)
 		{
-			if (obj.id > 3 && obj.id < 39)
+			if(obj.id < 4) //Player
+			{
+
+			}
+			else if(obj.id < 34) //Common Enemy
 			{
 				enemyIndices.Push(obj.id);
 			}
-			else if (obj.id > 38 && obj.id < 49)
+			else if (obj.id < 44) //Special Enemy
+			{
+				specialsSpawned[obj.id - 34] = false;
+			}
+			else if(obj.id < 49)
 			{
 				objectiveIndices.Push(obj.id);
 			}
-			else if (obj.id > 48 && obj.id < 255)
+			else if (obj.id < 255)
 			{
 				projectileIndices.Push(obj.id);
 			}
