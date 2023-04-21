@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
 
 		if(timer <= 0.0f)
 		{
-			GameManager.Instance.Destroy(entity);
+			Destroy(gameObject);
 		}
     }
 
@@ -58,7 +58,7 @@ public class Projectile : MonoBehaviour
 		if (dealsDamage && 1 << collision.gameObject.layer == ENEMY_MASK.value)
 		{
 			//TODO: Deal damage
-			GameManager.Instance.Destroy(entity);
+			Destroy(gameObject);
 			dealsDamage = false;
 		}
 		else if (1 << collision.gameObject.layer == GROUND_MASK.value)

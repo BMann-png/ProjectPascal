@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Entity : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class Entity : MonoBehaviour
 
 	public Transform shoot;
 	[HideInInspector] public GameObject model;
+
+	private bool quitting = false;
 
 	private void Awake()
 	{
@@ -88,7 +91,7 @@ public class Entity : MonoBehaviour
 		{
 			switch (packet.data)
 			{
-				case 0:
+				case 0: //Sprint
 					{
 						model.transform.localPosition = Vector3.zero;
 						model.transform.localRotation = Quaternion.identity;
@@ -98,7 +101,7 @@ public class Entity : MonoBehaviour
 						collider.center = Vector3.up * 1.1f;
 					}
 					break;
-				case 1:
+				case 1: //End Sprint
 					{
 						model.transform.localPosition = new Vector3(0.0f, 0.25f, -1.0f);
 						model.transform.localRotation = Quaternion.AngleAxis(90, Vector3.right);
@@ -112,7 +115,19 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 39)
 		{
+		}
+	}
 
+	private void OnApplicationQuit()
+	{
+		quitting = true;
+	}
+
+	private void OnDestroy()
+	{
+		if (!quitting)
+		{
+			GameManager.Instance.Destroy(this);
 		}
 	}
 }

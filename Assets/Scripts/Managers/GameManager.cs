@@ -1,6 +1,5 @@
 using Steamworks;
 using Steamworks.Data;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +23,9 @@ public class GameManager : Singleton<GameManager>
 	private Entity[] entities;
 	private Transform[] lobbySpawnpoints;
 	private Stack<byte> enemyIndices = new Stack<byte>(30);
-	private Stack<byte> objectiveIndices = new Stack<byte>(10);
+	private Stack<byte> objectiveIndices = new Stack<byte>(5);
 	private Stack<byte> projectileIndices = new Stack<byte>(206);
+	private bool[] specialsSpawned = new bool[10];
 	private int enemyCount = 0;
 	private int specialCount = 0;
 
@@ -85,14 +85,22 @@ public class GameManager : Singleton<GameManager>
 
 			if (specialCount < MAX_SPECIAL_COUNT)
 			{
+				byte id = 255;
+				while(true)
+				{
+					id = (byte)Random.Range(0, 3);
+
+					if (specialsSpawned[id] == false) { id += 34; break; }
+				}
+
 				byte spawn = level.RandomEnemySpawn();
 				Transform transform = level.GetEnemySpawn(spawn);
-				entities[34] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[34].id = 34;
-				entities[34].SetModel();
+				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+				entities[id].id = id;
+				entities[id].SetModel();
 
 				Packet packet = new Packet();
-				packet.id = 34;
+				packet.id = id;
 				packet.type = 6;
 				packet.spawn = new SpawnPacket(spawn);
 
@@ -317,26 +325,35 @@ public class GameManager : Singleton<GameManager>
 
 	public void Destroy(Entity obj)
 	{
-		if (obj.id > 3 && obj.id < 39)
+		if (IsServer)
 		{
-			enemyIndices.Push(obj.id);
-		}
-		else if (obj.id > 38 && obj.id < 49)
-		{
-			objectiveIndices.Push(obj.id);
-		}
-		else if (obj.id > 48 && obj.id < 255)
-		{
-			projectileIndices.Push(obj.id);
-		}
+			if(obj.id < 4) //Player
+			{
 
-		Packet packet = new Packet();
-		packet.id = obj.id;
-		packet.type = 7;
+			}
+			else if(obj.id < 34) //Common Enemy
+			{
+				enemyIndices.Push(obj.id);
+			}
+			else if (obj.id < 44) //Special Enemy
+			{
+				specialsSpawned[obj.id - 34] = false;
+			}
+			else if(obj.id < 49)
+			{
+				objectiveIndices.Push(obj.id);
+			}
+			else if (obj.id < 255)
+			{
+				projectileIndices.Push(obj.id);
+			}
 
-		NetworkManager.Instance.SendMessage(packet);
+			Packet packet = new Packet();
+			packet.id = obj.id;
+			packet.type = 7;
 
-		Destroy(obj.gameObject);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	//Callbacks
@@ -491,19 +508,6 @@ public class GameManager : Singleton<GameManager>
 
 	public void Despawn(Packet packet)
 	{
-		if (packet.id > 3 && packet.id < 39)
-		{
-			enemyIndices.Push(packet.id);
-		}
-		else if (packet.id > 38 && packet.id < 49)
-		{
-			objectiveIndices.Push(packet.id);
-		}
-		else if (packet.id > 48 && packet.id < 255)
-		{
-			projectileIndices.Push(packet.id);
-		}
-
 		Destroy(entities[packet.id].gameObject);
 	}
 
