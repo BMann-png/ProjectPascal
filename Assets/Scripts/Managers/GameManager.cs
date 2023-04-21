@@ -86,13 +86,15 @@ public class GameManager : Singleton<GameManager>
 			if (specialCount < MAX_SPECIAL_COUNT)
 			{
 				byte id = 255;
-				while(true)
+				while (true)
 				{
 					id = (byte)Random.Range(0, 3);
 
-					if (specialsSpawned[id] == false) { id += 34; break; }
+					if (specialsSpawned[id] == false) { break; }
 				}
 
+				specialsSpawned[id] = true;
+				id += 34;
 				byte spawn = level.RandomEnemySpawn();
 				Transform transform = level.GetEnemySpawn(spawn);
 				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();

@@ -4231,9 +4231,9 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 4811f30188c7b1544a9dea22898020a6, type: 3}
   enemyModels:
   - {fileID: 1815383720639527769, guid: 7e245bb5582093e4c875abb7d0d30746, type: 3}
-  - {fileID: 1815383720639527769, guid: 5f69603bfc1efa2439157b643b0b6fdb, type: 3}
-  - {fileID: 1815383720639527769, guid: 5f69603bfc1efa2439157b643b0b6fdb, type: 3}
-  - {fileID: 1815383720639527769, guid: 5f69603bfc1efa2439157b643b0b6fdb, type: 3}
+  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
+  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
+  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
   player: {fileID: 4249420564965122353, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
   networkPlayer: {fileID: 8291552484210884512, guid: e47317380b49ddf459c1a36777b6b445, type: 3}
   lobbyPlayer: {fileID: 7710098097953584521, guid: 2db0c05ceb18f8e45a2e3aeeeb5f76ea, type: 3}
