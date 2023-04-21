@@ -5,15 +5,16 @@ using UnityEngine;
 [RequireComponent(typeof(Entity))]
 public class Damage : MonoBehaviour
 {
-    [SerializeField] bool DamageOverTime = false;
+    public bool dealsDamage = true;
+    [SerializeField] bool damageOverTime = false;
     [SerializeField] int damage = 0;
 
     private void OnCollisionEnter(Collision collision)
     {
         Health collisionHealth;
-        if (!collision.gameObject.TryGetComponent(out collisionHealth)) return;
+        if (!dealsDamage || !collision.gameObject.TryGetComponent(out collisionHealth)) return;
 
-        if (DamageOverTime)
+        if (damageOverTime)
         {
             collisionHealth.decayRate = damage;
         }
@@ -26,7 +27,7 @@ public class Damage : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         Health collisionHealth;
-        if (DamageOverTime && !collision.gameObject.TryGetComponent(out collisionHealth))
+        if (damageOverTime && !collision.gameObject.TryGetComponent(out collisionHealth))
         {
             collisionHealth.decayRate = 0;
         }
