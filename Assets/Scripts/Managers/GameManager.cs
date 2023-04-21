@@ -23,6 +23,8 @@ struct TempEntity
 
 public class GameManager : Singleton<GameManager>
 {
+	[SerializeField] public GameObject[] playerLocations = new GameObject[] {};
+
 	public bool IsServer { get; private set; }
 	private bool inLobby;
 	private byte level;
