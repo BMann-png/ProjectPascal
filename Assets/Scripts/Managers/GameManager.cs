@@ -153,6 +153,21 @@ public class GameManager : Singleton<GameManager>
 		inLobby = false;
 		PlayerDeaths = 0;
 
+		if (++loadedPlayers == PlayerCount) { FinishLoading(); }
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = ThisPlayer;
+		packet.action = new ActionPacket(255);
+
+		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	private void FinishLoading()
+	{
+		SceneLoader.SetLoadingScreen(false);
+		Loading = false;
+
 		foreach (byte id in tempPlayers)
 		{
 			if (id != 255)
@@ -172,15 +187,6 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 		}
-
-		if (++loadedPlayers == PlayerCount) { SceneLoader.SetLoadingScreen(false); Loading = false; }
-
-		Packet packet = new Packet();
-		packet.type = 1;
-		packet.id = ThisPlayer;
-		packet.action = new ActionPacket(255);
-
-		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	public async void CreateLobby(string lobbyName)
@@ -415,7 +421,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (action.action.data == 255) //Loaded into level
 		{
-			if (++loadedPlayers == PlayerCount) { SceneLoader.SetLoadingScreen(false); Loading = false; }
+			if (++loadedPlayers == PlayerCount) { FinishLoading(); }
 		}
 		else { entities[action.id].DoAction(action.action); }
 	}
