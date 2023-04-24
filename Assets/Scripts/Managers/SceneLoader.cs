@@ -17,6 +17,7 @@ public class SceneLoader : Singleton<SceneLoader>
 		base.Awake();
 
 		DontDestroyOnLoad(gameObject);
+		DontDestroyOnLoad(loadingScreen);
 		SceneManager.sceneLoaded += SceneLoaded;
 	}
 
