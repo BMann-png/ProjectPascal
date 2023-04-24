@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
-
 [RequireComponent(typeof(Entity))]
 public class Projectile : MonoBehaviour
 {
 	[SerializeField] private float speed = 100f;
+	[SerializeField] private bool destoryOnCollide = false;
 	
 	private static readonly float LIFETIME = 5.0f;
 	private static LayerMask ENEMY_MASK;
@@ -66,6 +66,9 @@ public class Projectile : MonoBehaviour
 		else if (1 << collision.gameObject.layer == GROUND_MASK.value)
 		{
 			dealsDamage = false;
+
+			if (destoryOnCollide)
+				Destroy(gameObject);
 		}
 	}
 }
