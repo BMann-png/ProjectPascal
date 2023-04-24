@@ -35,62 +35,68 @@ public class PlayerController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (sprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime))
+		if (!GameManager.Instance.Loading)
 		{
-			tripped = true;
-			tripTimer = TRIP_TIME;
+			if (sprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime))
+			{
+				tripped = true;
+				tripTimer = TRIP_TIME;
 
-			EndSprint();
+				EndSprint();
+			}
+
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
-
-		Packet packet = new Packet();
-		packet.type = 0;
-		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
-
-		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	private void Update()
 	{
-		movement = Vector3.down * 10.0f * Time.deltaTime;
-
-		float vertInput = Input.GetAxis("Vertical");
-		float HoriInput = Input.GetAxis("Horizontal");
-
-		sprintTimer -= Time.deltaTime;
-		sprintCooldownTimer -= Time.deltaTime;
-		tripTimer -= Time.deltaTime;
-
-		tripped = tripTimer > 0.0f;
-
-		if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
+		if (!GameManager.Instance.Loading)
 		{
-			StartSprint();
-		}
+			movement = Vector3.down * 10.0f * Time.deltaTime;
 
-		if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
-		{
-			if(sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
+			float vertInput = Input.GetAxis("Vertical");
+			float HoriInput = Input.GetAxis("Horizontal");
 
-			EndSprint();
-		}
+			sprintTimer -= Time.deltaTime;
+			sprintCooldownTimer -= Time.deltaTime;
+			tripTimer -= Time.deltaTime;
 
-		movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
-		movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
+			tripped = tripTimer > 0.0f;
 
-		movement *= tripped ? TRIP_MOD : 1.0f;
+			if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
+			{
+				StartSprint();
+			}
 
-		controller.Move(movement);
+			if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
+			{
+				if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
 
-		if(entity.shoot)
-		{
-			entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
-		}
+				EndSprint();
+			}
 
-		if(Input.GetKeyDown(KeyCode.Mouse0))
-		{
-			Shoot();
+			movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
+			movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
+
+			movement *= tripped ? TRIP_MOD : 1.0f;
+
+			controller.Move(movement);
+
+			if (entity.shoot)
+			{
+				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
+			}
+
+			if (Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				Shoot();
+			}
 		}
 	}
 

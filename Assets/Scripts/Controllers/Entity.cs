@@ -2,38 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Entity : MonoBehaviour
 {
-	[HideInInspector] public byte id;   //ID 0-3 is a player
-										//ID 4-38 is an enemy
-										//ID 39-48 is an objective
+	[HideInInspector] public byte id;   //ID 0-3 - player
+										//ID 4-33 - common enemy
+										//ID 34 - Spitter
+										//ID 35 - Alarmer
+										//ID 36 - Lurker
+										//ID 37 - Hurler
+										//ID 38 - Snatcher
+										//ID 39 - Corrupted Spitter
+										//ID 40 - Corrupted Alarmer
+										//ID 41 - Corrupted Lurker
+										//ID 42 - Corrupted Hurler
+										//ID 43 - Corrupted Snatcher
+										//ID 44-48 is an objective
 										//ID 49-254 is a projectile
 										//ID of 255 is invalid
-	[HideInInspector] public byte type; //Type decides what model/kind of entity this is
-										//Type 0 - Player model 1
-										//Type 1 - Player model 2
-										//Type 2 - Player model 3
-										//Type 3 - Player model 4
-										//Type 4 - Common
-										//Type 5 - Spitter
-										//Type 6 - Alarmer
-										//Type 7 - Lurker
-										//Type 8 - Hurler
-										//Type 9 - Snatcher
-										//Type 10 - Currupted Common
-										//Type 11 - Currupted Spitter
-										//Type 12 - Currupted Alarmer
-										//Type 13 - Currupted Lurker
-										//Type 14 - Currupted Hurler
-										//Type 15 - Currupted Snatcher
-										//Type 16 - Projectile
 
 	private Vector3 targetPosition;
 	private float targetRotation;
 
 	public Transform shoot;
 	[HideInInspector] public GameObject model;
+
+	private bool quitting = false;
 
 	private void Awake()
 	{
@@ -43,7 +38,7 @@ public class Entity : MonoBehaviour
 
 	private void Update()
 	{
-		if ((id < 4 && GameManager.Instance.thisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
+		if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
 		{
 			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
@@ -55,7 +50,7 @@ public class Entity : MonoBehaviour
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
 		targetRotation = tp.yRot;
 
-		if (type == 16)
+		if (id > 48)
 		{
 			transform.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f); //TODO: Lerp smoothly
 		}
@@ -78,9 +73,13 @@ public class Entity : MonoBehaviour
 		{
 			model = Instantiate(GameManager.Instance.PrefabManager.PlayerModels[id], transform);
 		}
-		else if (id < 15)
+		else if (id < 34)
 		{
-			model = Instantiate(GameManager.Instance.PrefabManager.EnemyModels[id - 4], transform);
+			model = Instantiate(GameManager.Instance.PrefabManager.EnemyModels[0], transform);
+		}
+		else
+		{
+			model = Instantiate(GameManager.Instance.PrefabManager.EnemyModels[id - 33], transform);
 		}
 	}
 
@@ -92,7 +91,7 @@ public class Entity : MonoBehaviour
 		{
 			switch (packet.data)
 			{
-				case 0:
+				case 0: //Sprint
 					{
 						model.transform.localPosition = Vector3.zero;
 						model.transform.localRotation = Quaternion.identity;
@@ -102,7 +101,7 @@ public class Entity : MonoBehaviour
 						collider.center = Vector3.up * 1.1f;
 					}
 					break;
-				case 1:
+				case 1: //End Sprint
 					{
 						model.transform.localPosition = new Vector3(0.0f, 0.25f, -1.0f);
 						model.transform.localRotation = Quaternion.AngleAxis(90, Vector3.right);
@@ -114,9 +113,21 @@ public class Entity : MonoBehaviour
 					break;
 			}
 		}
-		else if (id < 15)
+		else if (id < 39)
 		{
-			GetComponent<EnemyController>().ChangeColor(packet.data);
+		}
+	}
+
+	private void OnApplicationQuit()
+	{
+		quitting = true;
+	}
+
+	private void OnDestroy()
+	{
+		if (!quitting)
+		{
+			GameManager.Instance.Destroy(this);
 		}
 	}
 }
