@@ -16,8 +16,16 @@ public class LobbyHandler : MonoBehaviour
 	private void Awake()
 	{
 		GameManager.Instance.OnJoinLobby(spawnPoints);
+	}
 
-		if(!GameManager.Instance.IsServer)
+	private void Update()
+	{
+		if (GameManager.Instance.IsServer)
+		{
+			startButton.SetActive(true);
+			levelSelect.SetActive(true);
+		}
+		else
 		{
 			startButton.SetActive(false);
 			levelSelect.SetActive(false);
@@ -28,7 +36,7 @@ public class LobbyHandler : MonoBehaviour
 	{
 		GameManager.Instance.LeaveLobby();
 		NetworkManager.Instance.LeaveLobby();
-		SceneLoader.Instance.LoadScene("MainMenu");
+		GameManager.Instance.SceneLoader.LoadScene("MainMenu");
 	}
 
 	public void StartGame()
@@ -39,19 +47,5 @@ public class LobbyHandler : MonoBehaviour
 	public void SelectLevel(TMP_Dropdown change)
 	{
 		GameManager.Instance.SelectLevel(change);
-	}
-
-	public void CheckOwner()
-	{
-		if (!GameManager.Instance.IsServer)
-		{
-			startButton.SetActive(false);
-			levelSelect.SetActive(false);
-		}
-		else
-		{
-			startButton.SetActive(true);
-			levelSelect.SetActive(true);
-		}
 	}
 }
