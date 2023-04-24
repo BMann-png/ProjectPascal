@@ -15,26 +15,21 @@ using UnityEngine;
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct TransformPacket
 {
-	public TransformPacket(Transform t)
+	public TransformPacket(Transform t, float x)
 	{
 		xPos = t.position.x;
 		yPos = t.position.y;
 		zPos = t.position.z;
-		yRot = t.rotation.y;
-		zRot = t.rotation.z;
 
-		//transform = t.position.x;
-		//transform += (int)(t.position.y * 10000.0f);
-		//transform += (int)(t.position.z * 100000000.0f);
-		//transform += (int)(t.rotation.y * 1000000000000.0f);
-		//transform += (int)(t.rotation.z * 10000000000000000.0f);
+		xRot = x;
+		yRot = t.eulerAngles.y;
 	}
 
 	public float xPos;
 	public float yPos;
 	public float zPos;
+	public float xRot;
 	public float yRot;
-	public float zRot;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -57,6 +52,9 @@ public struct HealthPacket
 	}
 
 	public byte data;
+	//FOR PLAYERS:
+	//0 - sprint
+	//1 - stop sprint
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -392,7 +390,8 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 4: size = 2; break;    //Game Trigger
 			case 5: size = 2; break;    //Scene Load
 			case 6: size = 3; break;    //Game Spawn
-			case 7: size = 10; break;   //Owner Change
+			case 7: size = 2; break;    //Game Despawn
+			case 8: size = 10; break;   //Owner Change
 			default: return false;
 		}
 
@@ -425,14 +424,15 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			switch (packet.type)
 			{
-				case 0: GameManager.Instance.ReceiveTransform(packet); break;  //Transform
-				case 1: GameManager.Instance.Action(packet); break;               //Action
-				case 2: GameManager.Instance.Health(packet); break;               //Health
-				case 3: GameManager.Instance.Inventory(packet); break;         //Inventory
-				case 4: GameManager.Instance.GameTrigger(packet); break;     //Game Trigger
-				case 5: GameManager.Instance.LoadLevel(packet); break;             //Scene Load
-				case 6: GameManager.Instance.Spawn(packet); break;                 //Game Spawn
-				case 7: GameManager.Instance.OwnerChange(packet); break;           //Owner Change
+				case 0: GameManager.Instance.ReceiveTransform(packet); break;	//Transform
+				case 1: GameManager.Instance.Action(packet); break;				//Action
+				case 2: GameManager.Instance.Health(packet); break;				//Health
+				case 3: GameManager.Instance.Inventory(packet); break;			//Inventory
+				case 4: GameManager.Instance.GameTrigger(packet); break;		//Game Trigger
+				case 5: GameManager.Instance.LoadLevel(packet); break;          //Scene Load
+				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
+				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
+				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
 				default: break;
 			}
 		}
