@@ -1,30 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static SceneLoader;
 
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : Singleton<SceneLoader>
 {
-	[SerializeField] private GameObject loadingScreen;
-
 	public delegate void OnSceneLoad();
 
 	OnSceneLoad onSceneLoad;
 
-	private void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
+
 		DontDestroyOnLoad(gameObject);
 		SceneManager.sceneLoaded += SceneLoaded;
-		loadingScreen.SetActive(false);
 	}
 
-	public void SetLoadingScreen(bool b)
-	{
-		loadingScreen.SetActive(b);
-	}
-
-	//TODO: Wait for all players to load
 	public void LoadScene(string sceneName)
 	{
 		SceneManager.LoadScene(sceneName);
