@@ -36,7 +36,7 @@ public class LobbyHandler : MonoBehaviour
 	{
 		GameManager.Instance.LeaveLobby();
 		NetworkManager.Instance.LeaveLobby();
-		SceneLoader.Instance.LoadScene("MainMenu");
+		GameManager.Instance.SceneLoader.LoadScene("MainMenu");
 	}
 
 	public void StartGame()
@@ -47,19 +47,5 @@ public class LobbyHandler : MonoBehaviour
 	public void SelectLevel(TMP_Dropdown change)
 	{
 		GameManager.Instance.SelectLevel(change);
-	}
-
-	public void CheckOwner()
-	{
-		if (!GameManager.Instance.IsServer)
-		{
-			startButton.SetActive(false);
-			levelSelect.SetActive(false);
-		}
-		else
-		{
-			startButton.SetActive(true);
-			levelSelect.SetActive(true);
-		}
 	}
 }

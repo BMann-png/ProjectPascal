@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (GameManager.Instance.Network)
+		if (!GameManager.Instance.Loading)
 		{
 			Packet packet = new Packet();
 			packet.type = 0;
