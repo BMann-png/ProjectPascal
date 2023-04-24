@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4249420563881191925}
   - component: {fileID: 4249420563881191926}
   - component: {fileID: 4249420563881191931}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9e7c13986f54d4ab0c0c2344f41fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 100
+  sensitivity: 500
 --- !u!1 &4249420564580342457
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,9 +142,9 @@ GameObject:
   - component: {fileID: 4249420564965122358}
   - component: {fileID: 4249420564965122359}
   - component: {fileID: 6991602016641133472}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,7 +180,7 @@ CharacterController:
   m_Height: 1
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.1
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.5, z: 0}
@@ -197,7 +197,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  type: 0
   shoot: {fileID: 4249420564580342456}
   model: {fileID: 0}
 --- !u!114 &4249420564965122359
@@ -228,3 +227,18 @@ MonoBehaviour:
   primaryWeapons: []
   secondaryWeapons: []
   pacifier: {fileID: 0}
+--- !u!114 &5018046254760015926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4249420564965122353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60b638b9368aa1140bd16b9393242700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  healthVal: 0
+  decayRate: 0
