@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9e7c13986f54d4ab0c0c2344f41fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 500
+  sensitivity: 1
 --- !u!1 &4249420564580342457
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 4249420564965122358}
   - component: {fileID: 4249420564965122359}
   - component: {fileID: 6991602016641133472}
+  - component: {fileID: 5018046254760015926}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
