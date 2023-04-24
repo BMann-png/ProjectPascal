@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
 {
-	[SerializeField] private GameObject[] playerModels;
-	public GameObject[] PlayerModels { get => playerModels; }
-
-	[SerializeField] private GameObject[] enemyModels;
-	public GameObject[] EnemyModels { get => enemyModels; }
-
 	[SerializeField] private GameObject player;
 	public GameObject Player { get => player; }
 
@@ -21,13 +15,6 @@ public class PrefabManager : MonoBehaviour
   
 	[SerializeField] private GameObject enemy;
 	public GameObject Enemy { get => enemy; }
-
-	[SerializeField] private GameObject projectile;
-	public GameObject Projectile { get => projectile; }
-
-	[SerializeField] private GameObject networkProjectile;
-	public GameObject NetworkProjectile { get => networkProjectile; }
-
 	private void Awake()
 	{
 		DontDestroyOnLoad(gameObject);

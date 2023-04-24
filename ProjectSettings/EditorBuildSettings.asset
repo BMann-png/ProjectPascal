@@ -6,30 +6,30 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Menus/MainMenu.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: 7674f8d9d6b9d9e45a0b3cdf8b9c0007
   - enabled: 0
     path: Assets/Scenes/Daycare/c1m1_NapTime.unity
     guid: bc966686ad6bbda468abbb180e973118
   - enabled: 1
-    path: Assets/Daycare/c1m2_Library.unity
+    path: Assets/Scenes/Daycare/c1m2_Library.unity
     guid: 93b6f722da9efa14cade5eecc86eefb3
   - enabled: 1
-    path: Assets/Daycare/c1m3_Playground.unity
+    path: Assets/Scenes/Daycare/c1m3_Playground.unity
     guid: 148908a7fe3fb2846817ba65b0f00800
   - enabled: 1
-    path: Assets/Daycare/c1m4_Cellar.unity
+    path: Assets/Scenes/Daycare/c1m4_Cellar.unity
     guid: 90e8f521e1c2a64428573e0b94c6281f
   - enabled: 1
-    path: Assets/Daycare/c1m5_Corruption.unity
+    path: Assets/Scenes/Daycare/c1m5_Corruption.unity
     guid: 26279f37da99ec24ea7af94ee912bd18
   - enabled: 0
     path: Assets/Scenes/AITest.unity
     guid: 06c3d01a5c3b0fd4ba23d3bc4215b4fb
   - enabled: 1
-    path: Assets/Scenes/Menus/Lobby.unity
+    path: Assets/Scenes/Lobby.unity
     guid: 4975a78081d086f46bcedf6db5f63050
   - enabled: 1
-    path: Assets/Daycare/c1m1_NapRoom.unity
+    path: Assets/Scenes/Daycare/c1m1_NapRoom.unity
     guid: dbba48c08a56a4b419c4e5564294202c
   m_configObjects: {}

@@ -1,115 +1,62 @@
 using Steamworks;
 using Steamworks.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using TMPro;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
+
+struct TempEntity
+{
+	public TempEntity(byte id, byte type)
+	{
+		this.id = id;
+		this.type = type;
+	}
+
+	public byte id;
+	public byte type;
+}
 
 public class GameManager : Singleton<GameManager>
 {
-	private static readonly int MAX_ENEMY_COUNT = 30;
-	private static readonly int MAX_SPECIAL_COUNT = 2;
-
 	public bool IsServer { get; private set; }
 	private bool inLobby;
-	private byte levelNum;
+	private byte level;
 
-	private byte[] tempPlayers;
+	private TempEntity[] tempPlayers;
 	private Entity[] entities;
-	private Transform[] lobbySpawnpoints;
-	private Stack<byte> enemyIndices = new Stack<byte>(30);
-	private Stack<byte> objectiveIndices = new Stack<byte>(5);
-	private Stack<byte> projectileIndices = new Stack<byte>(206);
-	private bool[] specialsSpawned = new bool[10];
-	private int enemyCount = 0;
-	private int specialCount = 0;
-
-	private LevelManager level;
+	private Transform[] playerSpawnPoints;
+	private Transform[] enemySpawnPoints;
 
 	private PrefabManager prefabManager;
-	public PrefabManager PrefabManager { get => prefabManager; }
 
-	private SceneLoader sceneLoader;
-	public SceneLoader SceneLoader { get => sceneLoader; }
-
-	public bool Loading { get; private set; } = false;
-
-	public byte ThisPlayer { get; private set; } = 255;
-	public byte PlayerCount { get; private set; } = 0;
-	public byte PlayerDeaths { get; private set; } = 0;
-	private byte loadedPlayers = 0;
+	public byte thisPlayer { get; private set; } = 255;
 
 	protected override void Awake()
 	{
 		base.Awake();
 
 		prefabManager = FindFirstObjectByType<PrefabManager>();
-		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
-		tempPlayers = new byte[4] { 255, 255, 255, 255 };
+		tempPlayers = new TempEntity[4] {
+			new TempEntity(255, 255),
+			new TempEntity(255, 255),
+			new TempEntity(255, 255),
+			new TempEntity(255, 255)
+		};
 
 		entities = new Entity[256];
-
-		for (byte i = 4; i < 34; ++i) { enemyIndices.Push(i); }
-		for (byte i = 44; i < 49; ++i) { objectiveIndices.Push(i); }
-		for (byte i = 49; i < 255; ++i) { projectileIndices.Push(i); }
 	}
 
 	private void Update()
 	{
-		if (IsServer && !inLobby)
+		if(IsServer && !inLobby)
 		{
-			if (enemyCount < MAX_ENEMY_COUNT)
-			{
-				byte id = enemyIndices.Pop();
-				byte spawn = level.RandomEnemySpawn();
-				Transform transform = level.GetEnemySpawn(spawn);
-				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].SetModel();
-
-				Packet packet = new Packet();
-				packet.id = id;
-				packet.type = 6;
-				packet.spawn = new SpawnPacket(spawn);
-
-				NetworkManager.Instance.SendMessage(packet);
-
-				++enemyCount;
-			}
-
-			if (specialCount < MAX_SPECIAL_COUNT)
-			{
-				byte id = 255;
-				while (true)
-				{
-					id = (byte)Random.Range(0, 3);
-
-					if (specialsSpawned[id] == false) { break; }
-				}
-
-				specialsSpawned[id] = true;
-				id += 34;
-				byte spawn = level.RandomEnemySpawn();
-				Transform transform = level.GetEnemySpawn(spawn);
-				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].SetModel();
-
-				Packet packet = new Packet();
-				packet.id = id;
-				packet.type = 6;
-				packet.spawn = new SpawnPacket(spawn);
-
-				NetworkManager.Instance.SendMessage(packet);
-
-				++specialCount;
-			}
+			//TODO: Run the game
 		}
 	}
 
@@ -117,24 +64,12 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (IsServer)
 		{
-			levelNum = (byte)change.value;
+			level = (byte)change.value;
 		}
 	}
 
+	//TODO: only show level select and start game if owner
 	public void StartGame()
-	{
-		if (IsServer)
-		{
-			Packet packet = new Packet();
-			packet.type = 5;
-			packet.id = levelNum;
-
-			NetworkManager.Instance.SendMessage(packet);
-			LoadLevel(packet);
-		}
-	}
-
-	public void ChangeLevel(byte level)
 	{
 		if (IsServer)
 		{
@@ -147,44 +82,26 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	public void OnLevelLoad(LevelManager level)
+	public void OnLevelLoad(Transform[] playerSpawnPoints, Transform[] enemySpawnPoints)
 	{
-		this.level = level;
-		inLobby = false;
-		PlayerDeaths = 0;
+		this.playerSpawnPoints = playerSpawnPoints;
+		this.enemySpawnPoints = enemySpawnPoints;
 
-		if (++loadedPlayers == PlayerCount) { FinishLoading(); }
-
-		Packet packet = new Packet();
-		packet.type = 1;
-		packet.id = ThisPlayer;
-		packet.action = new ActionPacket(255);
-
-		NetworkManager.Instance.SendMessage(packet);
-	}
-
-	private void FinishLoading()
-	{
-		SceneLoader.SetLoadingScreen(false);
-		Loading = false;
-
-		foreach (byte id in tempPlayers)
+		foreach (TempEntity e in tempPlayers)
 		{
-			if (id != 255)
+			if (e.id != 255)
 			{
-				Transform transform = level.GetPlayerSpawn(id);
-
-				if (id == ThisPlayer)
+				if (e.id == thisPlayer)
 				{
-					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
-					entities[id].id = id;
+					entities[e.id] = Instantiate(prefabManager.Player, playerSpawnPoints[e.id].position, playerSpawnPoints[e.id].rotation).GetComponent<Entity>();
 				}
 				else
 				{
-					entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
-					entities[id].id = id;
-					entities[id].SetModel();
+					entities[e.id] = Instantiate(prefabManager.NetworkPlayer, playerSpawnPoints[e.id].position, playerSpawnPoints[e.id].rotation).GetComponent<Entity>();
 				}
+
+				entities[e.id].id = e.id;
+				entities[e.id].type = e.type;
 			}
 		}
 	}
@@ -206,7 +123,7 @@ public class GameManager : Singleton<GameManager>
 		if (result)
 		{
 			IsServer = true;
-			SceneLoader.LoadScene("Lobby");
+			SceneLoader.Instance.LoadScene("Lobby");
 		}
 		else
 		{
@@ -216,18 +133,17 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnJoinLobby(Transform[] spawnPoints)
 	{
-		lobbySpawnpoints = spawnPoints;
+		playerSpawnPoints = spawnPoints;
 		inLobby = true;
-		PlayerCount = 1;
 
 		if (IsServer)
 		{
-			entities[0] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[0].position, spawnPoints[0].rotation).GetComponent<Entity>();
+			entities[0] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[0].position, playerSpawnPoints[0].rotation).GetComponent<Entity>();
 			entities[0].id = 0;
+			entities[0].type = 0;
 			entities[0].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
-			entities[0].SetModel();
 
-			ThisPlayer = 0;
+			thisPlayer = 0;
 
 			NetworkManager.Instance.currentLobby.SetData("Player0", NetworkManager.Instance.PlayerId.Value.ToString());
 		}
@@ -242,15 +158,14 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId == 0 || steamId == NetworkManager.Instance.PlayerId.Value)
 				{
-					if (ThisPlayer == 255)
+					if (thisPlayer == 255)
 					{
-						ThisPlayer = i;
-						++PlayerCount;
+						thisPlayer = i;
 
-						entities[ThisPlayer] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[ThisPlayer].position, spawnPoints[ThisPlayer].rotation).GetComponent<Entity>();
-						entities[ThisPlayer].id = ThisPlayer;
-						entities[ThisPlayer].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
-						entities[ThisPlayer].SetModel();
+						entities[thisPlayer] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[thisPlayer].position, playerSpawnPoints[thisPlayer].rotation).GetComponent<Entity>();
+						entities[thisPlayer].id = thisPlayer;
+						entities[thisPlayer].type = thisPlayer;
+						entities[thisPlayer].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					}
 
 					continue;
@@ -259,17 +174,17 @@ public class GameManager : Singleton<GameManager>
 				string steamName = "";
 				foreach (Friend f in members)
 				{
-					if (f.Id.Value == steamId)
+					if(f.Id.Value == steamId)
 					{
 						steamName = f.Name;
 						break;
 					}
 				}
 
-				entities[i] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[i].position, spawnPoints[i].rotation).GetComponent<Entity>();
+				entities[i] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation).GetComponent<Entity>();
 				entities[i].id = i;
+				entities[i].type = i;
 				entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
-				entities[i].SetModel();
 			}
 		}
 	}
@@ -295,78 +210,16 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
-		PlayerCount = 0;
-		ThisPlayer = 255;
+		thisPlayer = 255;
 		IsServer = false;
 		inLobby = false;
-	}
-
-	public void Shoot(byte type)
-	{
-		if (IsServer)
-		{
-			byte id = projectileIndices.Pop();
-
-			Entity entity = entities[ThisPlayer];
-
-			entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
-			entities[id].id = id;
-			entities[id].GetComponent<Projectile>().SetSpeed(100);
-
-			Packet packet = new Packet();
-			packet.id = id;
-			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
-
-			NetworkManager.Instance.SendMessage(packet);
-		}
-		else
-		{
-			Packet packet = new Packet();
-			packet.id = 255;
-			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
-
-			NetworkManager.Instance.SendMessage(packet);
-		}
-	}
-
-	public void Destroy(Entity obj)
-	{
-		if (IsServer)
-		{
-			if(obj.id < 4) //Player
-			{
-
-			}
-			else if(obj.id < 34) //Common Enemy
-			{
-				enemyIndices.Push(obj.id);
-			}
-			else if (obj.id < 44) //Special Enemy
-			{
-				specialsSpawned[obj.id - 34] = false;
-			}
-			else if(obj.id < 49)
-			{
-				objectiveIndices.Push(obj.id);
-			}
-			else if (obj.id < 255)
-			{
-				projectileIndices.Push(obj.id);
-			}
-
-			Packet packet = new Packet();
-			packet.id = obj.id;
-			packet.type = 7;
-
-			NetworkManager.Instance.SendMessage(packet);
-		}
 	}
 
 	//Callbacks
 	public void PlayerJoined(Friend player) //This is called before OnJoinLobby
 	{
+		//TODO: Send message of player joining
+
 		Lobby lobby = NetworkManager.Instance.currentLobby;
 
 		for (byte i = 0; i < 4; ++i)
@@ -375,15 +228,10 @@ public class GameManager : Singleton<GameManager>
 
 			if (steamId == 0)
 			{
-				Transform transform;
-				if (inLobby) { transform = lobbySpawnpoints[i]; }
-				else { transform = level.GetPlayerSpawn(i); }
-
-				entities[i] = Instantiate(prefabManager.LobbyPlayer, transform.position, transform.rotation).GetComponent<Entity>();
+				entities[i] = Instantiate(prefabManager.LobbyPlayer, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation).GetComponent<Entity>();
 				entities[i].id = i;
+				entities[i].type = i;
 				entities[i].GetComponent<LobbyPlayer>().name.text = player.Name;
-				entities[i].SetModel();
-				++PlayerCount;
 
 				lobby.SetData("Player" + i, player.Id.Value.ToString());
 				break;
@@ -393,6 +241,8 @@ public class GameManager : Singleton<GameManager>
 
 	public void PlayerLeft(Friend player)
 	{
+		//TODO: Send message of player leaving
+
 		Lobby lobby = NetworkManager.Instance.currentLobby;
 
 		for (int i = 0; i < 4; ++i)
@@ -403,7 +253,6 @@ public class GameManager : Singleton<GameManager>
 			{
 				Destroy(entities[i].gameObject);
 				entities[i] = null;
-				--PlayerCount;
 
 				lobby.SetData("Player" + i, "0");
 
@@ -414,16 +263,18 @@ public class GameManager : Singleton<GameManager>
 
 	public void ReceiveTransform(Packet transform)
 	{
-		if (!Loading) { entities[transform.id].SetTransform(transform.transform); }
+		if (transform.id != thisPlayer)
+		{
+			entities[transform.id].SetTransform(transform.transform);
+		}
 	}
 
 	public void Action(Packet action)
 	{
-		if (action.action.data == 255) //Loaded into level
+		if (action.id != thisPlayer)
 		{
-			if (++loadedPlayers == PlayerCount) { FinishLoading(); }
+			entities[action.id].DoAction(action.action);
 		}
-		else { entities[action.id].DoAction(action.action); }
 	}
 
 	public void Health(Packet health)
@@ -447,7 +298,8 @@ public class GameManager : Singleton<GameManager>
 		{
 			if (entities[i] != null)
 			{
-				tempPlayers[i] = entities[i].id;
+				tempPlayers[i].id = entities[i].id;
+				tempPlayers[i].type = entities[i].type;
 			}
 		}
 
@@ -462,71 +314,20 @@ public class GameManager : Singleton<GameManager>
 			case 4: scene = "c1m5_Corruption"; break;
 		}
 
-		Loading = true;
-		loadedPlayers = 0;
-		SceneLoader.SetLoadingScreen(true);
-		SceneLoader.LoadScene(scene);
+		SceneLoader.Instance.LoadScene(scene);
 	}
 
 	public void Spawn(Packet packet)
 	{
-		if (packet.id < 4)
-		{
-			//player
-		}
-		else if (packet.id < 44)
-		{
-			Transform transform = level.GetEnemySpawn(packet.spawn.spawn);
-			entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-			entities[packet.id].id = packet.id;
-			entities[packet.id].SetModel();
-		}
-		else if (packet.id < 49)
-		{
-			//objective
-		}
-		else
-		{
-			if (IsServer && packet.id == 255)
-			{
-				byte id = projectileIndices.Pop();
 
-				Entity entity = entities[packet.spawn.spawn];
-
-				entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].GetComponent<Projectile>().SetSpeed(100);
-
-				Packet newPacket = new Packet();
-				newPacket.id = id;
-				newPacket.type = 6;
-				newPacket.spawn = packet.spawn;
-
-				NetworkManager.Instance.SendMessage(newPacket);
-			}
-			else if (packet.id != 255)
-			{
-				Entity entity = entities[packet.spawn.spawn];
-
-				entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
-				entities[packet.id].id = packet.id;
-			}
-		}
-	}
-
-	public void Despawn(Packet packet)
-	{
-		if (entities[packet.id] != null)
-		{
-			Destroy(entities[packet.id].gameObject);
-		}
 	}
 
 	public void OwnerChange(Packet packet)
 	{
-		if (packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
+		if(packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
 			IsServer = true;
+			//TODO: enable level select and start button
 		}
 	}
 }
