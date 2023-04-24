@@ -34,6 +34,7 @@ public class GameManager : Singleton<GameManager>
 
 	public byte ThisPlayer { get; private set; } = 255;
 	public byte PlayerCount { get; private set; } = 0; //TODO: Take into account player deaths
+	public bool Network { get; private set; } = true;
 
 	protected override void Awake()
 	{
@@ -59,6 +60,11 @@ public class GameManager : Singleton<GameManager>
 		{
 			projectileIndices.Push(i);
 		}
+	}
+
+	private void FixedUpdate()
+	{
+		Network = !Network;
 	}
 
 	private void Update()

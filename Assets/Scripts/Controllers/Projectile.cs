@@ -27,12 +27,15 @@ public class Projectile : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		Packet packet = new Packet();
-		packet.type = 0;
-		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform, transform.eulerAngles.x);
+		if (GameManager.Instance.Network)
+		{
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform, transform.eulerAngles.x);
 
-		NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	private void Update()

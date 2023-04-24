@@ -22,6 +22,7 @@ public class Entity : MonoBehaviour
 										//ID of 255 is invalid
 
 	private Vector3 targetPosition;
+	private Vector3 movement;
 	private float targetRotation;
 
 	public Transform shoot;
@@ -33,11 +34,11 @@ public class Entity : MonoBehaviour
 		targetRotation = transform.eulerAngles.y;
 	}
 
-	private void Update()
+	private void FixedUpdate()
 	{
 		if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
 		{
-			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
+			transform.position += movement;
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
 		}
 	}
@@ -45,6 +46,7 @@ public class Entity : MonoBehaviour
 	public void SetTransform(TransformPacket tp)
 	{
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
+		movement = (targetPosition - transform.position) / 60.0f;
 		targetRotation = tp.yRot;
 
 		if (id > 48)

@@ -41,12 +41,15 @@ public class PlayerController : MonoBehaviour
 			EndSprint();
 		}
 
-		Packet packet = new Packet();
-		packet.type = 0;
-		packet.id = entity.id;
-		packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
+		if (GameManager.Instance.Network)
+		{
+			Packet packet = new Packet();
+			packet.type = 0;
+			packet.id = entity.id;
+			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
 
-		NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	private void Update()
