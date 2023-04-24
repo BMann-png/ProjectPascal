@@ -69,7 +69,7 @@ public class Projectile : MonoBehaviour
 		}
 		else if (1 << collision.gameObject.layer == GROUND_MASK.value)
 		{
-			dealsDamage = false;
+			damage.dealsDamage = false;
 
 			if (destoryOnCollide)
 				Destroy(gameObject);

@@ -311,7 +311,6 @@ public class GameManager : Singleton<GameManager>
 
 			entities[id] = Instantiate(prefabManager.Projectiles[type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 			entities[id].id = id;
-			entities[id].type = 16;
 			entities[id].GetComponent<Projectile>().SetSpeed();
 
 			Packet packet = new Packet();
@@ -496,7 +495,6 @@ public class GameManager : Singleton<GameManager>
 
 				entities[id] = Instantiate(prefabManager.Projectiles[type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[id].id = id;
-				entities[id].type = 16;
 				entities[id].GetComponent<Projectile>().SetSpeed();
 
 				Packet newPacket = new Packet();
