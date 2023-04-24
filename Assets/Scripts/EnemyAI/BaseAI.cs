@@ -9,7 +9,7 @@ public class BaseAI : MonoBehaviour
     [SerializeField] Perception playerPerception;
     [SerializeField] Perception allyPerception;
 
-    [SerializeField] float attackRange = 0.0f;
+    [SerializeField] float aiRange = 0.0f;
 
     BAIStateMachine stateMachine = new BAIStateMachine();
 
@@ -35,10 +35,10 @@ public class BaseAI : MonoBehaviour
         stateMachine.AddTransition(typeof(IdleState).Name, new Transition(new Condition[]
             { new Condition<bool>(isAgitated, Predicate.Equal, true)}), typeof(MoveState).Name);
         stateMachine.AddTransition(typeof(IdleState).Name, new Transition(new Condition[]
-            { new Condition<float>(distanceToPlayer, Predicate.LessOrEqual, attackRange)}), typeof(AttackState).Name);
+            { new Condition<float>(distanceToPlayer, Predicate.LessOrEqual, aiRange)}), typeof(AttackState).Name);
 
         stateMachine.AddTransition(typeof(AttackState).Name, new Transition(new Condition[]
-            { new Condition<float>(distanceToPlayer, Predicate.Greater, attackRange)}), typeof(MoveState).Name);
+            { new Condition<float>(distanceToPlayer, Predicate.Greater, aiRange)}), typeof(MoveState).Name);
 
         //All States to the Death State
         stateMachine.AddTransition(typeof(AttackState).Name, new Transition(new Condition[]
