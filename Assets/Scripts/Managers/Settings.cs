@@ -47,7 +47,7 @@ public class Settings : MonoBehaviour
 		if (sensitivityInput.text != null)
 		{
 			float value = Mathf.Clamp(float.Parse(sensitivityInput.text), 0.5f, 2.0f);
-			sensitivityInput.text = value.ToString();
+			sensitivityInput.text = string.Format("{0:0.0}", value);
 			PlayerPrefs.SetFloat("Sensitivity", value);
 			sensitivity.value = PlayerPrefs.GetFloat("Sensitivity");
 
@@ -72,7 +72,7 @@ public class Settings : MonoBehaviour
 		if (masterAudioInput.text != null)
 		{
 			float value = Mathf.Clamp(float.Parse(masterAudioInput.text), 0.0f, 1.0f);
-			masterAudioInput.text = value.ToString();
+			masterAudioInput.text = string.Format("{0:0.0}", value);
 			PlayerPrefs.SetFloat("MasterAudio", value);
 			masterAudio.value = PlayerPrefs.GetFloat("MasterAudio");
 
@@ -97,7 +97,7 @@ public class Settings : MonoBehaviour
 		if (musicAudioInput.text != null)
 		{
 			float value = Mathf.Clamp(float.Parse(musicAudioInput.text), 0.0f, 1.0f);
-			musicAudioInput.text = value.ToString();
+			musicAudioInput.text = string.Format("{0:0.0}", value);
 			PlayerPrefs.SetFloat("MusicAudio", value);
 			musicAudio.value = PlayerPrefs.GetFloat("MusicAudio");
 
@@ -122,7 +122,7 @@ public class Settings : MonoBehaviour
 		if (sfxAudioInput.text != null)
 		{
 			float value = Mathf.Clamp(float.Parse(sfxAudioInput.text), 0.0f, 1.0f);
-			sfxAudioInput.text = value.ToString();
+			sfxAudioInput.text = string.Format("{0:0.0}", value);
 			PlayerPrefs.SetFloat("SFXAudio", value);
 			sfxAudio.value = PlayerPrefs.GetFloat("SFXAudio");
 
