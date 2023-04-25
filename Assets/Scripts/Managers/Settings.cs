@@ -28,41 +28,109 @@ public class Settings : MonoBehaviour
 		masterAudio.value = PlayerPrefs.GetFloat("MasterAudio");
 		musicAudio.value = PlayerPrefs.GetFloat("MusicAudio");
 		sfxAudio.value = PlayerPrefs.GetFloat("SFXAudio");
-		sensitivityInput.text = PlayerPrefs.GetFloat("Sensitivity").ToString();
-		masterAudioInput.text = PlayerPrefs.GetFloat("MasterAudio").ToString();
-		musicAudioInput.text = PlayerPrefs.GetFloat("MusicAudio").ToString();
-		sfxAudioInput.text = PlayerPrefs.GetFloat("SFXAudio").ToString();
+		sensitivityInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("Sensitivity"));
+		masterAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MasterAudio"));
+		musicAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MusicAudio"));
+		sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
 	}
 
 	public void ChangeSensitivity()
 	{
 		PlayerPrefs.SetFloat("Sensitivity", sensitivity.value);
-		sensitivityInput.text = PlayerPrefs.GetFloat("Sensitivity").ToString();
+		sensitivityInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("Sensitivity"));
 
 		PlayerPrefs.Save();
+	}
+
+	public void ChangeSensitivityInput()
+	{
+		if (sensitivityInput.text != null)
+		{
+			float value = Mathf.Clamp(float.Parse(sensitivityInput.text), 0.5f, 2.0f);
+			sensitivityInput.text = value.ToString();
+			PlayerPrefs.SetFloat("Sensitivity", value);
+			sensitivity.value = PlayerPrefs.GetFloat("Sensitivity");
+
+			PlayerPrefs.Save();
+		}
+		else
+		{
+			sensitivityInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("Sensitivity"));
+		}
 	}
 
 	public void ChangeMasterAudio()
 	{
 		PlayerPrefs.SetFloat("MasterAudio", masterAudio.value);
-		masterAudioInput.text = PlayerPrefs.GetFloat("MasterAudio").ToString();
+		masterAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MasterAudio"));
 
 		PlayerPrefs.Save();
+	}
+
+	public void ChangeMasterAudioInput()
+	{
+		if (masterAudioInput.text != null)
+		{
+			float value = Mathf.Clamp(float.Parse(masterAudioInput.text), 0.0f, 1.0f);
+			masterAudioInput.text = value.ToString();
+			PlayerPrefs.SetFloat("MasterAudio", value);
+			masterAudio.value = PlayerPrefs.GetFloat("MasterAudio");
+
+			PlayerPrefs.Save();
+		}
+		else
+		{
+			masterAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MasterAudio"));
+		}
 	}
 
 	public void ChangeMusicAudio()
 	{
 		PlayerPrefs.SetFloat("MusicAudio", musicAudio.value);
-		musicAudioInput.text = PlayerPrefs.GetFloat("MusicAudio").ToString();
+		musicAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MusicAudio"));
 
 		PlayerPrefs.Save();
+	}
+
+	public void ChangeMusicAudioInput()
+	{
+		if (musicAudioInput.text != null)
+		{
+			float value = Mathf.Clamp(float.Parse(musicAudioInput.text), 0.0f, 1.0f);
+			musicAudioInput.text = value.ToString();
+			PlayerPrefs.SetFloat("MusicAudio", value);
+			musicAudio.value = PlayerPrefs.GetFloat("MusicAudio");
+
+			PlayerPrefs.Save();
+		}
+		else
+		{
+			musicAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MusicAudio"));
+		}
 	}
 
 	public void ChangeSFXAudio()
 	{
 		PlayerPrefs.SetFloat("SFXAudio", sfxAudio.value);
-		sfxAudioInput.text = PlayerPrefs.GetFloat("SFXAudio").ToString();
+		sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
 
 		PlayerPrefs.Save();
+	}
+
+	public void ChangeSFXAudioInput()
+	{
+		if (sfxAudioInput.text != null)
+		{
+			float value = Mathf.Clamp(float.Parse(sfxAudioInput.text), 0.0f, 1.0f);
+			sfxAudioInput.text = value.ToString();
+			PlayerPrefs.SetFloat("SFXAudio", value);
+			sfxAudio.value = PlayerPrefs.GetFloat("SFXAudio");
+
+			PlayerPrefs.Save();
+		}
+		else
+		{
+			sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
+		}
 	}
 }
