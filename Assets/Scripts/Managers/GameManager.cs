@@ -13,7 +13,7 @@ using UnityEngine.UIElements;
 
 public class GameManager : Singleton<GameManager>
 {
-	[SerializeField] public GameObject[] playerLocations = new GameObject[] {};
+	public List<GameObject> playerLocations = new List<GameObject>();
 	private static readonly int MAX_ENEMY_COUNT = 30;
 	private static readonly int MAX_SPECIAL_COUNT = 2;
 
@@ -181,12 +181,14 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
+					playerLocations.Add(entities[id].gameObject);
 				}
 				else
 				{
 					entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					entities[id].SetModel();
+					playerLocations.Add(entities[id].gameObject);
 				}
 			}
 		}
@@ -463,6 +465,7 @@ public class GameManager : Singleton<GameManager>
 		loadedPlayers = 0;
 
 		SceneLoader.SetLoadingScreen(true);
+		playerLocations.Clear();
 
 		string scene;
 		switch (i)

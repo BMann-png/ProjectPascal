@@ -24,7 +24,7 @@ public class BaseAI : MonoBehaviour
 
     private void Start()
     {
-        obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Length - 1)];
+        obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count - 1)];
         navMeshAgent = GetComponent<NavMeshAgent>();
 
         animator = GetComponentInChildren<Animator>();
