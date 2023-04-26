@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class BaseAI : MonoBehaviour
 {
     [SerializeField] Perception playerPerception;
@@ -54,6 +54,8 @@ public class BaseAI : MonoBehaviour
     private void Update()
     {
         distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
+
+        agentHealth.value = GetComponent<Health>().health;
 
     }
 }
