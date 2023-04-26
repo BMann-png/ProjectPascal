@@ -20,10 +20,14 @@ public class BaseAI : MonoBehaviour
     public GameObject obsession;
     public NavMeshAgent navMeshAgent;
 
+    public Animator animator;
+
     private void Start()
     {
         obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Length - 1)];
         navMeshAgent = GetComponent<NavMeshAgent>();
+
+        animator = GetComponentInChildren<Animator>();
 
         stateMachine.AddState(new AttackState(typeof(AttackState).Name, this));
         stateMachine.AddState(new IdleState(typeof(IdleState).Name, this));

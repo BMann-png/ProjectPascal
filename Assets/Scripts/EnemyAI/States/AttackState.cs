@@ -8,12 +8,12 @@ public class AttackState : State
 
     public override void OnEnter()
     {
-        throw new System.NotImplementedException();
+        Agent.animator.SetBool("isAttacking", true);
     }
 
     public override void OnExit()
     {
-        throw new System.NotImplementedException();
+        Agent.animator.SetBool("isAttacking", false);
     }
 
     public override void OnUpdate()

@@ -19,5 +19,6 @@ public class MoveState : State
     public override void OnUpdate()
     {
         Agent.navMeshAgent.SetDestination(Agent.obsession.transform.position);
+        Agent.animator.SetFloat("Speed", Agent.navMeshAgent.speed);
     }
 }
