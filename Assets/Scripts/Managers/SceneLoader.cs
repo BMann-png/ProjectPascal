@@ -1,12 +1,15 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static SceneLoader;
 
 public class SceneLoader : MonoBehaviour
 {
 	[SerializeField] private GameObject loadingScreen;
+	[SerializeField] private Image fade;
 
 	public delegate void OnSceneLoad();
 
@@ -24,7 +27,6 @@ public class SceneLoader : MonoBehaviour
 		loadingScreen.SetActive(b);
 	}
 
-	//TODO: Wait for all players to load
 	public void LoadScene(string sceneName)
 	{
 		SceneManager.LoadScene(sceneName);
@@ -38,5 +40,25 @@ public class SceneLoader : MonoBehaviour
 	public void SceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if(onSceneLoad != null) { onSceneLoad(); onSceneLoad = null; }
+	}
+
+	public delegate void OnFinishFade(int scene);
+
+	public IEnumerable FadeToLoad(float time, int scene, OnFinishFade finish)
+	{
+		float fadeAmount = 1.0f / time;
+
+		while(fade.color.a < 1.0f)
+		{
+			fade.color = new Color(0.0f, 0.0f, 0.0f, fade.color.a + fadeAmount * Time.deltaTime);
+			yield return null;
+		}
+
+		finish(scene);
+	}
+
+	public void ResetScreen()
+	{
+		fade.color = Color.clear;
 	}
 }

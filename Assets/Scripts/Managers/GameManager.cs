@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
@@ -166,6 +167,7 @@ public class GameManager : Singleton<GameManager>
 	private void FinishLoading()
 	{
 		SceneLoader.SetLoadingScreen(false);
+		SceneLoader.ResetScreen();
 		Loading = false;
 
 		foreach (byte id in tempPlayers)
@@ -451,8 +453,18 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
+		SceneLoader.FadeToLoad(3.0f, packet.id, StartLoad);
+	}
+
+	public void StartLoad(int i)
+	{
+		Loading = true;
+		loadedPlayers = 0;
+
+		SceneLoader.SetLoadingScreen(true);
+
 		string scene;
-		switch (packet.id)
+		switch (i)
 		{
 			default:
 			case 0: scene = "c1m1_NapRoom"; break;
@@ -462,9 +474,6 @@ public class GameManager : Singleton<GameManager>
 			case 4: scene = "c1m5_Corruption"; break;
 		}
 
-		Loading = true;
-		loadedPlayers = 0;
-		SceneLoader.SetLoadingScreen(true);
 		SceneLoader.LoadScene(scene);
 	}
 
