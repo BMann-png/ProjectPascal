@@ -9,22 +9,6 @@ public class Saferoom : MonoBehaviour
 
 	private int playerCount = 0;
 	private int enemyCount = 0;
-	private float timer = 3.0f;
-	private bool ready = false;
-
-	private void Update()
-	{
-		if(ready)
-		{
-			//TODO: Fade
-			timer -= Time.deltaTime;
-
-			if(timer <= 0 )
-			{
-				GameManager.Instance.ChangeLevel(nextLevel);
-			}
-		}
-	}
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -33,7 +17,7 @@ public class Saferoom : MonoBehaviour
 
 		if(enemyCount == 0 && playerCount == GameManager.Instance.PlayerCount)
 		{
-			ready = true;
+			GameManager.Instance.ChangeLevel(nextLevel);
 		}
 	}
 
@@ -44,7 +28,7 @@ public class Saferoom : MonoBehaviour
 
 		if (enemyCount == 0 && playerCount == GameManager.Instance.PlayerCount)
 		{
-			ready = true;
+			GameManager.Instance.ChangeLevel(nextLevel);
 		}
 	}
 }

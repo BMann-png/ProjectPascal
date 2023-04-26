@@ -453,7 +453,7 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
-		SceneLoader.FadeToLoad(3.0f, packet.id, StartLoad);
+		StartCoroutine(SceneLoader.FadeToLoad(3.0f, packet.id, StartLoad));
 	}
 
 	public void StartLoad(int i)

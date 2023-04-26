@@ -20,6 +20,7 @@ public class SceneLoader : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 		SceneManager.sceneLoaded += SceneLoaded;
 		loadingScreen.SetActive(false);
+		fade.color = Color.clear;
 	}
 
 	public void SetLoadingScreen(bool b)
@@ -44,7 +45,7 @@ public class SceneLoader : MonoBehaviour
 
 	public delegate void OnFinishFade(int scene);
 
-	public IEnumerable FadeToLoad(float time, int scene, OnFinishFade finish)
+	public IEnumerator FadeToLoad(float time, int scene, OnFinishFade finish)
 	{
 		float fadeAmount = 1.0f / time;
 
