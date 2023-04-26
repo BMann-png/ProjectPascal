@@ -11,8 +11,8 @@ public class LevelManager : MonoBehaviour
 
 	private void Awake()
 	{
-		playerSpawners = FindObjectsByType<PlayerSpawner>(FindObjectsSortMode.None);
-		enemySpawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+		playerSpawners = FindObjectsByType<PlayerSpawner>(FindObjectsSortMode.InstanceID);
+		enemySpawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.InstanceID);
 
 		GameManager.Instance.OnLevelLoad(this);
 	}
