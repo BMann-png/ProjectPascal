@@ -10,6 +10,9 @@ public class PrefabManager : MonoBehaviour
 	[SerializeField] private GameObject[] enemyModels;
 	public GameObject[] EnemyModels { get => enemyModels; }
 
+	[SerializeField] private GameObject[] specialModels;
+	public GameObject[] SpecialModels { get => specialModels; }
+
 	[SerializeField] private GameObject player;
 	public GameObject Player { get => player; }
 
@@ -31,5 +34,10 @@ public class PrefabManager : MonoBehaviour
 	private void Awake()
 	{
 		DontDestroyOnLoad(gameObject);
+	}
+
+	public GameObject RandomCommon()
+	{
+		return enemyModels[Random.Range(0, enemyModels.Length)];
 	}
 }
