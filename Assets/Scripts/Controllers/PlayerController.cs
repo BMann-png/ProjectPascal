@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 	private CharacterController controller;
 	private Entity entity;
 	private Vector3 movement;
-	private Animator animator;
 
 	private bool sprinting = false;
 	private bool tripped = false;
@@ -30,7 +29,6 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
-		animator = GetComponentInChildren<Animator>();
 	}
 
 	private void FixedUpdate()
@@ -85,9 +83,6 @@ public class PlayerController : MonoBehaviour
 			movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
 
 			movement *= tripped ? TRIP_MOD : 1.0f;
-
-			if(animator) { animator.SetFloat("Movespeed", movement.magnitude); }
-			else { animator = GetComponentInChildren<Animator>(); }
 
 			controller.Move(movement);
 
