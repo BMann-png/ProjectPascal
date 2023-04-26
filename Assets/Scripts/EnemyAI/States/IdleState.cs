@@ -8,16 +8,17 @@ public class IdleState : State
 
     public override void OnEnter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Idle");
+        //throw new System.NotImplementedException();
     }
 
     public override void OnExit()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public override void OnUpdate()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

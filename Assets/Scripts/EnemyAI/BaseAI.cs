@@ -41,18 +41,25 @@ public class BaseAI : MonoBehaviour
         stateMachine.AddTransition(typeof(IdleState).Name, new Transition(new Condition[]
             { new Condition<float>(distanceToPlayer, Predicate.LessOrEqual, aiRange)}), typeof(AttackState).Name);
 
+        stateMachine.AddTransition(typeof(MoveState).Name, new Transition(new Condition[]
+            { new Condition<float>(distanceToPlayer, Predicate.LessOrEqual, aiRange)}), typeof(AttackState).Name);
+
         stateMachine.AddTransition(typeof(AttackState).Name, new Transition(new Condition[]
             { new Condition<float>(distanceToPlayer, Predicate.Greater, aiRange)}), typeof(MoveState).Name);
 
         //All States to the Death State
-        stateMachine.AddTransition(typeof(AttackState).Name, new Transition(new Condition[]
-            { new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)}), typeof(DeathState).Name);
-        stateMachine.AddTransition(typeof(IdleState).Name, new Transition(new Condition[]
-            { new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)}), typeof(DeathState).Name);
-        stateMachine.AddTransition(typeof(MoveState).Name, new Transition(new Condition[]
-            { new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)}), typeof(DeathState).Name);
-        stateMachine.AddTransition(typeof(WanderState).Name, new Transition(new Condition[]
-            { new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)}), typeof(DeathState).Name);
+        stateMachine.AddTransition(typeof(AttackState).Name, new Transition(
+            new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)), typeof(DeathState).Name);
+        stateMachine.AddTransition(typeof(IdleState).Name, new Transition(
+            new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)), typeof(DeathState).Name);
+        stateMachine.AddTransition(typeof(MoveState).Name, new Transition(
+            new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)), typeof(DeathState).Name);
+        stateMachine.AddTransition(typeof(WanderState).Name, new Transition(
+            new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)), typeof(DeathState).Name);
+
+        stateMachine.SetState(stateMachine.GetState(typeof(IdleState).Name));
+
+        isAgitated.value = true;
     }
 
     private void Update()
@@ -60,6 +67,7 @@ public class BaseAI : MonoBehaviour
         distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
 
         agentHealth.value = GetComponent<Health>().health;
+        Debug.Log(agentHealth.value);
 
         stateMachine.OnUpdate();
     }

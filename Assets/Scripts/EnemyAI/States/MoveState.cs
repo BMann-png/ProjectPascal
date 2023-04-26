@@ -8,6 +8,7 @@ public class MoveState : State
 
     public override void OnEnter()
     {
+        Debug.Log("Move");
         Agent.navMeshAgent.isStopped = false;
     }
 
@@ -19,6 +20,6 @@ public class MoveState : State
     public override void OnUpdate()
     {
         Agent.navMeshAgent.SetDestination(Agent.obsession.transform.position);
-        Agent.animator.SetFloat("Speed", Agent.navMeshAgent.speed);
+        Agent.animator.SetFloat("speed", Agent.navMeshAgent.speed);
     }
 }

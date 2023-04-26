@@ -8,6 +8,7 @@ public class DeathState : State
 
     public override void OnEnter()
     {
+        Debug.Log("Died");
         Agent.animator.SetTrigger("isDead");
     }
 
@@ -18,6 +19,6 @@ public class DeathState : State
 
     public override void OnUpdate()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }
