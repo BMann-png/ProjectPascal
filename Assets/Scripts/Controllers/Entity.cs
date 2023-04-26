@@ -77,11 +77,11 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 34)
 		{
-			model = Instantiate(GameManager.Instance.PrefabManager.EnemyModels[0], transform);
+			model = Instantiate(GameManager.Instance.PrefabManager.RandomCommon(), transform);
 		}
 		else
 		{
-			model = Instantiate(GameManager.Instance.PrefabManager.EnemyModels[id - 33], transform);
+			model = Instantiate(GameManager.Instance.PrefabManager.SpecialModels[id - 34], transform);
 		}
 	}
 
