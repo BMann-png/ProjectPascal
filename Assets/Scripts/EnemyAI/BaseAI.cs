@@ -61,5 +61,6 @@ public class BaseAI : MonoBehaviour
 
         agentHealth.value = GetComponent<Health>().health;
 
+        stateMachine.OnUpdate();
     }
 }
