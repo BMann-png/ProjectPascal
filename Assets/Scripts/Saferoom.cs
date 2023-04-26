@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Saferoom : MonoBehaviour
 {
 	[SerializeField] byte nextLevel;
 
-	private int playerCount;
-	private int enemyCount;
+	private int playerCount = 0;
+	private int enemyCount = 0;
 
 	private void OnTriggerEnter(Collider other)
 	{

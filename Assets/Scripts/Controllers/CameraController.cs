@@ -7,8 +7,6 @@ public class CameraController : MonoBehaviour
 {
 	private static readonly float MAX_ANGLE = 90.0f;
 
-	[SerializeField] private float sensitivity = 1;
-
 	private Transform character;
 
 	private void Start()
@@ -22,6 +20,8 @@ public class CameraController : MonoBehaviour
 	{
 		if (!GameManager.Instance.Loading)
 		{
+			float sensitivity = PlayerPrefs.GetFloat("Sensitivity");
+
 			float mouseX = Input.GetAxis("Mouse X") * sensitivity;
 			float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
 
