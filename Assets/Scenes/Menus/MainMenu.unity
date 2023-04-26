@@ -8037,10 +8037,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModels:
-  - {fileID: 919132149155446097, guid: 8a13afe15f2d65d4b9fb1e0aef28f20d, type: 3}
-  - {fileID: 919132149155446097, guid: 5f41fd1b508fe6447b143faa8bdaf12f, type: 3}
-  - {fileID: 919132149155446097, guid: 3f93deef69483e74d9e0cde773d15936, type: 3}
-  - {fileID: 919132149155446097, guid: 4811f30188c7b1544a9dea22898020a6, type: 3}
+  - {fileID: 4663835777904343275, guid: a6c864a3f0053404eb2affc24dac13c6, type: 3}
+  - {fileID: 1497608282148421202, guid: 3e9bdb5398aaca14c8d688c6a8a560a6, type: 3}
+  - {fileID: 7981072203922677204, guid: 16b3890f89b53a242b33c964ab260421, type: 3}
+  - {fileID: 6102916416845409384, guid: 137c7b56d9700ac46b2bdad8f07f981f, type: 3}
   enemyModels:
   - {fileID: 6119440742508462032, guid: 96c6b2f2a5727a443a7a3bfaf7df2e69, type: 3}
   - {fileID: 2752576016948203729, guid: 91c68ee2ec901de47af3f5c97695b16b, type: 3}

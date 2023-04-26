@@ -93,8 +93,6 @@ public class Entity : MonoBehaviour
 			{
 				case 0: //Sprint
 					{
-						model.transform.localPosition = Vector3.zero;
-						model.transform.localRotation = Quaternion.identity;
 						CapsuleCollider collider = GetComponent<CapsuleCollider>();
 						collider.height = 2.2f;
 						collider.radius = 0.3f;
@@ -103,8 +101,6 @@ public class Entity : MonoBehaviour
 					break;
 				case 1: //End Sprint
 					{
-						model.transform.localPosition = new Vector3(0.0f, 0.25f, -1.0f);
-						model.transform.localRotation = Quaternion.AngleAxis(90, Vector3.right);
 						CapsuleCollider collider = GetComponent<CapsuleCollider>();
 						collider.height = 1.0f;
 						collider.radius = 0.5f;
