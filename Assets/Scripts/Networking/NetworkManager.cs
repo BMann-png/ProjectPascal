@@ -112,7 +112,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	public SteamId PlayerId { get; private set; }
 
 	private string playerIdString;
-	private bool connectedToSteam;
 
 	private Pascal.SocketManager socketManager;
 	private Pascal.ConnectionManager connectionManager;
@@ -144,7 +143,6 @@ public class NetworkManager : Singleton<NetworkManager>
 			PlayerId = SteamClient.SteamId;
 			playerIdString = PlayerId.ToString();
 			activeLobbies = new List<Lobby>();
-			connectedToSteam = true;
 
 			SteamNetworkingUtils.InitRelayNetworkAccess();
 

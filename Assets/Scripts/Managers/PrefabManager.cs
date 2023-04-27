@@ -25,6 +25,9 @@ public class PrefabManager : MonoBehaviour
 	[SerializeField] private GameObject enemy;
 	public GameObject Enemy { get => enemy; }
 
+	[SerializeField] private GameObject networkEnemy;
+	public GameObject NetworkEnemy { get => networkEnemy; }
+
 	[SerializeField] private GameObject projectile;
 	public GameObject Projectile { get => projectile; }
 

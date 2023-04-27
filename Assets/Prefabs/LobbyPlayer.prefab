@@ -182,9 +182,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  type: 0
   shoot: {fileID: 0}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 1
 --- !u!114 &-2614088611639962923
 MonoBehaviour:
   m_ObjectHideFlags: 0
