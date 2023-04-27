@@ -137,17 +137,17 @@ public class Entity : MonoBehaviour
             {
                 case 0: //Attack
                     {
-                        animator.SetBool("IsAttacking", true);
+                        animator.SetBool("isAttacking", true);
                     }
                     break;
                 case 1: //Attack
                     {
-                        animator.SetBool("IsAttacking", false);
+                        animator.SetBool("isAttacking", false);
                     }
                     break;
                 case 2: //Death
                     {
-                        animator.SetTrigger("IsDead");
+                        animator.SetTrigger("isDead");
                     }
                     break;
             }
