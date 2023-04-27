@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class Entity : MonoBehaviour
 {
