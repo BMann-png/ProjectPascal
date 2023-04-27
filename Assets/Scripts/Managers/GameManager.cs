@@ -490,7 +490,8 @@ public class GameManager : Singleton<GameManager>
 		else if (packet.id < 44)
 		{
 			Transform transform = level.GetEnemySpawn(packet.spawn.spawn);
-			entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+			if(IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>(); }
+			else { entities[packet.id] = Instantiate(prefabManager.NetworkEnemy, transform.position, transform.rotation).GetComponent<Entity>(); }
 			entities[packet.id].id = packet.id;
 			entities[packet.id].SetModel();
 		}
