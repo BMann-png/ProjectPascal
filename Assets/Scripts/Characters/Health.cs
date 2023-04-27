@@ -32,10 +32,5 @@ public class Health : MonoBehaviour
         packet.health = new HealthPacket();
         packet.health.data = (byte)health;
         NetworkManager.Instance.SendMessage(packet);
-
-        if(health <= 0)
-        {
-            Debug.Log("Ded");
-        }
     }
 }
