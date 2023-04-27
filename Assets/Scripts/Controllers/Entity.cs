@@ -49,7 +49,7 @@ public class Entity : MonoBehaviour
 
         if (!inLobby && animator != null)
         {
-			float speed = (transform.position - previousPosition).magnitude;
+			float speed = (transform.position - previousPosition).magnitude /Time.deltaTime;
 
             animator.SetFloat("Speed", Mathf.Abs(speed));
         }
@@ -137,10 +137,15 @@ public class Entity : MonoBehaviour
 			{
 				case 0: //Attack
 				{
-					animator.SetTrigger("IsAttacking");
+					animator.SetBool("IsAttacking",true);
 				}
 				break;
-				case 1: //Death
+				case 1: //Attack
+				{
+					animator.SetBool("IsAttacking", false);
+				}
+				break;
+				case 2: //Death
 				{
 					animator.SetTrigger("IsDead");
 				}

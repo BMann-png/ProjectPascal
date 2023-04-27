@@ -16,7 +16,7 @@ public class DeathState : State
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = Agent.entity.id;
-		packet.action = new ActionPacket(3);
+		packet.action = new ActionPacket(2);
 
 		NetworkManager.Instance.SendMessage(packet);
 	}
