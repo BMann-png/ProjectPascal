@@ -5,14 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
-using UnityEditor.MemoryProfiler;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class GameManager : Singleton<GameManager>
 {
-	private static readonly int MAX_ENEMY_COUNT = 30;
+	public List<GameObject> playerLocations = new List<GameObject>();
+	private static readonly int MAX_ENEMY_COUNT = 15;
 	private static readonly int MAX_SPECIAL_COUNT = 2;
 
 	public bool IsServer { get; private set; }
@@ -62,7 +63,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if (IsServer && !inLobby)
+		if (IsServer && !inLobby && playerLocations.Count > 0) //TODO: potential bigger problem
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
@@ -166,6 +167,7 @@ public class GameManager : Singleton<GameManager>
 	private void FinishLoading()
 	{
 		SceneLoader.SetLoadingScreen(false);
+		SceneLoader.ResetScreen();
 		Loading = false;
 
 		foreach (byte id in tempPlayers)
@@ -178,12 +180,14 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
+					playerLocations.Add(entities[id].gameObject);
 				}
 				else
 				{
 					entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					entities[id].SetModel();
+					playerLocations.Add(entities[id].gameObject);
 				}
 			}
 		}
@@ -453,8 +457,19 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
+		StartCoroutine(SceneLoader.FadeToLoad(3.0f, packet.id, StartLoad));
+	}
+
+	public void StartLoad(int i)
+	{
+		Loading = true;
+		loadedPlayers = 0;
+
+		SceneLoader.SetLoadingScreen(true);
+		playerLocations.Clear();
+
 		string scene;
-		switch (packet.id)
+		switch (i)
 		{
 			default:
 			case 0: scene = "c1m1_NapRoom"; break;
@@ -464,9 +479,6 @@ public class GameManager : Singleton<GameManager>
 			case 4: scene = "c1m5_Corruption"; break;
 		}
 
-		Loading = true;
-		loadedPlayers = 0;
-		SceneLoader.SetLoadingScreen(true);
 		SceneLoader.LoadScene(scene);
 	}
 
@@ -479,7 +491,8 @@ public class GameManager : Singleton<GameManager>
 		else if (packet.id < 44)
 		{
 			Transform transform = level.GetEnemySpawn(packet.spawn.spawn);
-			entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+			if(IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>(); }
+			else { entities[packet.id] = Instantiate(prefabManager.NetworkEnemy, transform.position, transform.rotation).GetComponent<Entity>(); }
 			entities[packet.id].id = packet.id;
 			entities[packet.id].SetModel();
 		}
