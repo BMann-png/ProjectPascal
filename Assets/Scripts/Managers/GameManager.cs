@@ -162,7 +162,6 @@ public class GameManager : Singleton<GameManager>
 	private void FinishLoading()
 	{
 		SceneLoader.SetLoadingScreen(false);
-		SceneLoader.ResetScreen();
 		Loading = false;
 
 		foreach (byte id in tempPlayers)
@@ -459,6 +458,7 @@ public class GameManager : Singleton<GameManager>
 		loadedPlayers = 0;
 
 		SceneLoader.SetLoadingScreen(true);
+		SceneLoader.ResetScreen();
 		playerLocations.Clear();
 
 		string scene;
