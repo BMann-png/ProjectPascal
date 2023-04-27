@@ -301,15 +301,17 @@ public class GameManager : Singleton<GameManager>
 		inLobby = false;
 	}
 
-	public void Shoot(byte type)
+	public void Shoot(Transform shoot, byte type, Vector2 variation)
 	{
 		if (IsServer)
 		{
 			byte id = projectileIndices.Pop();
 
-			Entity entity = entities[ThisPlayer];
+			//Entity entity = entities[ThisPlayer];
 
-			entities[id] = Instantiate(prefabManager.Projectiles[type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
+
+			entities[id] = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation).GetComponent<Entity>();
 			entities[id].id = id;
 			entities[id].GetComponent<Projectile>().SetSpeed();
 

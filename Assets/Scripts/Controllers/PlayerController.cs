@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
 	private static readonly float TRIP_MOD = 0.5f;
 
 	[SerializeField] private new Transform camera;
+	[SerializeField] private GameObject hand;
 	private CharacterController controller;
 	private Entity entity;
 	private Weapon weapon;
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
-		weapon = GetComponent<Weapon>();
+		weapon = hand.GetComponentInChildren<Weapon>();
 	}
 
 	private void FixedUpdate()
@@ -141,6 +142,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Shoot()
 	{
+		if (weapon == null) return;
 		weapon.Shoot();
 	}
 }

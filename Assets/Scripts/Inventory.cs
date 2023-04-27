@@ -6,13 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(Entity))]
 public class Inventory : MonoBehaviour
 {
+	[SerializeField] private GameObject hand;
     [SerializeField] private List<GameObject> primaryWeapons;
     [SerializeField] private List<GameObject> secondaryWeapons;
 	[SerializeField] private GameManager pacifier;
 
 	private Entity entity;
 
-    private byte primaryIndex = 255;
+    private byte primaryIndex = 0;
     private byte secondaryIndex = 255;
 
     private bool hasPacifier = false;
@@ -37,6 +38,8 @@ public class Inventory : MonoBehaviour
 			else if (Input.GetKeyDown(KeyCode.Alpha2)) { equippedItem = 1; }
 			else if (Input.GetKeyDown(KeyCode.Alpha3)) { equippedItem = 2; }
 
+			EquipWeapon(equippedItem, primaryIndex);
+
 			Packet packet = new Packet();
 			packet.type = 3;
 			packet.id = entity.id;
@@ -56,6 +59,8 @@ public class Inventory : MonoBehaviour
 			case 3: hasMission = id > 0; break;
 		}
 
+		SetWeapon(slot, id);
+
 		Packet packet = new Packet();
 		packet.type = 3;
 		packet.id = entity.id;
@@ -73,7 +78,7 @@ public class Inventory : MonoBehaviour
 			case 2: hasPacifier = id > 0; break;
 			case 3: hasMission = id > 0; break;
 		}
-	}
+    }
 
 	public void Switch(byte slot)
 	{

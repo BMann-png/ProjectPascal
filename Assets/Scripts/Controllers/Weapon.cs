@@ -4,32 +4,25 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    enum WeaponType 
-    { 
-        FOAM_DART,
-        RUBBER_BAND,
-        BUBBLE
-    }
-
-    [SerializeField] private WeaponType type;
+    [SerializeField] private Transform shoot;
+    [SerializeField] private byte type = 0;
+    [SerializeField] private float delay = 0.1f;
+    [SerializeField] private int numsOfShots = 1;
 
     public void Shoot() 
-    { 
-        GameManager.Instance.Shoot(GetWeaponType());
+    {
+        StartCoroutine(Fire());
     }
 
-    public byte GetWeaponType() 
+    private IEnumerator Fire() 
     {
-        switch (type)
+        Vector2 variation = Vector2.zero;
+        for (int i = 0; i < numsOfShots; i++)
         {
-            case WeaponType.FOAM_DART:
-                return 0;
-            case WeaponType.RUBBER_BAND:
-                return 1;
-            case WeaponType.BUBBLE:
-                return 2;
-            default:
-                return 255;
+            GameManager.Instance.Shoot(shoot, type, variation);
+            variation.x = Random.Range(-15, 16);
+            variation.y = Random.Range(-15, 16);
+            yield return new WaitForSeconds(delay);
         }
     }
 }
