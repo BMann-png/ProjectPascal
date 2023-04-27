@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
@@ -28,9 +29,12 @@ public class LobbyHandler : MonoBehaviour
 
 	public void LeaveLobby()
 	{
-		GameManager.Instance.LeaveLobby();
-		NetworkManager.Instance.LeaveLobby();
-		GameManager.Instance.SceneLoader.LoadScene("MainMenu");
+		if (!GameManager.Instance.Fading)
+		{
+			GameManager.Instance.LeaveLobby();
+			NetworkManager.Instance.LeaveLobby();
+			GameManager.Instance.SceneLoader.LoadScene("MainMenu");
+		}
 	}
 
 	public void StartGame()

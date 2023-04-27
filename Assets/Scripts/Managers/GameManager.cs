@@ -33,6 +33,7 @@ public class GameManager : Singleton<GameManager>
 	public SceneLoader SceneLoader { get => sceneLoader; }
 
 	public bool Loading { get; private set; } = false;
+	public bool Fading { get; private set; } = false;
 
 	public byte ThisPlayer { get; private set; } = 255;
 	public byte PlayerCount { get; private set; } = 0;
@@ -110,7 +111,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void SelectLevel(TMP_Dropdown change)
 	{
-		if (IsServer)
+		if (IsServer && !Loading)
 		{
 			levelNum = (byte)change.value;
 		}
@@ -118,7 +119,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void StartGame()
 	{
-		if (IsServer)
+		if (IsServer && !Loading)
 		{
 			Packet packet = new Packet();
 			packet.type = 5;
