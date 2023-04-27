@@ -47,7 +47,7 @@ public class Entity : MonoBehaviour
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
 		}
 
-        if (inLobby && animator != null)
+        if (!inLobby && animator != null)
         {
 			float speed = (transform.position - previousPosition).magnitude;
 
