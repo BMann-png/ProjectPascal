@@ -22,6 +22,7 @@ public class Entity : MonoBehaviour
 										//ID 49-254 is a projectile
 										//ID of 255 is invalid
 
+	private Vector3 previousPosition;
 	private Vector3 targetPosition;
 	private float targetRotation;
 
@@ -44,12 +45,22 @@ public class Entity : MonoBehaviour
 			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
 		}
-	}
+
+        if (animator != null)
+        {
+			float speed = (transform.position - previousPosition).magnitude;
+
+            animator.SetFloat("Speed", Mathf.Abs(speed));
+        }
+    }
 
 	public void SetTransform(TransformPacket tp)
 	{
+		previousPosition = transform.position;
+
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
 		targetRotation = tp.yRot;
+
 
 		if (id > 48)
 		{
@@ -123,22 +134,12 @@ public class Entity : MonoBehaviour
 		{
 			switch (packet.data)
 			{
-				case 0: //Idle
+				case 0: //Attack
 				{
-					animator.SetTrigger("Idle");
+					animator.SetTrigger("IsAttacking");
 				}
 				break;
-				case 1: //Running
-				{
-					animator.SetTrigger("Run");
-				}
-				break;
-				case 2: //Attack
-				{
-					animator.SetTrigger("Attack");
-				}
-				break;
-				case 3: //Death
+				case 1: //Death
 				{
 					animator.SetTrigger("IsDead");
 				}
