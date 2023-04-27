@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class AttackState : State
 {
-    public AttackState(string name, BaseAI agent) : base(name, agent) {}
+	public AttackState(string name, BaseAI agent) : base(name, agent) { }
 
-    public override void OnEnter()
-    {
-        Agent.entity.animator.SetBool("isAttacking", true);
+	public override void OnEnter()
+	{
+		Agent.entity.animator.SetBool("isAttacking", true);
 
 		Packet packet = new Packet();
 		packet.type = 1;
@@ -18,13 +18,13 @@ public class AttackState : State
 		NetworkManager.Instance.SendMessage(packet);
 	}
 
-    public override void OnExit()
-    {
-        Agent.entity.animator.SetBool("isAttacking", false);
-    }
+	public override void OnExit()
+	{
+		Agent.entity.animator.SetBool("isAttacking", false);
+	}
 
-    public override void OnUpdate()
-    {
-        //throw new System.NotImplementedException();
-    }
+	public override void OnUpdate()
+	{
+		//throw new System.NotImplementedException();
+	}
 }

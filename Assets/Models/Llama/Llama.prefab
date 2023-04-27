@@ -809,7 +809,7 @@ GameObject:
   - component: {fileID: 6649710586034319989}
   - component: {fileID: 6611915333192949261}
   m_Layer: 0
-  m_Name: LlamaPrefab
+  m_Name: Llama
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

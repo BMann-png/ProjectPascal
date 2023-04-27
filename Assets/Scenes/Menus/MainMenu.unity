@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8048,8 +8048,8 @@ MonoBehaviour:
   - {fileID: 943251903415590955, guid: 21bbf640bf652094ca7eb27d81ab26e9, type: 3}
   specialModels:
   - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
-  - {fileID: 1815383720639527769, guid: 5f69603bfc1efa2439157b643b0b6fdb, type: 3}
-  - {fileID: 1815383720639527769, guid: 5f69603bfc1efa2439157b643b0b6fdb, type: 3}
+  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
+  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
   player: {fileID: 4249420564965122353, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
   networkPlayer: {fileID: 8291552484210884512, guid: e47317380b49ddf459c1a36777b6b445, type: 3}
   lobbyPlayer: {fileID: 7710098097953584521, guid: 2db0c05ceb18f8e45a2e3aeeeb5f76ea, type: 3}

@@ -119,7 +119,7 @@ public class Entity : MonoBehaviour
 				break;
 			}
 		}
-		else if (id < 39)
+		else if (id < 34)
 		{
 			switch (packet.data)
 			{
@@ -140,7 +140,7 @@ public class Entity : MonoBehaviour
 				break;
 				case 3: //Death
 				{
-					animator.SetTrigger("Die");
+					animator.SetTrigger("IsDead");
 				}
 				break;
 			}

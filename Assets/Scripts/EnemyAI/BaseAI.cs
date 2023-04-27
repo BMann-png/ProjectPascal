@@ -66,7 +66,6 @@ public class BaseAI : MonoBehaviour
 		distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
 
 		agentHealth.value = GetComponent<Health>().health;
-		Debug.Log(agentHealth.value);
 
 		stateMachine.OnUpdate();
 	}
