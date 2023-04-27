@@ -8,12 +8,19 @@ public class AttackState : State
 
     public override void OnEnter()
     {
-        Agent.animator.SetBool("isAttacking", true);
-    }
+        Agent.entity.animator.SetBool("isAttacking", true);
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = Agent.entity.id;
+		packet.action = new ActionPacket(2);
+
+		NetworkManager.Instance.SendMessage(packet);
+	}
 
     public override void OnExit()
     {
-        Agent.animator.SetBool("isAttacking", false);
+        Agent.entity.animator.SetBool("isAttacking", false);
     }
 
     public override void OnUpdate()

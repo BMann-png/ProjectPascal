@@ -8,18 +8,31 @@ public class MoveState : State
 
     public override void OnEnter()
     {
-        Debug.Log("Move");
         Agent.navMeshAgent.isStopped = false;
-    }
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = Agent.entity.id;
+		packet.action = new ActionPacket(1);
+
+		NetworkManager.Instance.SendMessage(packet);
+	}
 
     public override void OnExit()
     {
         Agent.navMeshAgent.isStopped = true;
-    }
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = Agent.entity.id;
+		packet.action = new ActionPacket(0);
+
+		NetworkManager.Instance.SendMessage(packet);
+	}
 
     public override void OnUpdate()
     {
         Agent.navMeshAgent.SetDestination(Agent.obsession.transform.position);
-        Agent.animator.SetFloat("speed", Agent.navMeshAgent.speed);
-    }
+        Agent.entity.animator.SetFloat("speed", Agent.navMeshAgent.speed);
+	}
 }

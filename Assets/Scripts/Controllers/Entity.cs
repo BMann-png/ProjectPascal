@@ -27,6 +27,7 @@ public class Entity : MonoBehaviour
 
 	public Transform shoot;
 	[HideInInspector] public GameObject model;
+	[HideInInspector] public Animator animator;
 
 	private bool quitting = false;
 
@@ -81,6 +82,8 @@ public class Entity : MonoBehaviour
 		{
 			model = Instantiate(GameManager.Instance.PrefabManager.SpecialModels[id - 34], transform);
 		}
+
+		model.TryGetComponent(out animator);
 	}
 
 	//TODO: Health, Inventory
@@ -92,25 +95,55 @@ public class Entity : MonoBehaviour
 			switch (packet.data)
 			{
 				case 0: //Sprint
-					{
-						CapsuleCollider collider = GetComponent<CapsuleCollider>();
-						collider.height = 2.2f;
-						collider.radius = 0.3f;
-						collider.center = Vector3.up * 1.1f;
-					}
-					break;
-				case 1: //End Sprint
-					{
-						CapsuleCollider collider = GetComponent<CapsuleCollider>();
-						collider.height = 1.0f;
-						collider.radius = 0.5f;
-						collider.center = Vector3.up * 0.5f;
-					}
-					break;
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 2.2f;
+					collider.radius = 0.3f;
+					collider.center = Vector3.up * 1.1f;
+					animator.SetTrigger("Sprint");
+				}
+				break;
+				case 1: //Crawl
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("Crawl");
+				}
+				break;
+				case 2: //Idle
+				{
+					animator.SetTrigger("Idle");
+				}
+				break;
 			}
 		}
 		else if (id < 39)
 		{
+			switch (packet.data)
+			{
+				case 0: //Idle
+				{
+					animator.SetTrigger("Idle");
+				}
+				break;
+				case 1: //Running
+				{
+					animator.SetTrigger("Run");
+				}
+				break;
+				case 2: //Attack
+				{
+					animator.SetTrigger("Attack");
+				}
+				break;
+				case 3: //Death
+				{
+					animator.SetTrigger("Die");
+				}
+				break;
+			}
 		}
 	}
 
