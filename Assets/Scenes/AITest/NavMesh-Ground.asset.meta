@@ -1,8 +1,15 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/AITest/NavMesh-Ground.asset.meta
 guid: 3025c4dc0f18350459035e86e39d31d5
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 23800000
+========
+guid: c72da7dcea00e374b8e1da89c20907d4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+>>>>>>>> main:Assets/Models/Players/Crawl.anim.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 
