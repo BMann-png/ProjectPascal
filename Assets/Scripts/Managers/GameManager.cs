@@ -64,7 +64,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if (IsServer && !inLobby)
+		if (IsServer && !inLobby && playerLocations.Count > 0) //TODO: potential bigger problem
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
