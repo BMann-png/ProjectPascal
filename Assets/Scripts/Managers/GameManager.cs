@@ -14,8 +14,8 @@ using UnityEngine.UIElements;
 public class GameManager : Singleton<GameManager>
 {
 	public List<GameObject> playerLocations = new List<GameObject>();
-	private static readonly int MAX_ENEMY_COUNT = 1;
-	private static readonly int MAX_SPECIAL_COUNT = 0;
+	private static readonly int MAX_ENEMY_COUNT = 15;
+	private static readonly int MAX_SPECIAL_COUNT = 2;
 
 	public bool IsServer { get; private set; }
 	private bool inLobby;
