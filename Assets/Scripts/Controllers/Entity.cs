@@ -30,6 +30,7 @@ public class Entity : MonoBehaviour
 	[HideInInspector] public GameObject model;
 	[HideInInspector] public Animator animator;
 
+	[SerializeField] bool inLobby = false;
 	private bool quitting = false;
 
 	private void Awake()
@@ -46,7 +47,7 @@ public class Entity : MonoBehaviour
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
 		}
 
-        if (animator != null)
+        if (inLobby && animator != null)
         {
 			float speed = (transform.position - previousPosition).magnitude;
 
