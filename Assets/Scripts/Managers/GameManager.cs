@@ -6,14 +6,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class GameManager : Singleton<GameManager>
 {
-	private static readonly int MAX_ENEMY_COUNT = 30;
+	public List<GameObject> playerLocations = new List<GameObject>();
+	private static readonly int MAX_ENEMY_COUNT = 15;
 	private static readonly int MAX_SPECIAL_COUNT = 2;
 
 	public bool IsServer { get; private set; }
@@ -63,7 +63,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if (IsServer && !inLobby)
+		if (IsServer && !inLobby && playerLocations.Count > 0) //TODO: potential bigger problem
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
@@ -180,12 +180,14 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
+					playerLocations.Add(entities[id].gameObject);
 				}
 				else
 				{
 					entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					entities[id].SetModel();
+					playerLocations.Add(entities[id].gameObject);
 				}
 			}
 		}
@@ -462,6 +464,7 @@ public class GameManager : Singleton<GameManager>
 		loadedPlayers = 0;
 
 		SceneLoader.SetLoadingScreen(true);
+		playerLocations.Clear();
 
 		string scene;
 		switch (i)
@@ -486,7 +489,8 @@ public class GameManager : Singleton<GameManager>
 		else if (packet.id < 44)
 		{
 			Transform transform = level.GetEnemySpawn(packet.spawn.spawn);
-			entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+			if(IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>(); }
+			else { entities[packet.id] = Instantiate(prefabManager.NetworkEnemy, transform.position, transform.rotation).GetComponent<Entity>(); }
 			entities[packet.id].id = packet.id;
 			entities[packet.id].SetModel();
 		}
