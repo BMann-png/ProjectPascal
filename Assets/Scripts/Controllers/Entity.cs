@@ -77,60 +77,6 @@ public class Entity : MonoBehaviour
         }
     }
 
-	public void DoAction(ActionPacket packet)
-	{
-		if (id < 4)
-        {
-            switch (packet.data)
-            {
-                case 0: //Sprint
-                    {
-                        CapsuleCollider collider = GetComponent<CapsuleCollider>();
-                        collider.height = 2.2f;
-                        collider.radius = 0.3f;
-                        collider.center = Vector3.up * 1.1f;
-                        animator.SetTrigger("Sprint");
-                    }
-                    break;
-                case 1: //Crawl
-                    {
-                        CapsuleCollider collider = GetComponent<CapsuleCollider>();
-                        collider.height = 1.0f;
-                        collider.radius = 0.5f;
-                        collider.center = Vector3.up * 0.5f;
-                        animator.SetTrigger("Crawl");
-                    }
-                    break;
-                case 2: //Idle
-                    {
-                        animator.SetTrigger("Idle");
-                    }
-                    break;
-            }
-        }
-        else if (id < 34)
-        {
-            switch (packet.data)
-            {
-                case 0: //Attack
-                    {
-                        animator.SetBool("IsAttacking", true);
-                    }
-                    break;
-                case 1: //Attack
-                    {
-                        animator.SetBool("IsAttacking", false);
-                    }
-                    break;
-                case 2: //Death
-                    {
-                        animator.SetTrigger("IsDead");
-                    }
-                    break;
-            }
-        }
-	}
-
     public void SetModel()
     {
         //TODO: Check for existing model
