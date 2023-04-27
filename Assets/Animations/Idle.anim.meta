@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Models/Players/Idle.anim.meta
+guid: 351fb6368022976488cef63d9280511f
+========
 guid: aff15aeefd351504c88baff688ac9b24
+>>>>>>>> main:Assets/Animations/Idle.anim.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000

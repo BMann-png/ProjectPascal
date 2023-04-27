@@ -69,6 +69,7 @@ public class Entity : MonoBehaviour
         else
         {
             transform.eulerAngles = new Vector3(0.0f, tp.yRot, 0.0f); //TODO: Lerp smoothly
+
             if (shoot != null)
             {
                 shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
@@ -135,17 +136,17 @@ public class Entity : MonoBehaviour
             {
                 case 0: //Attack
                     {
-                        animator.SetBool("IsAttacking", true);
+                        animator.SetBool("isAttacking", true);
                     }
                     break;
                 case 1: //Attack
                     {
-                        animator.SetBool("IsAttacking", false);
+                        animator.SetBool("isAttacking", false);
                     }
                     break;
                 case 2: //Death
                     {
-                        animator.SetTrigger("IsDead");
+                        animator.SetTrigger("isDead");
                     }
                     break;
             }
