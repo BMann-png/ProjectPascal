@@ -110,8 +110,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	public string PlayerName { get; private set; }
 	public SteamId PlayerId { get; private set; }
 
-	private string playerIdString;
-
 	private Pascal.SocketManager socketManager;
 	private Pascal.ConnectionManager connectionManager;
 	public bool activeSocketServer { get; private set; }
@@ -123,6 +121,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private IntPtr message;
 	private bool cleanedUp = false;
+	private bool awaitingConnection = false;
 
 	protected override void Awake()
 	{
@@ -140,7 +139,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			PlayerName = SteamClient.Name;
 			PlayerId = SteamClient.SteamId;
-			playerIdString = PlayerId.ToString();
 			activeLobbies = new List<Lobby>();
 
 			SteamNetworkingUtils.InitRelayNetworkAccess();
@@ -155,13 +153,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void Start()
 	{
+		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
+		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
+		SteamNetworkingSockets.OnConnectionStatusChanged += OnConnected;
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
 		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
-		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
 		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
-		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
 		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
 		//SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
 		//SceneManager.sceneLoaded += OnSceneLoaded;
@@ -316,6 +315,9 @@ public class NetworkManager : Singleton<NetworkManager>
 	{
 		currentLobby = lobby;
 		JoinSocketServer(lobby);
+
+		while (awaitingConnection) { await Task.Delay(100); }
+
 		RoomEnter result = await currentLobby.Join();
 
 		if(result != RoomEnter.Success)
@@ -346,6 +348,12 @@ public class NetworkManager : Singleton<NetworkManager>
 		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
+		awaitingConnection = true;
+	}
+
+	private void OnConnected(Connection connection, ConnectionInfo info)
+	{
+		if(info.State == ConnectionState.Connected) { awaitingConnection = false; }
 	}
 
 	private void LeaveSocketServer()

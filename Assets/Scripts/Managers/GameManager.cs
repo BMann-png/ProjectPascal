@@ -491,9 +491,14 @@ public class GameManager : Singleton<GameManager>
 
 			if (steamId == player.Id.Value)
 			{
-				Destroy(entities[i].gameObject);
-				entities[i] = null;
+				if (entities[i] != null)
+				{
+					Destroy(entities[i].gameObject);
+					entities[i] = null;
+				}
+
 				--PlayerCount;
+				//TODO: decrement AlivePlayers
 
 				lobby.SetData("Player" + i, "0");
 
