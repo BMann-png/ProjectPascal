@@ -241,7 +241,7 @@ public class GameManager : Singleton<GameManager>
 			return;
 		}
 
-		if(data == 0)
+		if(data == 255)
 		{
 			Lobby lobby = NetworkManager.Instance.currentLobby;
 			IEnumerable<Friend> members = lobby.Members;
@@ -466,9 +466,10 @@ public class GameManager : Singleton<GameManager>
 						packet.id = i;
 						packet.type = 6;
 
-						if(Fading) { new SpawnPacket((byte)(levelNum + 100)); }
-						else if(Loading) { new SpawnPacket((byte)(levelNum + 200)); }
-						else if(!(Loading || inLobby)) { new SpawnPacket(levelNum); }
+						if(Fading) { packet.spawn = new SpawnPacket((byte)(levelNum + 100)); }
+						else if(Loading) { packet.spawn = new SpawnPacket((byte)(levelNum + 200)); }
+						else if(!(Loading || inLobby)) { packet.spawn = new SpawnPacket(levelNum); }
+						else { packet.spawn = new SpawnPacket(255); }
 
 						NetworkManager.Instance.SendMessage(packet);
 
