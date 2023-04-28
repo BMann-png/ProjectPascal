@@ -42,7 +42,7 @@ public class Inventory : MonoBehaviour
 			packet.id = entity.id;
 			packet.inventory = new InventoryPacket(equippedItem, 255);
 
-			NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.QueueMessage(packet);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class Inventory : MonoBehaviour
 		packet.id = entity.id;
 		packet.inventory = new InventoryPacket(equippedItem, id);
 
-		NetworkManager.Instance.SendMessage(packet);
+		NetworkManager.Instance.QueueMessage(packet);
 	}
 
 	public void SetWeapon(byte slot, byte id)

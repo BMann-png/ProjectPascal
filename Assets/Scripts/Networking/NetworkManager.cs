@@ -1,6 +1,7 @@
 using Steamworks;
 using Steamworks.Data;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,6 +13,8 @@ using UnityEngine;
 //TODO: Invite Friends
 //TODO: Public vs private lobbies
 
+
+#region Packets
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct TransformPacket
 {
@@ -105,9 +108,17 @@ public struct Packet
 	[FieldOffset(2)] public SpawnPacket spawn;
 	[FieldOffset(2)] public OwnerPacket owner;
 }
+#endregion
 
 public class NetworkManager : Singleton<NetworkManager>
 {
+	private const int TICK_RATE = 30;
+	private const float TICK_TIME = 1.0f/TICK_RATE;
+
+	private int tick;
+
+	public Queue<Packet> QueuedPackets = new Queue<Packet>();
+
 	public string PlayerName { get; private set; }
 	public SteamId PlayerId { get; private set; }
 
@@ -156,19 +167,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void Start()
 	{
-		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
-		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
-		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
 		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
-		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
-		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
 		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
-		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
-		//SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
-		//SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
-	#region Obsolete
+	#region Callbacks
 
 
 	//private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -262,6 +265,20 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 	}
 
+	private IEnumerator Tick()
+	{
+		while (true)
+		{
+			while (QueuedPackets.Count > 0)
+			{
+				SendMessage(QueuedPackets.Dequeue());
+			}
+
+			yield return new WaitForSeconds(TICK_TIME);
+		}
+	}
+
+
 	public async Task<bool> CreateLobby(Dictionary<string, string> data, int maxPlayers)
 	{
 		try
@@ -284,9 +301,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			currentLobby = hostedLobby;
 
-			CreateSocketServer();
-
-			return true;
+            return true;
 		}
 		catch (Exception e)
 		{
@@ -374,6 +389,11 @@ public class NetworkManager : Singleton<NetworkManager>
 		{
 			Debug.Log("unable to relay server message");
 		}
+	}
+
+	public void QueueMessage(Packet packet)
+	{
+		QueuedPackets.Enqueue(packet);
 	}
 
 	public bool SendMessage(Packet packet)

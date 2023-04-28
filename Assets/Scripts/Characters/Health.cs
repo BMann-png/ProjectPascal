@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, INetworked
 {
     public const int MIN_HEALTH = 0;
 
@@ -31,6 +31,11 @@ public class Health : MonoBehaviour
         packet.type = 2;
         packet.health = new HealthPacket();
         packet.health.data = (byte)health;
-        NetworkManager.Instance.SendMessage(packet);
+        NetworkManager.Instance.QueueMessage(packet);
+
+        if(health <= 0)
+        {
+            Debug.Log("Ded");
+        }
     }
 }

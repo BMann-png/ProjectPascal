@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 			packet.id = entity.id;
 			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
 
-			NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.QueueMessage(packet);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 		packet.id = entity.id;
 		packet.action = new ActionPacket(0);
 
-		NetworkManager.Instance.SendMessage(packet);
+		NetworkManager.Instance.QueueMessage(packet);
 	}
 
 	private void EndSprint()
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
 		if(movement.sqrMagnitude > 0.01f) { packet.action = new ActionPacket(1); }
 		else { packet.action = new ActionPacket(2); }
 
-		NetworkManager.Instance.SendMessage(packet);
+		NetworkManager.Instance.QueueMessage(packet);
 	}
 
 	private void Shoot()
