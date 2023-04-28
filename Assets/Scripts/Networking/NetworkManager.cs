@@ -315,11 +315,16 @@ public class NetworkManager : Singleton<NetworkManager>
 	public async Task<bool> JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
+		JoinSocketServer(lobby);
 		RoomEnter result = await currentLobby.Join();
 
-		JoinSocketServer();
+		if(result != RoomEnter.Success)
+		{
+			LeaveSocketServer();
+			return false;
+		}
 
-		return result == RoomEnter.Success;
+		return true;
 	}
 
 	public void LeaveLobby()
@@ -336,9 +341,9 @@ public class NetworkManager : Singleton<NetworkManager>
 		activeSocketConnection = true;
 	}
 
-	private void JoinSocketServer()
+	private void JoinSocketServer(Lobby lobby)
 	{
-		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(currentLobby.Owner.Id);
+		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
 	}
