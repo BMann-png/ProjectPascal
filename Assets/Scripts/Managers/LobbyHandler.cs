@@ -10,11 +10,12 @@ public class LobbyHandler : MonoBehaviour
 
 	private void Awake()
 	{
-		GameManager.Instance.OnJoinLobby(spawnPoints);
+		GameManager.Instance.SetupLobby(spawnPoints);
 	}
 
 	private void Update()
 	{
+		//TODO: This is brain dead
 		if (GameManager.Instance.IsServer)
 		{
 			startButton.SetActive(true);
