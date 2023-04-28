@@ -569,6 +569,8 @@ public class GameManager : Singleton<GameManager>
 		{
 			if (ThisPlayer == 255)
 			{
+				Debug.Log("Me");
+
 				Lobby lobby = NetworkManager.Instance.currentLobby;
 				ulong steamId = ulong.Parse(lobby.GetData("Player" + packet.id));
 
@@ -580,6 +582,7 @@ public class GameManager : Singleton<GameManager>
 			}
 			else
 			{
+				Debug.Log("Someone else");
 				AddPlayer(packet.id);
 			}
 		}
