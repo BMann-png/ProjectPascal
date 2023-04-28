@@ -121,7 +121,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private IntPtr message;
 	private bool cleanedUp = false;
-	private bool awaitingConnection = false;
 
 	protected override void Awake()
 	{
@@ -311,22 +310,15 @@ public class NetworkManager : Singleton<NetworkManager>
 		return activeLobbies;
 	}
 
-	public async Task<bool> JoinLobby(Lobby lobby)
+	public void JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
 		JoinSocketServer(lobby);
+	}
 
-		while (awaitingConnection) { await Task.Delay(100); }
-
-		RoomEnter result = await currentLobby.Join();
-
-		if(result != RoomEnter.Success)
-		{
-			LeaveSocketServer();
-			return false;
-		}
-
-		return true;
+	public void FinishJoinLobby()
+	{
+		currentLobby.Join();
 	}
 
 	public void LeaveLobby()
@@ -348,12 +340,11 @@ public class NetworkManager : Singleton<NetworkManager>
 		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
-		awaitingConnection = true;
 	}
 
 	private void OnConnected(Connection connection, ConnectionInfo info)
 	{
-		if(info.State == ConnectionState.Connected) { awaitingConnection = false; }
+		if(info.State == ConnectionState.Connected) { FinishJoinLobby(); }
 	}
 
 	private void LeaveSocketServer()
