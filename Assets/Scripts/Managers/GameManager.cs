@@ -444,7 +444,7 @@ public class GameManager : Singleton<GameManager>
 
 	//-----CALLBACKS-----
 
-	public void PlayerJoined(Friend player)
+	public void PlayerJoined(ulong id)
 	{
 		++PlayerCount;
 
@@ -460,7 +460,7 @@ public class GameManager : Singleton<GameManager>
 
 					if (steamId == 0)
 					{
-						lobby.SetData("Player" + i, player.Id.Value.ToString());
+						lobby.SetData("Player" + i, id.ToString());
 
 						Packet packet = new Packet();
 						packet.id = i;

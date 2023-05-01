@@ -91,6 +91,17 @@ public struct OwnerPacket
 	public ulong steamId;
 }
 
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct JoinPacket
+{
+	public JoinPacket(ulong steamId)
+	{
+		this.steamId = steamId;
+	}
+
+	public ulong steamId;
+}
+
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
 public struct Packet
 {
@@ -103,6 +114,7 @@ public struct Packet
 	[FieldOffset(2)] public InventoryPacket inventory;
 	[FieldOffset(2)] public SpawnPacket spawn;
 	[FieldOffset(2)] public OwnerPacket owner;
+	[FieldOffset(2)] public JoinPacket join;
 }
 
 public class NetworkManager : Singleton<NetworkManager>
@@ -114,6 +126,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	private Pascal.ConnectionManager connectionManager;
 	public bool activeSocketServer { get; private set; }
 	private bool activeSocketConnection;
+	private bool fullyConnected = false;
 
 	private List<Lobby> activeLobbies;
 	public Lobby currentLobby;
@@ -144,7 +157,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			Debug.Log("Steam initialized: " + PlayerName);
 		}
-		catch (System.Exception e)
+		catch (Exception e)
 		{
 			Debug.Log(e.Message);
 		}
@@ -152,9 +165,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void Start()
 	{
-		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
 		SteamNetworkingSockets.OnConnectionStatusChanged += OnConnected;
+		//SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
 		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
@@ -217,11 +230,11 @@ public class NetworkManager : Singleton<NetworkManager>
 	//    throw new NotImplementedException();
 	//}
 
-	private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
-	{
-		if (friend.IsMe) { return; } //ignore yourself joining
-		GameManager.Instance.PlayerJoined(friend);
-	}
+	//private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
+	//{
+	//	if (friend.IsMe) { return; } //ignore yourself joining
+	//	GameManager.Instance.PlayerJoined(friend);
+	//}
 
 	//private void OnLobbyEnteredCallback(Lobby obj)
 	//{
@@ -313,12 +326,8 @@ public class NetworkManager : Singleton<NetworkManager>
 	public void JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
-		JoinSocketServer(lobby);
-	}
-
-	public void FinishJoinLobby()
-	{
 		currentLobby.Join();
+		JoinSocketServer(lobby);
 	}
 
 	public void LeaveLobby()
@@ -344,13 +353,20 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnected(Connection connection, ConnectionInfo info)
 	{
-		if(info.State == ConnectionState.Connected) { FinishJoinLobby(); }
+		if(info.State == ConnectionState.Connected && !fullyConnected)
+		{
+			fullyConnected = true;
+			Packet packet = new Packet();
+			packet.type = 9;
+			packet.join = new JoinPacket(PlayerId);
+		}
 	}
 
 	private void LeaveSocketServer()
 	{
 		if (activeSocketConnection) { connectionManager.Close(); activeSocketConnection = false; }
 		if (activeSocketServer) { socketManager.Close(); activeSocketServer = false; }
+		fullyConnected = false;
 	}
 
 	public void RelayMessageReceived(IntPtr message, int size, uint connectionId)
@@ -393,6 +409,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 6: size = 3; break;    //Game Spawn
 			case 7: size = 2; break;    //Game Despawn
 			case 8: size = 10; break;   //Owner Change
+			case 9: size = 10; break;   //Player Joined
 			default: return false;
 		}
 
@@ -434,6 +451,7 @@ public class NetworkManager : Singleton<NetworkManager>
 				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
 				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
 				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
+				case 9: GameManager.Instance.PlayerJoined(packet.join.steamId); break;        //Player Joined
 				default: break;
 			}
 		}
