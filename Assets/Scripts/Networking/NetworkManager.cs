@@ -166,11 +166,11 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void Start()
 	{
 		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
-		SteamNetworkingSockets.OnConnectionStatusChanged += OnConnected;
+		//SteamNetworkingSockets.OnConnectionStatusChanged += OnConnected;
 		//SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
-		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
+		SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
 		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
 		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
 		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
@@ -236,10 +236,14 @@ public class NetworkManager : Singleton<NetworkManager>
 	//	GameManager.Instance.PlayerJoined(friend);
 	//}
 
-	//private void OnLobbyEnteredCallback(Lobby obj)
-	//{
-	//    throw new NotImplementedException();
-	//}
+	private void OnLobbyEnteredCallback(Lobby obj)
+	{
+		Packet packet = new Packet();
+		packet.type = 9;
+		packet.join = new JoinPacket(PlayerId);
+
+		SendMessage(packet);
+	}
 
 	//private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
 	//{
@@ -354,17 +358,17 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnected(Connection connection, ConnectionInfo info)
 	{
-		Debug.Log(info.State);
-
-		if(info.State == ConnectionState.Connected && !fullyConnected)
-		{
-			fullyConnected = true;
-			Packet packet = new Packet();
-			packet.type = 9;
-			packet.join = new JoinPacket(PlayerId);
-
-			SendMessage(packet);
-		}
+		//Debug.Log(info.State);
+		//
+		//if(info.State == ConnectionState.Connected && !fullyConnected)
+		//{
+		//	fullyConnected = true;
+		//	Packet packet = new Packet();
+		//	packet.type = 9;
+		//	packet.join = new JoinPacket(PlayerId);
+		//
+		//	SendMessage(packet);
+		//}
 	}
 
 	private void LeaveSocketServer()
