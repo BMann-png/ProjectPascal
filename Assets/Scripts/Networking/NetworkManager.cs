@@ -1,6 +1,7 @@
 using Steamworks;
 using Steamworks.Data;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -236,6 +237,13 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnLobbyEnteredCallback(Lobby obj)
 	{
+		StartCoroutine(WaitForConnection());
+	}
+
+	IEnumerator WaitForConnection()
+	{
+		yield return new WaitForSeconds(0.5f);
+
 		Packet packet = new Packet();
 		packet.type = 9;
 		packet.join = new JoinPacket(PlayerId);
@@ -426,8 +434,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	public void ProcessMessage(IntPtr message, int dataBlockSize)
 	{
-		Debug.Log("Anything");
-
 		try
 		{
 			Packet packet = Marshal.PtrToStructure<Packet>(message);
@@ -440,7 +446,7 @@ public class NetworkManager : Singleton<NetworkManager>
 				case 3: GameManager.Instance.Inventory(packet); break;			//Inventory
 				case 4: GameManager.Instance.GameTrigger(packet); break;		//Game Trigger
 				case 5: GameManager.Instance.LoadLevel(packet); break;          //Scene Load
-				case 6: GameManager.Instance.Spawn(packet); Debug.Log("Recieved"); break;              //Game Spawn
+				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
 				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
 				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
 				case 9: GameManager.Instance.PlayerJoined(packet.join.steamId); break;        //Player Joined
