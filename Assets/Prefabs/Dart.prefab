@@ -146,6 +146,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 50
+  gravityModifier: -9.81
+  destoryOnCollide: 0
 --- !u!114 &6882036858200203633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +163,5 @@ MonoBehaviour:
   id: 0
   shoot: {fileID: 0}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 0

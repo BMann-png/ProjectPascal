@@ -6,12 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(Entity))]
 public class Inventory : MonoBehaviour
 {
-	[SerializeField] private GameObject hand;
     [SerializeField] private List<GameObject> primaryWeapons;
     [SerializeField] private List<GameObject> secondaryWeapons;
 	[SerializeField] private GameManager pacifier;
 
 	private Entity entity;
+
+	private GameObject curPrimary = null;
+	private GameObject curSecondary = null;
 
     private byte primaryIndex = 255;
     private byte secondaryIndex = 255;
@@ -69,14 +71,16 @@ public class Inventory : MonoBehaviour
 			case 0:
 				if (primaryIndex == id) return;
 				primaryIndex = id;
-				//if (hand.GetComponentInChildren<> != null) Destroy(hand.GetComponentInChildren<Weapon>().gameObject);
-				Instantiate(primaryWeapons[primaryIndex], hand.transform);
+				curPrimary.SetActive(false);
+				curPrimary = primaryWeapons[primaryIndex];
+                curPrimary.SetActive(true);
                 break;
 			case 1:
                 if (secondaryIndex == id) return;
                 secondaryIndex = id;
-                //if (hand.GetComponentInChildren<Weapon>().gameObject != null) Destroy(hand.GetComponentInChildren<Weapon>().gameObject);
-                Instantiate(secondaryWeapons[secondaryIndex], hand.transform);
+                curSecondary.SetActive(false);
+                curSecondary = secondaryWeapons[secondaryIndex];
+                curSecondary.SetActive(true);
                 break;
 			case 2:
                 if (id > 0 == hasPacifier) return;
