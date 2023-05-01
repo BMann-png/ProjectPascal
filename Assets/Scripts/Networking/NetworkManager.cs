@@ -98,9 +98,11 @@ public struct JoinPacket
 	public JoinPacket(ulong steamId)
 	{
 		this.steamId = steamId;
+		level = 255;
 	}
 
 	public ulong steamId;
+	public byte level; 
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
@@ -237,13 +239,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnLobbyEnteredCallback(Lobby obj)
 	{
-		StartCoroutine(WaitForConnection());
-	}
-
-	IEnumerator WaitForConnection()
-	{
-		yield return new WaitForSeconds(0.5f);
-
 		Packet packet = new Packet();
 		packet.type = 9;
 		packet.join = new JoinPacket(PlayerId);
@@ -407,7 +402,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 6: size = 3; break;    //Game Spawn
 			case 7: size = 2; break;    //Game Despawn
 			case 8: size = 10; break;   //Owner Change
-			case 9: size = 10; break;   //Player Joined
+			case 9: size = 11; break;   //Player Joined
 			default: return false;
 		}
 
@@ -449,7 +444,7 @@ public class NetworkManager : Singleton<NetworkManager>
 				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
 				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
 				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
-				case 9: GameManager.Instance.PlayerJoined(packet.join.steamId); break;        //Player Joined
+				case 9: GameManager.Instance.PlayerJoined(packet); break;        //Player Joined
 				default: break;
 			}
 		}

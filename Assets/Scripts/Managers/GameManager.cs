@@ -444,11 +444,11 @@ public class GameManager : Singleton<GameManager>
 
 	//-----CALLBACKS-----
 
-	public void PlayerJoined(ulong id)
+	public void PlayerJoined(Packet packet)
 	{
 		++PlayerCount;
 
-		if (IsServer)
+		if (IsServer && packet.id == 255)
 		{
 			lock (joinLock)
 			{
@@ -460,16 +460,14 @@ public class GameManager : Singleton<GameManager>
 
 					if (steamId == 0)
 					{
-						lobby.SetData("Player" + i, id.ToString());
+						lobby.SetData("Player" + i, packet.join.steamId.ToString());
 
-						Packet packet = new Packet();
 						packet.id = i;
-						packet.type = 6;
 
-						if(Fading) { packet.spawn = new SpawnPacket((byte)(levelNum + 100)); }
-						else if(Loading) { packet.spawn = new SpawnPacket((byte)(levelNum + 200)); }
-						else if(!(Loading || inLobby)) { packet.spawn = new SpawnPacket(levelNum); }
-						else { packet.spawn = new SpawnPacket(255); }
+						if (Fading) { packet.join.level = (byte)(levelNum + 100); }
+						else if(Loading) { packet.join.level = (byte)(levelNum + 200); }
+						else if(!(Loading || inLobby)) { packet.join.level = levelNum; }
+						else { packet.join.level = 255; }
 
 						NetworkManager.Instance.SendMessage(packet);
 						AddPlayer(i);
@@ -477,6 +475,24 @@ public class GameManager : Singleton<GameManager>
 						break;
 					}
 				}
+			}
+		}
+		else if(packet.id != 255 && !IsServer)
+		{
+			if (ThisPlayer == 255)
+			{
+				Lobby lobby = NetworkManager.Instance.currentLobby;
+				ulong steamId = ulong.Parse(lobby.GetData("Player" + packet.id));
+
+				if (steamId == NetworkManager.Instance.PlayerId.Value)
+				{
+					ThisPlayer = packet.id;
+					OnJoinGame(packet.join.level);
+				}
+			}
+			else
+			{
+				AddPlayer(packet.id);
 			}
 		}
 	}
@@ -573,21 +589,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (packet.id < 4)
 		{
-			if (ThisPlayer == 255)
-			{
-				Lobby lobby = NetworkManager.Instance.currentLobby;
-				ulong steamId = ulong.Parse(lobby.GetData("Player" + packet.id));
-
-				if(steamId == NetworkManager.Instance.PlayerId)
-				{
-					ThisPlayer = packet.id;
-					OnJoinGame(packet.spawn.spawn);
-				}
-			}
-			else
-			{
-				AddPlayer(packet.id);
-			}
+			
 		}
 		else if (packet.id < 44)
 		{
