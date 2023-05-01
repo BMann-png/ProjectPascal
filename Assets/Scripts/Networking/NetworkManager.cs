@@ -99,10 +99,12 @@ public struct JoinPacket
 	{
 		this.steamId = steamId;
 		level = 255;
+		unused = 255;
 	}
 
 	public ulong steamId;
-	public byte level; 
+	public byte level;
+	public byte unused; 
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
@@ -402,7 +404,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 6: size = 3; break;    //Game Spawn
 			case 7: size = 2; break;    //Game Despawn
 			case 8: size = 10; break;   //Owner Change
-			case 9: size = 11; break;   //Player Joined
+			case 9: size = 12; break;   //Player Joined
 			default: return false;
 		}
 
@@ -440,11 +442,11 @@ public class NetworkManager : Singleton<NetworkManager>
 				case 2: GameManager.Instance.Health(packet); break;				//Health
 				case 3: GameManager.Instance.Inventory(packet); break;			//Inventory
 				case 4: GameManager.Instance.GameTrigger(packet); break;		//Game Trigger
-				case 5: GameManager.Instance.LoadLevel(packet); break;          //Scene Load
-				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
-				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
-				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
-				case 9: GameManager.Instance.PlayerJoined(packet); break;        //Player Joined
+				case 5: GameManager.Instance.LoadLevel(packet); break;			//Scene Load
+				case 6: GameManager.Instance.Spawn(packet); break;				//Game Spawn
+				case 7: GameManager.Instance.Despawn(packet); break;			//Game Despawn
+				case 8: GameManager.Instance.OwnerChange(packet); break;		//Owner Change
+				case 9: GameManager.Instance.PlayerJoined(packet); break;		//Player Joined
 				default: break;
 			}
 		}
