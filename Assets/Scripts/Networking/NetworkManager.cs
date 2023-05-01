@@ -354,6 +354,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnected(Connection connection, ConnectionInfo info)
 	{
+		Debug.Log(info.State);
+
 		if(info.State == ConnectionState.Connected && !fullyConnected)
 		{
 			fullyConnected = true;
