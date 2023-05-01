@@ -245,7 +245,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		packet.type = 9;
 		packet.join = new JoinPacket(PlayerId);
 
-		SendMessage(packet);
+		Instance.SendMessage(packet);
 	}
 
 	//private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
