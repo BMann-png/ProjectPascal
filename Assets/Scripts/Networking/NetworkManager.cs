@@ -126,7 +126,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	private Pascal.ConnectionManager connectionManager;
 	public bool activeSocketServer { get; private set; }
 	private bool activeSocketConnection;
-	private bool fullyConnected = false;
 
 	private List<Lobby> activeLobbies;
 	public Lobby currentLobby;
@@ -144,7 +143,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			SteamClient.Init(480, true);
 			if (!SteamClient.IsValid)
 			{
-				throw new System.Exception("Client is not valid");
+				throw new Exception("Client is not valid");
 			}
 
 			message = Marshal.AllocHGlobal(22);
@@ -166,7 +165,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void Start()
 	{
 		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
-		//SteamNetworkingSockets.OnConnectionStatusChanged += OnConnected;
 		//SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
 		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
 		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
@@ -353,29 +351,12 @@ public class NetworkManager : Singleton<NetworkManager>
 		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
-		fullyConnected = false;
-	}
-
-	private void OnConnected(Connection connection, ConnectionInfo info)
-	{
-		//Debug.Log(info.State);
-		//
-		//if(info.State == ConnectionState.Connected && !fullyConnected)
-		//{
-		//	fullyConnected = true;
-		//	Packet packet = new Packet();
-		//	packet.type = 9;
-		//	packet.join = new JoinPacket(PlayerId);
-		//
-		//	SendMessage(packet);
-		//}
 	}
 
 	private void LeaveSocketServer()
 	{
 		if (activeSocketConnection) { connectionManager.Close(); activeSocketConnection = false; }
 		if (activeSocketServer) { socketManager.Close(); activeSocketServer = false; }
-		fullyConnected = false;
 	}
 
 	public void RelayMessageReceived(IntPtr message, int size, uint connectionId)
