@@ -349,6 +349,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
+		fullyConnected = false;
 	}
 
 	private void OnConnected(Connection connection, ConnectionInfo info)
@@ -359,6 +360,8 @@ public class NetworkManager : Singleton<NetworkManager>
 			Packet packet = new Packet();
 			packet.type = 9;
 			packet.join = new JoinPacket(PlayerId);
+
+			SendMessage(packet);
 		}
 	}
 
