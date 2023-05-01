@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
 
 	private Entity entity;
 
-    private byte primaryIndex = 0;
+    private byte primaryIndex = 255;
     private byte secondaryIndex = 255;
 
     private bool hasPacifier = false;
@@ -38,11 +38,12 @@ public class Inventory : MonoBehaviour
 			else if (Input.GetKeyDown(KeyCode.Alpha2)) { equippedItem = 1; }
 			else if (Input.GetKeyDown(KeyCode.Alpha3)) { equippedItem = 2; }
 
-			EquipWeapon(equippedItem, primaryIndex);
+			EquipWeapon(equippedItem, 0);
 
 			Packet packet = new Packet();
 			packet.type = 3;
 			packet.id = entity.id;
+
 			packet.inventory = new InventoryPacket(equippedItem, 255);
 
 			NetworkManager.Instance.SendMessage(packet);
@@ -51,14 +52,6 @@ public class Inventory : MonoBehaviour
 
 	public void EquipWeapon(byte slot, byte id)
 	{
-		switch(slot)
-		{
-			case 0: primaryIndex = id; break;
-			case 1: secondaryIndex = id; break;
-			case 2: hasPacifier = id > 0; break;
-			case 3: hasMission = id > 0; break;
-		}
-
 		SetWeapon(slot, id);
 
 		Packet packet = new Packet();
@@ -73,10 +66,26 @@ public class Inventory : MonoBehaviour
 	{
 		switch (slot)
 		{
-			case 0: primaryIndex = id; break;
-			case 1: secondaryIndex = id; break;
-			case 2: hasPacifier = id > 0; break;
-			case 3: hasMission = id > 0; break;
+			case 0:
+				if (primaryIndex == id) return;
+				primaryIndex = id;
+				//if (hand.GetComponentInChildren<> != null) Destroy(hand.GetComponentInChildren<Weapon>().gameObject);
+				Instantiate(primaryWeapons[primaryIndex], hand.transform);
+                break;
+			case 1:
+                if (secondaryIndex == id) return;
+                secondaryIndex = id;
+                //if (hand.GetComponentInChildren<Weapon>().gameObject != null) Destroy(hand.GetComponentInChildren<Weapon>().gameObject);
+                Instantiate(secondaryWeapons[secondaryIndex], hand.transform);
+                break;
+			case 2:
+                if (id > 0 == hasPacifier) return;
+                hasPacifier = id > 0; 
+				break;
+			case 3:
+                if (id > 0 == hasMission) return;
+                hasMission = id > 0; 
+				break;
 		}
     }
 

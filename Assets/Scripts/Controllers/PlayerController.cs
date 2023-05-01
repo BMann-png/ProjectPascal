@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private GameObject hand;
 	private CharacterController controller;
 	private Entity entity;
-	private Weapon weapon;
 	private Vector3 movement;
 
 	private bool sprinting = false;
@@ -31,7 +30,6 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
-		weapon = hand.GetComponentInChildren<Weapon>();
 	}
 
 	private void FixedUpdate()
@@ -143,7 +141,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Shoot()
 	{
-		if (weapon == null) return;
-		weapon.Shoot();
-	}
+		Weapon weapon = hand.GetComponentInChildren<Weapon>();
+		if (weapon != null) weapon.Shoot();
+    }
 }
