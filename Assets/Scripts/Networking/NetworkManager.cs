@@ -272,10 +272,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	{
 		while (true)
 		{
-			while (QueuedPackets.Count > 0)
-			{
-				SendMessage(QueuedPackets.Dequeue());
-			}
+			tickUpdate();
 
 			yield return new WaitForSeconds(TICK_TIME);
 		}
