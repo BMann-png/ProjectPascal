@@ -272,7 +272,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         while (true)
         {
-            tickUpdate();
+            tickUpdate?.Invoke();
 
             yield return new WaitForSeconds(TICK_TIME);
         }
@@ -303,7 +303,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
             CreateSocketServer();
             StartCoroutine(Tick());
-
+                    
             return true;
         }
         catch (Exception e)
