@@ -269,6 +269,13 @@ public class GameManager : Singleton<GameManager>
 					entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
 					entities[i].SetModel();
 				}
+				else if(i == ThisPlayer)
+				{
+					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
+					entities[i].id = i;
+					entities[i].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
+					entities[i].SetModel();
+				}
 			}
 		}
 		else if(data > 200)
@@ -298,6 +305,13 @@ public class GameManager : Singleton<GameManager>
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
 					entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
+					entities[i].SetModel();
+				}
+				else if (i == ThisPlayer)
+				{
+					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
+					entities[i].id = i;
+					entities[i].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					entities[i].SetModel();
 				}
 			}
