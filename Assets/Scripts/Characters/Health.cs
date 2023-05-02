@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
-public class Health : MonoBehaviour, INetworked
+public class Health : MonoBehaviour
 {
     public const int MIN_HEALTH = 0;
 

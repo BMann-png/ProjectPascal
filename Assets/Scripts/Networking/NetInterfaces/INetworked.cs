@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface INetworked
 {
-    public void UpdateNetworked();
+    public void NetworkUpdate();
 }

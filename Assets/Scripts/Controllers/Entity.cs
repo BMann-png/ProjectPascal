@@ -21,9 +21,9 @@ public class Entity : MonoBehaviour
                                         //ID 49-254 is a projectile
                                         //ID of 255 is invalid
 
-    private Vector3 previousPosition;
-    private Vector3 targetPosition;
-    private float targetRotation;
+    private Vector3 prevPos;
+    private Vector3 targPos;
+    private float targRot;
 
     public Transform shoot;
     [HideInInspector] public GameObject model;
@@ -34,32 +34,32 @@ public class Entity : MonoBehaviour
 
     private void Awake()
     {
-        targetPosition = transform.position;
-        targetRotation = transform.eulerAngles.y;
+        targPos = transform.position;
+        targRot = transform.eulerAngles.y;
     }
 
     private void Update()
     {
         if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
         {
-            transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
-            //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
+            transform.position = Vector3.Lerp(transform.position, targPos, 0.3f);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, targRot, 0.3f);
         }
 
-        if (!inLobby && animator != null && transform.position != previousPosition)
+        if (!inLobby && animator != null && transform.position != prevPos)
         {
-            float speed = (transform.position - previousPosition).magnitude / Time.deltaTime;
+            float speed = (transform.position - prevPos).magnitude / Time.deltaTime;
 
             animator.SetFloat("Speed", Mathf.Abs(speed));
 
-            previousPosition = transform.position;
+            prevPos = transform.position;
         }
     }
 
     public void SetTransform(TransformPacket tp)
     {
-        targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
-        targetRotation = tp.yRot;
+        targPos = new Vector3(tp.xPos, tp.yPos, tp.zPos);
+        targRot = tp.yRot;
 
 
         if (id > 48)

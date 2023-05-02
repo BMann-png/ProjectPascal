@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Entity))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, INetworked
 {
 	private static readonly float SPRINT_TIME = 3.0f;
 	private static readonly float SPRINT_COOLDOWN = 6.0f;
@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Awake()
 	{
+		NetworkManager.Instance.tickUpdate += NetworkUpdate;
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
 	}
@@ -42,13 +43,6 @@ public class PlayerController : MonoBehaviour
 
 				EndSprint();
 			}
-
-			Packet packet = new Packet();
-			packet.type = 0;
-			packet.id = entity.id;
-			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
-
-			NetworkManager.Instance.QueueMessage(packet);
 		}
 	}
 
@@ -97,6 +91,15 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+
+	public void NetworkUpdate()
+	{
+        Packet packet = new Packet();
+        packet.type = 0;
+        packet.id = entity.id;
+        packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
+        NetworkManager.Instance.QueueMessage(packet);
+    }
 
 	private void StartSprint()
 	{

@@ -136,6 +136,9 @@ public class NetworkManager : Singleton<NetworkManager>
 	private IntPtr message;
 	private bool cleanedUp = false;
 
+	public delegate void TickUpdate();
+	public event TickUpdate tickUpdate;
+
 	protected override void Awake()
 	{
 		base.Awake();
