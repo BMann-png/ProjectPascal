@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
@@ -40,7 +39,7 @@ public class Inventory : MonoBehaviour
 			else if (Input.GetKeyDown(KeyCode.Alpha2)) { equippedItem = 1; }
 			else if (Input.GetKeyDown(KeyCode.Alpha3)) { equippedItem = 2; }
 
-			EquipWeapon(equippedItem, 0);
+			EquipWeapon(0, equippedItem);
 
 			Packet packet = new Packet();
 			packet.type = 3;
@@ -71,14 +70,14 @@ public class Inventory : MonoBehaviour
 			case 0:
 				if (primaryIndex == id) return;
 				primaryIndex = id;
-				curPrimary.SetActive(false);
+				if (curPrimary != null) curPrimary.SetActive(false);
 				curPrimary = primaryWeapons[primaryIndex];
                 curPrimary.SetActive(true);
                 break;
 			case 1:
                 if (secondaryIndex == id) return;
                 secondaryIndex = id;
-                curSecondary.SetActive(false);
+                if (curSecondary != null) curSecondary.SetActive(false);
                 curSecondary = secondaryWeapons[secondaryIndex];
                 curSecondary.SetActive(true);
                 break;

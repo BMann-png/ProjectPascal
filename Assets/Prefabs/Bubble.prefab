@@ -163,7 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dealsDamage: 1
   damageOverTime: 0
-  damage: 10
+  damage: 25
 --- !u!114 &6882036858200203632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,3 +194,5 @@ MonoBehaviour:
   id: 0
   shoot: {fileID: 0}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 0
