@@ -243,6 +243,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	{
 		Packet packet = new Packet();
 		packet.type = 9;
+		packet.id = 255;
 		packet.join = new JoinPacket(PlayerId);
 
 		Instance.SendMessage(packet);
