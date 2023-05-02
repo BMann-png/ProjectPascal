@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
         packet.id = entity.id;
         packet.transform = new TransformPacket(transform, transform.eulerAngles.x);
 
-        NetworkManager.Instance.QueueMessage(packet);
+        NetworkManager.Instance.SendMessage(packet);
     }
 
     private void Update()

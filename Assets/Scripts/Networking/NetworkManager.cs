@@ -394,11 +394,6 @@ public class NetworkManager : Singleton<NetworkManager>
 		}
 	}
 
-	public void QueueMessage(Packet packet)
-	{
-		QueuedPackets.Enqueue(packet);
-	}
-
 	public bool SendMessage(Packet packet)
 	{
 		int size;

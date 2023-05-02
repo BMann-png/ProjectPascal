@@ -79,7 +79,7 @@ public class GameManager : Singleton<GameManager>
 				packet.type = 6;
 				packet.spawn = new SpawnPacket(spawn);
 
-				NetworkManager.Instance.QueueMessage(packet);
+				NetworkManager.Instance.SendMessage(packet);
 
 				++enemyCount;
 			}
@@ -107,7 +107,7 @@ public class GameManager : Singleton<GameManager>
 				packet.type = 6;
 				packet.spawn = new SpawnPacket(spawn);
 
-				NetworkManager.Instance.QueueMessage(packet);
+				NetworkManager.Instance.SendMessage(packet);
 
 				++specialCount;
 			}
@@ -130,7 +130,7 @@ public class GameManager : Singleton<GameManager>
 			packet.type = 5;
 			packet.id = levelNum;
 
-			NetworkManager.Instance.QueueMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
 			LoadLevel(packet);
 		}
 	}
@@ -143,7 +143,7 @@ public class GameManager : Singleton<GameManager>
 			packet.type = 5;
 			packet.id = level;
 
-			NetworkManager.Instance.QueueMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
 			LoadLevel(packet);
 		}
 	}
@@ -161,7 +161,7 @@ public class GameManager : Singleton<GameManager>
 		packet.id = ThisPlayer;
 		packet.action = new ActionPacket(255);
 
-		NetworkManager.Instance.QueueMessage(packet);
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	private void FinishLoading()
@@ -294,7 +294,7 @@ public class GameManager : Singleton<GameManager>
 					packet.type = 7;
 					packet.owner = new OwnerPacket(steamId);
 
-					NetworkManager.Instance.QueueMessage(packet);
+					NetworkManager.Instance.SendMessage(packet);
 				}
 			}
 		}
@@ -322,7 +322,7 @@ public class GameManager : Singleton<GameManager>
 			packet.type = 6;
 			packet.spawn = new SpawnPacket(ThisPlayer);
 
-			NetworkManager.Instance.QueueMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
 		}
 		else
 		{
@@ -331,7 +331,7 @@ public class GameManager : Singleton<GameManager>
 			packet.type = 6;
 			packet.spawn = new SpawnPacket(ThisPlayer);
 
-			NetworkManager.Instance.QueueMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -364,7 +364,7 @@ public class GameManager : Singleton<GameManager>
 			packet.id = obj.id;
 			packet.type = 7;
 
-			NetworkManager.Instance.QueueMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -515,7 +515,7 @@ public class GameManager : Singleton<GameManager>
 				newPacket.type = 6;
 				newPacket.spawn = packet.spawn;
 
-				NetworkManager.Instance.QueueMessage(newPacket);
+				NetworkManager.Instance.SendMessage(newPacket);
 			}
 			else if (packet.id != 255)
 			{

@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour, INetworked
         packet.type = 0;
         packet.id = entity.id;
         packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
-        NetworkManager.Instance.QueueMessage(packet);
+        NetworkManager.Instance.SendMessage(packet);
     }
 
 	private void StartSprint()
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour, INetworked
 		packet.id = entity.id;
 		packet.action = new ActionPacket(0);
 
-		NetworkManager.Instance.QueueMessage(packet);
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	private void EndSprint()
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour, INetworked
 		if(movement.sqrMagnitude > 0.01f) { packet.action = new ActionPacket(1); }
 		else { packet.action = new ActionPacket(2); }
 
-		NetworkManager.Instance.QueueMessage(packet);
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	private void Shoot()

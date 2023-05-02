@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
         packet.type = 2;
         packet.health = new HealthPacket();
         packet.health.data = (byte)health;
-        NetworkManager.Instance.QueueMessage(packet);
+        NetworkManager.Instance.SendMessage(packet);
 
         if(health <= 0)
         {
