@@ -29,7 +29,9 @@ public class Door : MonoBehaviour
 
 	private void Start()
     {
-        if(startClosed)
+		if (openCloseTime <= 0.0f) { openCloseTime = 0.01f; }
+
+		if (startClosed)
 		{
 			transform.position = closePosition;
 			transform.eulerAngles = closeRotation;
@@ -62,20 +64,11 @@ public class Door : MonoBehaviour
 		opened = true;
 		bool done = false;
 		float timer = 0.0f;
-		float time = 1.0f;
+		float time = 1.0f / openCloseTime;
 
 		Vector3 initialPosition = transform.position;
 		Quaternion initialRotation = transform.rotation;
 		Quaternion finalRotation = Quaternion.Euler(openRotation);
-
-		if(openCloseTime == 0.0f)
-		{
-			transform.position = openPosition;
-			transform.rotation = finalRotation;
-
-			done = true;
-		}
-		else { time = 1.0f / openCloseTime; }
 
 		while (!done)
 		{
@@ -94,20 +87,11 @@ public class Door : MonoBehaviour
 		opened = false;
 		bool done = false;
 		float timer = 0.0f;
-		float time = 1.0f;
+		float time = 1.0f / openCloseTime;
 
 		Vector3 initialPosition = transform.position;
 		Quaternion initialRotation = transform.rotation;
 		Quaternion finalRotation = Quaternion.Euler(closeRotation);
-
-		if (openCloseTime == 0.0f)
-		{
-			transform.position = closePosition;
-			transform.rotation = finalRotation;
-
-			done = true;
-		}
-		else { time = 1.0f / openCloseTime; }
 
 		while (!done)
 		{
