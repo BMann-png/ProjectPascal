@@ -241,9 +241,11 @@ public class GameManager : Singleton<GameManager>
 			return;
 		}
 
-		if(data == 255)
+		Lobby lobby = NetworkManager.Instance.currentLobby;
+		PlayerCount = (byte)lobby.MemberCount;
+
+		if (data == 255)
 		{
-			Lobby lobby = NetworkManager.Instance.currentLobby;
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (byte i = 0; i < 4; ++i)
@@ -275,7 +277,6 @@ public class GameManager : Singleton<GameManager>
 		}
 		else if(data > 100)
 		{
-			Lobby lobby = NetworkManager.Instance.currentLobby;
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (byte i = 0; i < 4; ++i)
@@ -446,12 +447,12 @@ public class GameManager : Singleton<GameManager>
 
 	public void PlayerJoined(Packet packet)
 	{
-		++PlayerCount;
-
 		if (IsServer && packet.id == 255)
 		{
 			lock (joinLock)
 			{
+				++PlayerCount;
+
 				Lobby lobby = NetworkManager.Instance.currentLobby;
 
 				for (byte i = 0; i < 4; ++i)
@@ -481,10 +482,7 @@ public class GameManager : Singleton<GameManager>
 		{
 			if (ThisPlayer == 255)
 			{
-				Lobby lobby = NetworkManager.Instance.currentLobby;
-				ulong steamId = ulong.Parse(lobby.GetData("Player" + packet.id));
-
-				if (steamId == NetworkManager.Instance.PlayerId.Value)
+				if (packet.join.steamId == NetworkManager.Instance.PlayerId.Value)
 				{
 					ThisPlayer = packet.id;
 					OnJoinGame(packet.join.level);
@@ -492,6 +490,7 @@ public class GameManager : Singleton<GameManager>
 			}
 			else
 			{
+				++PlayerCount;
 				AddPlayer(packet.id);
 			}
 		}
