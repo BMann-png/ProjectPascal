@@ -303,7 +303,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
             CreateSocketServer();
             StartCoroutine(Tick());
-                    
+
             return true;
         }
         catch (Exception e)
@@ -337,6 +337,7 @@ public class NetworkManager : Singleton<NetworkManager>
         RoomEnter result = await currentLobby.Join();
 
         JoinSocketServer();
+        StartCoroutine(Tick());
 
         return result == RoomEnter.Success;
     }
