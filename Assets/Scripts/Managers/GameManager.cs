@@ -21,6 +21,7 @@ public class GameManager : Singleton<GameManager>
 	private byte levelNum;
 
 	private byte[] tempPlayers;
+	private HealthBar[] healthBars;
 	private Entity[] entities;
 	private Transform[] lobbySpawnpoints;
 	private Stack<byte> enemyIndices = new Stack<byte>(30);
@@ -51,6 +52,12 @@ public class GameManager : Singleton<GameManager>
 
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
+		healthBars = FindObjectsByType<HealthBar>(FindObjectsSortMode.InstanceID);
+
+		foreach(HealthBar healthBar in healthBars)
+		{
+			healthBar.gameObject.SetActive(false);
+		}
 
 		tempPlayers = new byte[4] { 255, 255, 255, 255 };
 
@@ -170,6 +177,7 @@ public class GameManager : Singleton<GameManager>
 		SceneLoader.ResetScreen();
 		Loading = false;
 
+		int healthBarId = 1;
 		foreach (byte id in tempPlayers)
 		{
 			if (id != 255)
@@ -181,6 +189,10 @@ public class GameManager : Singleton<GameManager>
 					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					playerLocations.Add(entities[id].gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(healthBars[0]);
+					healthBars[0].SetName("Dillian");
+					healthBars[0].gameObject.SetActive(true);
 				}
 				else
 				{
@@ -188,6 +200,12 @@ public class GameManager : Singleton<GameManager>
 					entities[id].id = id;
 					entities[id].SetModel();
 					playerLocations.Add(entities[id].gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(healthBars[healthBarId]);
+					healthBars[healthBarId].SetName("Not Dillian");
+					healthBars[healthBarId].gameObject.SetActive(true);
+
+					++healthBarId;
 				}
 			}
 		}
@@ -432,7 +450,9 @@ public class GameManager : Singleton<GameManager>
 
 	public void Health(Packet health)
 	{
-
+		Health h = entities[health.id].GetComponent<Health>();
+		h.health = health.health.health;
+		h.trauma = health.health.trauma;
 	}
 
 	public void Inventory(Packet inventory)
@@ -462,6 +482,11 @@ public class GameManager : Singleton<GameManager>
 	{
 		Loading = true;
 		loadedPlayers = 0;
+
+		foreach (HealthBar healthBar in healthBars)
+		{
+			healthBar.gameObject.SetActive(false);
+		}
 
 		SceneLoader.SetLoadingScreen(true);
 		playerLocations.Clear();

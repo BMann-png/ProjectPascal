@@ -46,15 +46,14 @@ public struct ActionPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HealthPacket
 {
-	public HealthPacket(byte data)
+	public HealthPacket(byte health, byte trauma)
 	{
-		this.data = data;
+		this.health = health;
+		this.trauma = trauma;
 	}
 
-	public byte data;
-	//FOR PLAYERS:
-	//0 - sprint
-	//1 - stop sprint
+	public byte health;
+	public byte trauma;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
