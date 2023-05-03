@@ -233,9 +233,11 @@ MonoBehaviour:
   primaryWeapons:
   - {fileID: 1033129970614005306}
   - {fileID: 448924989800136423}
+  secondaryWeapons:
   - {fileID: 5936406216322940931}
-  secondaryWeapons: []
   pacifier: {fileID: 0}
+  primaryIndex: 0
+  secondaryIndex: 0
 --- !u!114 &5018046254760015926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +271,10 @@ PrefabInstance:
     - target: {fileID: 6499522961762826845, guid: cd529566155a0be45a2295afc82ffa91, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499522961762826845, guid: cd529566155a0be45a2295afc82ffa91, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: cd529566155a0be45a2295afc82ffa91, type: 3}
       propertyPath: m_LocalPosition.x
@@ -333,6 +339,10 @@ PrefabInstance:
     - target: {fileID: 1714632598187998691, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_Name
       value: DartGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714632598187998691, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_RootOrder
@@ -404,11 +414,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1714632598187998691, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499522961762826845, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
       propertyPath: m_LocalPosition.x

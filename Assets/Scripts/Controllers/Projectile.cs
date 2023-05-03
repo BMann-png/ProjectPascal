@@ -55,7 +55,7 @@ public class Projectile : MonoBehaviour
 		}
     }
 
-	public void SetSpeed()
+    public void SetSpeed()
 	{
 		rigidbody.AddForce(transform.forward * speed, ForceMode.VelocityChange);
 	}

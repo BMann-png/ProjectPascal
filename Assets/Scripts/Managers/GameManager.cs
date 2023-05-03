@@ -439,7 +439,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void Inventory(Packet inventory)
 	{
-
+		entities[inventory.id].DisplayInventory(inventory.inventory);
 	}
 
 	public void GameTrigger(Packet packet)
