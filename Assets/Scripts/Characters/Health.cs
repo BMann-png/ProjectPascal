@@ -15,7 +15,7 @@ public class Health : MonoBehaviour
 
 	public float health { get { return healthVal; } set { 
 			healthVal = Mathf.Clamp(value, 0, maxHealth); 
-			if (healthBar != null) { healthBar.SetTantrumPercent(healthVal / maxHealth); } 
+			if (healthBar != null) { healthBar.SetTantrumPercent(1.0f - healthVal / maxHealth); } 
 		} }
 	public float trauma { get { return traumaVal; } set {
 			traumaVal = Mathf.Clamp(value, 0, maxTrauma);
@@ -61,7 +61,7 @@ public class Health : MonoBehaviour
 	public void AttachHealthBar(HealthBar healthBar)
 	{
 		this.healthBar = healthBar;
-		healthBar.SetTantrumPercent(healthVal / maxHealth);
+		healthBar.SetTantrumPercent(1.0f - healthVal / maxHealth);
 		healthBar.SetTemperPercent(traumaVal / maxHealth);
 	}
 }

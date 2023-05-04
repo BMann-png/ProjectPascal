@@ -73,7 +73,7 @@ MonoBehaviour:
   aiRange: 2
   obsession: {fileID: 0}
   navMeshAgent: {fileID: -2950198444216322968}
-  animator: {fileID: 0}
+  entity: {fileID: 0}
 --- !u!114 &215556695426788973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +101,8 @@ MonoBehaviour:
   id: 0
   shoot: {fileID: 0}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 0
 --- !u!114 &6695557452631149413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,8 +116,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  maxTrauma: 50
   healthVal: 0
-  decayRate: 0
+  traumaVal: 0
 --- !u!136 &1974692429886420172
 CapsuleCollider:
   m_ObjectHideFlags: 0
