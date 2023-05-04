@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] private Transform shoot;
+    public Transform shoot;
     [SerializeField] private byte type = 0;
     [SerializeField] private float delay = 0.1f;
     [SerializeField] private int numsOfShots = 1;

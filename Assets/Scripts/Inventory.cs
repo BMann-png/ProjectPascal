@@ -98,6 +98,7 @@ public class Inventory : MonoBehaviour
                 primaryIndex = id;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
+                entity.shoot = primaryWeapons[primaryIndex].GetComponent<Weapon>().shoot;
                 break;
             case 1:
                 ResetWeapons(secondaryWeapons);
@@ -105,6 +106,7 @@ public class Inventory : MonoBehaviour
                 secondaryIndex = id;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
+                entity.shoot = secondaryWeapons[secondaryIndex].GetComponent<Weapon>().shoot;
                 break;
             case 2:
                 // TODO: Pacifier
