@@ -7,23 +7,22 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class BaseAI : MonoBehaviour
 {
-	[SerializeField] Perception playerPerception;
-	[SerializeField] Perception allyPerception;
+	[SerializeField] private Perception playerPerception;
+	[SerializeField] private Perception allyPerception;
 
-	[SerializeField] float aiRange = 0.0f;
+	[SerializeField] private float aiRange = 0.0f;
 
-	BAIStateMachine stateMachine = new BAIStateMachine();
+	private BAIStateMachine stateMachine = new BAIStateMachine();
 
-	RefValue<float> distanceToPlayer = new RefValue<float>();
-	RefValue<bool> isAgitated = new RefValue<bool>();
-	RefValue<float> agentHealth = new RefValue<float>();
+	private RefValue<float> distanceToPlayer = new RefValue<float>();
+	private RefValue<bool> isAgitated = new RefValue<bool>();
+	private RefValue<float> agentHealth = new RefValue<float>();
 
 	[HideInInspector] public GameObject obsession;
 	[HideInInspector] public NavMeshAgent navMeshAgent;
 	[HideInInspector] public Entity entity;
 
 	private Health health;
-
 	private LayerMask attackMask;
 
 	private void Start()

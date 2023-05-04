@@ -33,6 +33,16 @@ public class Health : MonoBehaviour
 		if (decayRate > 0.0f) { OnDamaged(decayRate); }
 	}
 
+	public void SetHealth(float health)
+	{
+		this.health = health;
+
+		Packet packet = new Packet();
+		packet.type = 2;
+		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal);
+		NetworkManager.Instance.SendMessage(packet);
+	}
+
 	public void OnDamaged(float damage)
 	{
 		health -= damage;

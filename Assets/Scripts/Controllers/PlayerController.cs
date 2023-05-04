@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private new Transform camera;
 	private CharacterController controller;
 	private Entity entity;
+	private Health health;
 	private Vector3 movement;
 
 	private bool sprinting = false;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
+		health = GetComponent<Health>();
 	}
 
 	private void FixedUpdate()
@@ -137,6 +139,18 @@ public class PlayerController : MonoBehaviour
 		else { packet.action = new ActionPacket(2); }
 
 		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	private void OnDown()
+	{
+		down = true;
+		//TODO: 
+	}
+
+	private void OnRevive()
+	{
+		down = false;
+		health.SetHealth(20);
 	}
 
 	private void Shoot()
