@@ -17,11 +17,12 @@ public class Inventory : MonoBehaviour
     private bool hasPacifier = false;
     private bool hasMission = false;
 
-    private byte equipItem = 1;
-    private byte prevEquipItem = 1;
+    private byte equipItem = 0;
+    private byte prevEquipItem = 0;
 
     private void Awake()
     {
+        //SetupPacket(equipItem, primaryIndex);
         entity = GetComponent<Entity>();
     }
 
@@ -68,16 +69,16 @@ public class Inventory : MonoBehaviour
         switch (slot)
         {
             case 0:
+                ResetWeapons(primaryWeapons);
                 id = primaryIndex;
                 if (id == 255) return;
-                ResetWeapons(primaryWeapons);
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
                 break;
             case 1:
+                ResetWeapons(secondaryWeapons);
                 id = secondaryIndex;
                 if (id == 255) return;
-                ResetWeapons(secondaryWeapons);
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
                 break;
@@ -92,16 +93,16 @@ public class Inventory : MonoBehaviour
         switch (slot)
         {
             case 0:
-                if (id == 255) return;
                 ResetWeapons(primaryWeapons);
+                if (id == 255) return;
                 primaryIndex = id;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
                 break;
             case 1:
+                ResetWeapons(secondaryWeapons);
                 if (id == 255) return;
                 secondaryIndex = id;
-                ResetWeapons(secondaryWeapons);
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
                 break;

@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  shoot: {fileID: 0}
+  shoot: {fileID: 8291552484210884444}
   model: {fileID: 0}
   animator: {fileID: 0}
   inLobby: 0
