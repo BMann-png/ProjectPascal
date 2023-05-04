@@ -127,6 +127,11 @@ public class Entity : MonoBehaviour
                     {
                         animator.SetTrigger("Idle");
                     }
+					break;
+				case 3: //Down
+					{
+						animator.SetTrigger("Down");
+					}
                     break;
             }
         }

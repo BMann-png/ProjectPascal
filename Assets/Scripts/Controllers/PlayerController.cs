@@ -59,6 +59,11 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!GameManager.Instance.Loading)
 		{
+			if(health.health == 0 && !down)
+			{
+				OnDown();
+			}
+
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 
 			float vertInput = Input.GetAxis("Vertical");
@@ -144,7 +149,7 @@ public class PlayerController : MonoBehaviour
 	private void OnDown()
 	{
 		down = true;
-		//TODO: 
+		//TODO: Do
 	}
 
 	private void OnRevive()
