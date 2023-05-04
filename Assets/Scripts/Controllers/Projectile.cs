@@ -57,7 +57,7 @@ public class Projectile : MonoBehaviour
 
     public void SetSpeed()
 	{
-		rigidbody.AddForce(transform.forward * speed, ForceMode.VelocityChange);
+		rigidbody.AddForce(transform.up * speed, ForceMode.VelocityChange);
 	}
 
 	private void OnCollisionEnter(Collision collision)

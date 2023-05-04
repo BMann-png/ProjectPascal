@@ -313,7 +313,7 @@ public class GameManager : Singleton<GameManager>
 
 			//Entity entity = entities[ThisPlayer];
 
-			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, variation.y, 0);
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
 
 			entities[id] = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation).GetComponent<Entity>();
 			entities[id].id = id;
