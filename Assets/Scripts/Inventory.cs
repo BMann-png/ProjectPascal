@@ -87,6 +87,30 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void EquipWeapon(byte slot, byte id) 
+    {
+        switch (slot)
+        {
+            case 0:
+                if (id == 255) return;
+                ResetWeapons(primaryWeapons);
+                primaryIndex = id;
+                if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
+                if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
+                break;
+            case 1:
+                if (id == 255) return;
+                secondaryIndex = id;
+                ResetWeapons(secondaryWeapons);
+                if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
+                if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
+                break;
+            case 2:
+                // TODO: Pacifier
+                break;
+        }
+    }
+
     public void SetWeapon(byte slot, byte id)
     {
         switch (slot)

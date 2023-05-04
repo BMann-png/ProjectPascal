@@ -81,7 +81,7 @@ public class Entity : MonoBehaviour
     {
         Inventory inventory = GetComponent<Inventory>();
 
-        inventory.EquipWeapon(ip.slot);
+        inventory.EquipWeapon(ip.slot, ip.data);
     }
 
     public void SetModel()
