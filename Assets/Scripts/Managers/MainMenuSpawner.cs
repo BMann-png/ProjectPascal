@@ -7,7 +7,6 @@ public class MainMenuSpawner : Singleton<MainMenuSpawner>
     private PrefabManager prefabManager;
     public PrefabManager PrefabManager { get => prefabManager; }
 
-	public List<GameObject> playerLocations = new List<GameObject>();
 	private static readonly int MAX_ENEMY_COUNT = 15;
 	private int enemyCount = 0;
 
@@ -29,9 +28,13 @@ public class MainMenuSpawner : Singleton<MainMenuSpawner>
 			GameObject spawner = spawners[Random.Range(0, spawners.Length)];
 			float x = Random.Range(-spawner.transform.localScale.x * 0.5f, spawner.transform.localScale.x * 0.5f);
 			float z = Random.Range(-spawner.transform.localScale.z * 0.5f, spawner.transform.localScale.z * 0.5f);
-			Transform t = gameObject.AddComponent<Transform>();
-			t.position = new Vector3(x, spawner.transform.position.y, z);
-			Instantiate(prefabManager.Enemy, t);
+			
+			GameObject t = Instantiate
+				(prefabManager.RandomCommon(), 
+				spawner.transform.position, 
+				spawner.transform.rotation);
+			t.transform.position += new Vector3(x, spawner.transform.position.y, z);
+
 			enemyCount++;
         }
 
