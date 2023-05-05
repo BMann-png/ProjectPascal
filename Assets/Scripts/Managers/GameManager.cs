@@ -322,7 +322,7 @@ public class GameManager : Singleton<GameManager>
 			Packet packet = new Packet();
 			packet.id = id;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer, type);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -331,7 +331,7 @@ public class GameManager : Singleton<GameManager>
 			Packet packet = new Packet();
 			packet.id = 255;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer, type);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -482,7 +482,7 @@ public class GameManager : Singleton<GameManager>
 		SceneLoader.LoadScene(scene);
 	}
 
-	public void Spawn(Packet packet, byte type = 0)
+	public void Spawn(Packet packet)
 	{
 		if (packet.id < 4)
 		{
@@ -508,7 +508,7 @@ public class GameManager : Singleton<GameManager>
 
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[id] = Instantiate(prefabManager.Projectiles[type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[id].id = id;
 				entities[id].GetComponent<Projectile>().SetSpeed();
 
@@ -523,7 +523,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 		}

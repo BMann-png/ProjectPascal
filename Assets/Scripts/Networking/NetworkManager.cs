@@ -73,11 +73,13 @@ public struct InventoryPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct SpawnPacket
 {
-	public SpawnPacket(byte spawn)
+	public SpawnPacket(byte spawn, byte type = 255)
 	{
 		this.spawn = spawn;
+		this.type = type;
 	}
 
+	public byte type;
 	public byte spawn;
 }
 

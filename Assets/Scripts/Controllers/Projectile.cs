@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
 	[SerializeField] private float speed = 100f;
 	[SerializeField] private float gravityModifier = -9.81f;
 	[SerializeField] private bool destoryOnCollide = false;
-	
+
 	private static readonly float LIFETIME = 5.0f;
 	private static LayerMask ENEMY_MASK;
 	private static LayerMask GROUND_MASK;
