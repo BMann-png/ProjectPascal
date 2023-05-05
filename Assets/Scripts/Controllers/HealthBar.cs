@@ -9,6 +9,7 @@ public class HealthBar : MonoBehaviour
 	[SerializeField] private RectTransform backing;
 	[SerializeField] private RectTransform tantrumFill;
 	[SerializeField] private RectTransform temperFill;
+	[SerializeField] private RectTransform downFill;
 
 	private float length;
 
@@ -18,6 +19,7 @@ public class HealthBar : MonoBehaviour
 
 		tantrumFill.sizeDelta = new Vector2(0.0f, backing.sizeDelta.y);
 		temperFill.sizeDelta = new Vector2(0.0f, backing.sizeDelta.y);
+		downFill.sizeDelta = new Vector2(0.0f, backing.sizeDelta.y);
 	}
 
 	public void SetName(string name)
@@ -33,5 +35,10 @@ public class HealthBar : MonoBehaviour
 	public void SetTemperPercent(float percent)
 	{
 		temperFill.sizeDelta = new Vector2(length * percent, backing.sizeDelta.y);
+	}
+
+	public void SetDownPercent(float percent)
+	{
+		downFill.sizeDelta = new Vector2(length * percent, backing.sizeDelta.y);
 	}
 }

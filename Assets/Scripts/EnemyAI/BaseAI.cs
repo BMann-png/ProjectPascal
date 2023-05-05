@@ -86,7 +86,8 @@ public class BaseAI : MonoBehaviour
 		{
 			if (collider.gameObject.TryGetComponent(out Health health))
 			{
-				health.OnDamaged(10);
+				if(health.down > 0) { health.OnDownDamage(3); }
+				else { health.OnDamaged(10); }
 			}
 		}
 	}

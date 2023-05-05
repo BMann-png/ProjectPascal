@@ -46,14 +46,16 @@ public struct ActionPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HealthPacket
 {
-	public HealthPacket(byte health, byte trauma)
+	public HealthPacket(byte health, byte trauma, byte down)
 	{
 		this.health = health;
 		this.trauma = trauma;
+		this.down = down;
 	}
 
 	public byte health;
 	public byte trauma;
+	public byte down;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -382,7 +384,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		{
 			case 0: size = 22; break;   //Transform
 			case 1: size = 3; break;    //Action
-			case 2: size = 3; break;    //Health
+			case 2: size = 5; break;    //Health
 			case 3: size = 5; break;    //Inventory
 			case 4: size = 2; break;    //Game Trigger
 			case 5: size = 2; break;    //Scene Load

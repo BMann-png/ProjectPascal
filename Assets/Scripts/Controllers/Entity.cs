@@ -131,6 +131,7 @@ public class Entity : MonoBehaviour
 				case 3: //Down
 					{
 						animator.SetTrigger("Down");
+						//Show down health
 					}
                     break;
             }

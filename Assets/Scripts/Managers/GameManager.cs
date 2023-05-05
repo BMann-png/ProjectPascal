@@ -453,6 +453,7 @@ public class GameManager : Singleton<GameManager>
 		Health h = entities[health.id].GetComponent<Health>();
 		h.health = health.health.health;
 		h.trauma = health.health.trauma;
+		
 	}
 
 	public void Inventory(Packet inventory)
