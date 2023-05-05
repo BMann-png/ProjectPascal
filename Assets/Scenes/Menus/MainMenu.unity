@@ -22946,7 +22946,7 @@ GameObject:
   - component: {fileID: 1300634940}
   m_Layer: 0
   m_Name: Spawner1
-  m_TagString: Untagged
+  m_TagString: EnemySpawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30566,7 +30566,7 @@ GameObject:
   - component: {fileID: 1730398378}
   m_Layer: 0
   m_Name: Spawner2
-  m_TagString: Untagged
+  m_TagString: EnemySpawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
