@@ -155,6 +155,9 @@ public class Inventory : MonoBehaviour
 
     private void SetupPacket(byte slot, byte id) 
     {
+        float switchDelay = 0.5f;
+        StartCoroutine(SwitchWeaponDelay(switchDelay));
+        
         EquipWeapon(slot);
 
         Packet packet = new Packet();
@@ -163,5 +166,10 @@ public class Inventory : MonoBehaviour
         packet.inventory = new InventoryPacket(slot, id);
 
         NetworkManager.Instance.SendMessage(packet);
+    }
+
+    private IEnumerator SwitchWeaponDelay(float delay)
+    { 
+        yield return new WaitForSeconds(delay);
     }
 }
