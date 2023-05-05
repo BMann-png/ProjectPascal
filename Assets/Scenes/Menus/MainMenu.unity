@@ -20962,9 +20962,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 482f0a21089de6f408d1e732b74f1d89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabManager: {fileID: 0}
-  enemyCount: 0
-  spawners: []
 --- !u!1001 &1212332364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22960,7 +22957,6 @@ GameObject:
   - component: {fileID: 1300634939}
   - component: {fileID: 1300634942}
   - component: {fileID: 1300634941}
-  - component: {fileID: 1300634940}
   m_Layer: 0
   m_Name: Spawner1
   m_TagString: EnemySpawner
@@ -22983,19 +22979,6 @@ Transform:
   m_Father: {fileID: 1211582767}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1300634940
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1300634938}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1300634941
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30656,7 +30639,6 @@ GameObject:
   - component: {fileID: 1730398377}
   - component: {fileID: 1730398380}
   - component: {fileID: 1730398379}
-  - component: {fileID: 1730398378}
   m_Layer: 0
   m_Name: Spawner2
   m_TagString: EnemySpawner
@@ -30679,19 +30661,6 @@ Transform:
   m_Father: {fileID: 1211582767}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1730398378
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1730398376}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1730398379
 MeshRenderer:
   m_ObjectHideFlags: 0
