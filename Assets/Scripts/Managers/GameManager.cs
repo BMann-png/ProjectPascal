@@ -523,7 +523,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[packet.inventory.data], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 		}

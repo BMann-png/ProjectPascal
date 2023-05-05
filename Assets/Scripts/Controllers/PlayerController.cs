@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
 
 	private bool sprinting = false;
 	private bool tripped = false;
+	private bool fired = false;
+
 	private float sprintTimer = 0.0f;
 	private float sprintCooldownTimer = 0.0f;
 	private float tripTimer = 0.0f;
