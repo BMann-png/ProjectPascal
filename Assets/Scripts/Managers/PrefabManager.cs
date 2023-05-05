@@ -13,6 +13,9 @@ public class PrefabManager : MonoBehaviour
 	[SerializeField] private GameObject[] specialModels;
 	public GameObject[] SpecialModels { get => specialModels; }
 
+	[SerializeField] private GameObject[] pickups;
+	public GameObject[] Pickups { get => pickups; }
+
 	[SerializeField] private GameObject player;
 	public GameObject Player { get => player; }
 
