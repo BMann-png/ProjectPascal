@@ -13,6 +13,7 @@ public class Projectile : MonoBehaviour
 	private static readonly float LIFETIME = 5.0f;
 	private static LayerMask ENEMY_MASK;
 	private static LayerMask GROUND_MASK;
+	private static LayerMask PLAYER_MASK;
 
 	private new Rigidbody rigidbody;
 	private Entity entity;
@@ -30,6 +31,7 @@ public class Projectile : MonoBehaviour
 		timer = LIFETIME;
 		ENEMY_MASK = LayerMask.GetMask("Enemy");
 		GROUND_MASK = LayerMask.GetMask("Ground");
+		PLAYER_MASK = LayerMask.GetMask("Player");
 	}
 
 	private void FixedUpdate()
@@ -70,11 +72,15 @@ public class Projectile : MonoBehaviour
 			//TODO: Deal damage
 			Destroy(gameObject);
 			damage.dealsDamage = false;
-        }
+		}
 		else if (1 << collision.gameObject.layer == GROUND_MASK.value)
 		{
 			damage.dealsDamage = false;
-        }
+		}
+		else if (1 << collision.gameObject.layer == PLAYER_MASK.value)
+		{
+			damage.dealsDamage = false;
+		}
 
 		if (destoryOnCollide) 
 		{ 

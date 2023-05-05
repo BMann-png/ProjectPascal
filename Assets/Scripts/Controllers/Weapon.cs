@@ -7,6 +7,7 @@ public class Weapon : MonoBehaviour
     public Transform shoot;
     [SerializeField] private byte type = 0;
     [SerializeField] private float delay = 0.1f;
+    [SerializeField] [Range(0, 45)] private float spreadAngle = 15f;
     [SerializeField] private int numsOfShots = 1;
 
     public void Shoot() 
@@ -20,8 +21,8 @@ public class Weapon : MonoBehaviour
         for (int i = 0; i < numsOfShots; i++)
         {
             GameManager.Instance.Shoot(shoot, type, variation);
-            variation.x = Random.Range(-15, 16);
-            variation.y = Random.Range(-15, 16);
+            variation.x = Random.Range(-spreadAngle, spreadAngle + 1);
+            variation.y = Random.Range(-spreadAngle, spreadAngle + 1);
             yield return new WaitForSeconds(delay);
         }
     }

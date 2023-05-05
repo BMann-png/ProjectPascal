@@ -59,6 +59,7 @@ MonoBehaviour:
   shoot: {fileID: 1298453045960056545}
   type: 1
   delay: 0.01
+  spreadAngle: 3.8
   numsOfShots: 3
 --- !u!23 &2893438902006871896
 MeshRenderer:
