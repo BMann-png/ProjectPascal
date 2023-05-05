@@ -191,7 +191,7 @@ public class GameManager : Singleton<GameManager>
 					playerLocations.Add(entities[id].gameObject);
 
 					entities[id].GetComponent<Health>().AttachHealthBar(healthBars[0]);
-					healthBars[0].SetName("Dillian");
+					healthBars[0].SetImage(id);
 					healthBars[0].gameObject.SetActive(true);
 				}
 				else
@@ -202,7 +202,7 @@ public class GameManager : Singleton<GameManager>
 					playerLocations.Add(entities[id].gameObject);
 
 					entities[id].GetComponent<Health>().AttachHealthBar(healthBars[healthBarId]);
-					healthBars[healthBarId].SetName("Not Dillian");
+					healthBars[healthBarId].SetImage(id);
 					healthBars[healthBarId].gameObject.SetActive(true);
 
 					++healthBarId;

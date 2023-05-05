@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-	[SerializeField] private TMP_Text textName;
+	[SerializeField] private Sprite[] sprites;
+
+	[SerializeField] private Image image;
 	[SerializeField] private RectTransform backing;
 	[SerializeField] private RectTransform tantrumFill;
 	[SerializeField] private RectTransform temperFill;
@@ -22,9 +25,9 @@ public class HealthBar : MonoBehaviour
 		downFill.sizeDelta = new Vector2(0.0f, backing.sizeDelta.y);
 	}
 
-	public void SetName(string name)
+	public void SetImage(byte id)
 	{
-		textName.text = name;
+		image.sprite = sprites[id];
 	}
 
 	public void SetTantrumPercent(float percent)
