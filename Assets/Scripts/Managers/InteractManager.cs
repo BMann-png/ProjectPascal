@@ -63,7 +63,7 @@ public class InteractManager : MonoBehaviour
 							i.onInteractOther.Invoke();
 							interacting = true;
 						}
-						else if (Input.GetKeyUp(KeyCode.E))
+						else if (Input.GetKeyUp(KeyCode.E) && interacting)
 						{
 							lastHover.onStopInteract.Invoke();
 							lastHover.onStopInteractOther.Invoke();
