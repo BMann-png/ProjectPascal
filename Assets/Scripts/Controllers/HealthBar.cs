@@ -25,7 +25,7 @@ public class HealthBar : MonoBehaviour
 		downFill.sizeDelta = new Vector2(0.0f, backing.sizeDelta.y);
 	}
 
-	public void SetImage(byte id)
+	public void SetImage(ushort id)
 	{
 		image.sprite = sprites[id];
 	}

@@ -199,6 +199,8 @@ MonoBehaviour:
   id: 0
   shoot: {fileID: 4249420564580342456}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 0
 --- !u!114 &4249420564965122359
 MonoBehaviour:
   m_ObjectHideFlags: 0
