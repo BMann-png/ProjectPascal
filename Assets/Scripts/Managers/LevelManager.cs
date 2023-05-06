@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour
 {
 	private PlayerSpawner[] playerSpawners;
 	private EnemySpawner[] enemySpawners;
+	private InteractableSpawner[] interactableSpawners;
 
 	//TODO: Initial spawn and hidden spawn
 
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviour
 	{
 		playerSpawners = FindObjectsByType<PlayerSpawner>(FindObjectsSortMode.InstanceID);
 		enemySpawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.InstanceID);
+		interactableSpawners = FindObjectsByType<InteractableSpawner>(FindObjectsSortMode.InstanceID);
 
 		GameManager.Instance.OnLevelLoad(this);
 	}
@@ -25,6 +27,16 @@ public class LevelManager : MonoBehaviour
 	public Transform GetEnemySpawn(int index)
 	{
 		return enemySpawners[index].transform;
+	}
+
+	public ushort InteractableSpawnCount()
+	{
+		return (ushort)interactableSpawners.Length;
+	}
+
+	public InteractableSpawner GetInteractableSpawn(int index)
+	{
+		return interactableSpawners[index];
 	}
 
 	public byte RandomEnemySpawn()

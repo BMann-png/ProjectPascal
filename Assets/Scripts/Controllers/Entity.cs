@@ -1,25 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
+
+//ID 0-3 - player
+//ID 4-33 - common enemy
+//ID 34 - Spitter
+//ID 35 - Alarmer
+//ID 36 - Lurker
+//ID 37 - Hurler
+//ID 38 - Snatcher
+//ID 39 - Corrupted Spitter
+//ID 40 - Corrupted Alarmer
+//ID 41 - Corrupted Lurker
+//ID 42 - Corrupted Hurler
+//ID 43 - Corrupted Snatcher
+//ID 44-10000 is an interactable
+//ID 10001-20000 is a water projectile
+//ID 20001-30000 is a bubble projectile
+//ID 30001-40000 is a dart projectile
+//ID 40001-50000 is a other projectile
+//ID of 65535 is invalid
 
 public class Entity : MonoBehaviour
 {
-	[HideInInspector] public byte id;   //ID 0-3 - player
-										//ID 4-33 - common enemy
-										//ID 34 - Spitter
-										//ID 35 - Alarmer
-										//ID 36 - Lurker
-										//ID 37 - Hurler
-										//ID 38 - Snatcher
-										//ID 39 - Corrupted Spitter
-										//ID 40 - Corrupted Alarmer
-										//ID 41 - Corrupted Lurker
-										//ID 42 - Corrupted Hurler
-										//ID 43 - Corrupted Snatcher
-										//ID 44-48 is an objective
-										//ID 49-254 is a projectile
-										//ID of 255 is invalid
+	[HideInInspector] public ushort id;
 
 	private Vector3 previousPosition;
 	private Vector3 targetPosition;
@@ -93,9 +97,21 @@ public class Entity : MonoBehaviour
 		{
 			model = Instantiate(GameManager.Instance.PrefabManager.SpecialModels[id - 34], transform);
 		}
-		else if (id < 49)
+		else if (id < 20001) // Water Projectile
 		{
-			//Set Item Model
+			//TODO: Set Item Model
+		}
+		else if (id < 20001) // Bubble Projectile
+		{
+			//TODO: Set Item Model
+		}
+		else if (id < 20001) // Dart Projectile
+		{
+			//TODO: Set Item Model
+		}
+		else if (id < 20001) // Other Projectile
+		{
+			//TODO: Set Item Model
 		}
 
 		model.TryGetComponent(out animator);
@@ -164,7 +180,7 @@ public class Entity : MonoBehaviour
 		{
 
 		}	
-		else if (id < 49)
+		else if (id < 10001)
 		{
 			//TODO: Pushing action
 		}
