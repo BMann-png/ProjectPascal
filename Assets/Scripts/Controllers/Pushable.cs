@@ -18,8 +18,8 @@ public class Pushable : MonoBehaviour
 	private bool complete = false;
 	private bool pushing = false;
 
-    void Start()
-    {
+	private void Awake()
+	{
 		interactable = GetComponent<Interactable>();
 		entity = GetComponent<Entity>();
 
@@ -35,11 +35,11 @@ public class Pushable : MonoBehaviour
 		timeInv = 1.0f / pushTime;
 		initialPosition = transform.position;
 		requiredPlayers = Mathf.Min(GameManager.Instance.PlayerCount, requiredPlayers);
-    }
+	}
 
 	public void Push()
 	{
-		if(!pushing)
+		if (!pushing)
 		{
 			pushing = true;
 			++playerCount;

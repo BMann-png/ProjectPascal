@@ -179,10 +179,10 @@ public class Entity : MonoBehaviour
 		else if (id < 44)
 		{
 
-		}	
+		}
 		else if (id < 10001)
 		{
-			if(packet.data == 0) { GetComponent<Pushable>().OtherPush(); }
+			if (packet.data == 0) { GetComponent<Pushable>().OtherPush(); }
 			else { GetComponent<Pushable>().OtherStop(); }
 		}
 	}
