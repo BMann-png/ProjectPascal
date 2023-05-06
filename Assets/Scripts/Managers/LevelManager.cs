@@ -43,4 +43,14 @@ public class LevelManager : MonoBehaviour
 	{
 		return (byte)Random.Range(0, enemySpawners.Length);
 	}
+
+	public void SetInteractable(int id)
+	{
+		Interactable[] ints = FindObjectsByType<Interactable>(FindObjectsSortMode.InstanceID);
+
+		foreach (Interactable i in ints)
+		{
+			if(i.id == id) { i.canInteract = true; }
+		}
+	}
 }

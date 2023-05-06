@@ -183,11 +183,17 @@ public class GameManager : Singleton<GameManager>
 					{
 						entities[id] = Instantiate(prefabManager.Pickups[spawner.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
+						Interactable inter = entities[id].GetComponent<Interactable>();
+						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
+						inter.id = spawner.id;
 					}
 					else if(spawner.type < 255)
 					{
 						entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
+						Interactable inter = entities[id].GetComponent<Interactable>();
+						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
+						inter.id = spawner.id;
 					}
 
 					Packet packet = new Packet();
@@ -551,17 +557,23 @@ public class GameManager : Singleton<GameManager>
 		}
 		else if (packet.id < 10001)
 		{
-			Transform spawner = level.GetInteractableSpawn(packet.spawn.spawn).transform;
+			InteractableSpawner spawner = level.GetInteractableSpawn(packet.spawn.spawn);
 
 			if (packet.spawn.type < 100)
 			{
-				entities[packet.id] = Instantiate(prefabManager.Pickups[packet.spawn.type - 1], spawner.position, spawner.rotation).GetComponentInChildren<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.Pickups[packet.spawn.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 				entities[packet.id].id = packet.id;
+				Interactable i = entities[packet.id].GetComponent<Interactable>();
+				i.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
+				i.id = spawner.id;
 			}
 			else if (packet.spawn.type < 255)
 			{
-				entities[packet.id] = Instantiate(prefabManager.Pushables[packet.spawn.type - 100], spawner.position, spawner.rotation).GetComponentInChildren<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.Pushables[packet.spawn.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 				entities[packet.id].id = packet.id;
+				Interactable i = entities[packet.id].GetComponent<Interactable>();
+				i.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
+				i.id = spawner.id;
 			}
 		}
 		else

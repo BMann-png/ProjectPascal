@@ -7,7 +7,8 @@ public class Pushable : MonoBehaviour
 	[SerializeField] private int requiredPlayers;
 	[SerializeField] private float pushTime;
 	[SerializeField] private Vector3 endPosition;
-	[SerializeField] private UnityEvent onComplete;
+	public UnityEvent onComplete;
+	public UnityEvent onCompleteOther;
 
 	private Entity entity;
 	private Interactable interactable;
@@ -37,6 +38,8 @@ public class Pushable : MonoBehaviour
 		requiredPlayers = Mathf.Min(GameManager.Instance.PlayerCount, requiredPlayers);
 	}
 
+	//TODO: Push faster if extra players are pushing
+	//TODO: Can't shoot or move? while pushing
 	private void Update()
 	{
 		if (playerCount >= requiredPlayers && !complete)
@@ -52,6 +55,7 @@ public class Pushable : MonoBehaviour
 				complete = true;
 				interactable.canInteract = false;
 				onComplete.Invoke();
+				onCompleteOther.Invoke();
 
 				Packet packet = new Packet();
 				packet.type = 1;
@@ -113,6 +117,7 @@ public class Pushable : MonoBehaviour
 			complete = true;
 			interactable.canInteract = false;
 			onComplete.Invoke();
+			onCompleteOther.Invoke();
 		}
 	}
 
