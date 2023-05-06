@@ -57,6 +57,8 @@ public class Pushable : MonoBehaviour
 			packet1.action = new ActionPacket(0);
 
 			NetworkManager.Instance.SendMessage(packet1);
+
+			Debug.Log("Push");
 		}
 
 		if (playerCount >= requiredPlayers && !complete)
@@ -94,6 +96,8 @@ public class Pushable : MonoBehaviour
 		packet1.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet1);
+
+		Debug.Log("Stop");
 	}
 
 	public void OtherPush()
