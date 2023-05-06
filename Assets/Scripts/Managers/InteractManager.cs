@@ -25,7 +25,9 @@ public class InteractManager : MonoBehaviour
 			Transform trans = Camera.main.transform;
 
 			if (Physics.Raycast(trans.position, trans.forward, out RaycastHit hit, 3.0f, layerMask.value) &&
-				hit.transform.TryGetComponent(out Interactable i) && i.canInteract)
+				hit.collider.isTrigger == false && //May not work
+				hit.transform.TryGetComponent(out Interactable i) && 
+				i.canInteract)
 			{
 				if (i != lastHover)
 				{
@@ -41,8 +43,12 @@ public class InteractManager : MonoBehaviour
 					i.outline.enabled = true;
 				}
 
-				if (i.hold && Input.GetKey(KeyCode.E)) { i.onInteract.Invoke(); interacting = true; }
-				else if (!i.hold && Input.GetKeyDown(KeyCode.E)) { i.onInteract.Invoke(); }
+				if (i.hold)
+				{
+					if(Input.GetKey(KeyCode.E)) { i.onInteract.Invoke(); interacting = true; }
+					else if(Input.GetKeyUp(KeyCode.E)) { lastHover.onStopInteract.Invoke(); interacting = false; }
+				}
+				else if (Input.GetKeyDown(KeyCode.E)) { i.onInteract.Invoke(); }
 			}
 			else if (lastHover)
 			{
