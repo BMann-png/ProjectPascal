@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Interactable), typeof(Entity), typeof(Collider))]
+[RequireComponent(typeof(Interactable), typeof(Entity))]
 public class Pickup : MonoBehaviour
 {
-	private Entity entity;
+	[SerializeField] private byte id;
 
-	private void Awake()
-	{
-		entity = GetComponent<Entity>();
-	}
+	[HideInInspector] private bool destroyOnPickup = true;
 
 	public void PickupItem()
 	{
-		Destroy(gameObject);
-		Debug.Log("Pickup");
+		GameManager.Instance.PickupItem(id);
+
+		if (destroyOnPickup) { Destroy(gameObject); }
 	}
 }

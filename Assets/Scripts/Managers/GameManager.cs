@@ -305,6 +305,23 @@ public class GameManager : Singleton<GameManager>
 		inLobby = false;
 	}
 
+	public void PickupItem(byte id)
+	{
+		//0 - sqirt gun
+		//1 - bubble gun
+		//2 - dart gun
+		//3 - gun
+		//4 - pacifier
+
+		//TODO: Not sure which weapons go in which slot
+		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(0, id);
+	}
+
+	public void PushPlayer(Vector3 dir)
+	{
+		entities[ThisPlayer].GetComponent<CharacterController>().Move(dir);
+	}
+
 	public void Shoot(byte type)
 	{
 		if (IsServer)

@@ -73,6 +73,8 @@ public class Inventory : MonoBehaviour
 			case 2: hasPacifier = id > 0; break;
 			case 3: hasMission = id > 0; break;
 		}
+
+		Debug.Log("We have weapon noww!!!!!");
 	}
 
 	public void Switch(byte slot)
