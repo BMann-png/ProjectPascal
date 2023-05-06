@@ -8037,7 +8037,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModels:
-  - {fileID: 6033962143860892849, guid: eaa5c036fc474864bbaf3e4639af1bfa, type: 3}
+  - {fileID: 3640847701278636104, guid: eaa5c036fc474864bbaf3e4639af1bfa, type: 3}
   - {fileID: 1497608282148421202, guid: 3e9bdb5398aaca14c8d688c6a8a560a6, type: 3}
   - {fileID: 7981072203922677204, guid: 16b3890f89b53a242b33c964ab260421, type: 3}
   - {fileID: 6102916416845409384, guid: 137c7b56d9700ac46b2bdad8f07f981f, type: 3}

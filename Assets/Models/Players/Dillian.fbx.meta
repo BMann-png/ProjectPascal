@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98568af4b39c5564593e1108a347be0e
+guid: c230966f8f2a7ae4ea60f02c25b245c0
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -182,7 +182,7 @@ ModelImporter:
       takeName: rig|Idle Standing
       internalID: 4730799937648784986
       firstFrame: 0
-      lastFrame: 421
+      lastFrame: 420
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -240,7 +240,7 @@ ModelImporter:
       takeName: rig|run
       internalID: -1186175002919557899
       firstFrame: 0
-      lastFrame: 45
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
