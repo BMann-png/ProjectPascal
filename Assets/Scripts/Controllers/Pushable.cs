@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.EventSystems.EventTrigger;
 
 [RequireComponent(typeof(Interactable), typeof(Entity))]
 public class Pushable : MonoBehaviour
@@ -11,6 +12,7 @@ public class Pushable : MonoBehaviour
 	[SerializeField] private Vector3 endPosition;
 	[SerializeField] private UnityEvent onComplete;
 
+	private Entity entity;
 	private InteractManager manager;
 	private Interactable interactable;
 	private Vector3 initialPosition;
@@ -24,6 +26,7 @@ public class Pushable : MonoBehaviour
     {
 		manager = FindFirstObjectByType<InteractManager>();
 		interactable = GetComponent<Interactable>();
+		entity = GetComponent<Entity>();
 
 		interactable.onInteract.RemoveAllListeners();
 		interactable.onInteract.AddListener(Push);
@@ -46,8 +49,19 @@ public class Pushable : MonoBehaviour
 			pushing = true;
 			++playerCount;
 
-			//TODO: Send pushing action message
-			//TODO: Send pushing message
+			Packet packet = new Packet();
+			packet.type = 1;
+			packet.id = GameManager.Instance.ThisPlayer;
+			packet.action = new ActionPacket(4);
+
+			NetworkManager.Instance.SendMessage(packet);
+
+			Packet packet1 = new Packet();
+			packet1.type = 1;
+			packet1.id = entity.id;
+			packet1.action = new ActionPacket(0);
+
+			NetworkManager.Instance.SendMessage(packet1);
 		}
 
 		if (playerCount >= requiredPlayers && !complete)
@@ -72,8 +86,29 @@ public class Pushable : MonoBehaviour
 		pushing = false;
 		--playerCount;
 
-		//TODO: Send idle/walking action message
-		//TODO: Send stop pushing message
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = GameManager.Instance.ThisPlayer;
+		packet.action = new ActionPacket(2);
+
+		NetworkManager.Instance.SendMessage(packet);
+
+		Packet packet1 = new Packet();
+		packet1.type = 1;
+		packet1.id = entity.id;
+		packet1.action = new ActionPacket(1);
+
+		NetworkManager.Instance.SendMessage(packet1);
+	}
+
+	public void OtherPush()
+	{
+		++playerCount;
+	}
+
+	public void OtherStop()
+	{
+		--playerCount;
 	}
 
 	private void OnTriggerEnter(Collider other)

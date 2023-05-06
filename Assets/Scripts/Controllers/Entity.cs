@@ -182,7 +182,8 @@ public class Entity : MonoBehaviour
 		}	
 		else if (id < 10001)
 		{
-			//TODO: Pushing action
+			if(packet.data == 0) { GetComponent<Pushable>().OtherPush(); }
+			else { GetComponent<Pushable>().OtherStop(); }
 		}
 	}
 
