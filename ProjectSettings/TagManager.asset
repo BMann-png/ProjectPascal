@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Interactable
   - Pushable
+  - NetPlayer
   layers:
   - Default
   - TransparentFX

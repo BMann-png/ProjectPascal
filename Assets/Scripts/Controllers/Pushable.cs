@@ -57,8 +57,6 @@ public class Pushable : MonoBehaviour
 			packet1.action = new ActionPacket(0);
 
 			NetworkManager.Instance.SendMessage(packet1);
-
-			Debug.Log("Push");
 		}
 
 		if (playerCount >= requiredPlayers && !complete)
@@ -96,29 +94,25 @@ public class Pushable : MonoBehaviour
 		packet1.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet1);
-
-		Debug.Log("Stop");
 	}
 
 	public void OtherPush()
 	{
 		++playerCount;
-		Debug.Log(playerCount);
 	}
 
 	public void OtherStop()
 	{
 		--playerCount;
-		Debug.Log(playerCount);
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (!complete) { interactable.canInteract = true; }
+		if (!complete && other.tag == "Player") { interactable.canInteract = true; }
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
-		interactable.canInteract = false;
+		if (other.tag == "Player") { interactable.canInteract = false; }
 	}
 }
