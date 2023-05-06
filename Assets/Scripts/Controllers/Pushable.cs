@@ -37,28 +37,8 @@ public class Pushable : MonoBehaviour
 		requiredPlayers = Mathf.Min(GameManager.Instance.PlayerCount, requiredPlayers);
 	}
 
-	public void Push()
+	private void Update()
 	{
-		if (!pushing)
-		{
-			pushing = true;
-			++playerCount;
-
-			Packet packet = new Packet();
-			packet.type = 1;
-			packet.id = GameManager.Instance.ThisPlayer;
-			packet.action = new ActionPacket(4);
-
-			NetworkManager.Instance.SendMessage(packet);
-
-			Packet packet1 = new Packet();
-			packet1.type = 1;
-			packet1.id = entity.id;
-			packet1.action = new ActionPacket(0);
-
-			NetworkManager.Instance.SendMessage(packet1);
-		}
-
 		if (playerCount >= requiredPlayers && !complete)
 		{
 			pushTimer += Time.deltaTime * timeInv;
@@ -80,6 +60,29 @@ public class Pushable : MonoBehaviour
 
 				NetworkManager.Instance.SendMessage(packet);
 			}
+		}
+	}
+
+	public void Push()
+	{
+		if (!pushing)
+		{
+			pushing = true;
+			++playerCount;
+
+			Packet packet = new Packet();
+			packet.type = 1;
+			packet.id = GameManager.Instance.ThisPlayer;
+			packet.action = new ActionPacket(4);
+
+			NetworkManager.Instance.SendMessage(packet);
+
+			Packet packet1 = new Packet();
+			packet1.type = 1;
+			packet1.id = entity.id;
+			packet1.action = new ActionPacket(0);
+
+			NetworkManager.Instance.SendMessage(packet1);
 		}
 	}
 
