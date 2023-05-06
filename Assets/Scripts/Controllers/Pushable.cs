@@ -45,7 +45,7 @@ public class Pushable : MonoBehaviour
 
 			Vector3 init = transform.position;
 			transform.position = Vector3.Lerp(initialPosition, endPosition, pushTimer);
-			GameManager.Instance.PushPlayer(transform.position - init);
+			if (pushing) { GameManager.Instance.PushPlayer(transform.position - init); }
 
 			if (pushTimer >= 1.0f)
 			{
