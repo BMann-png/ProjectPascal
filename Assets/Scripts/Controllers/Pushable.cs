@@ -72,6 +72,13 @@ public class Pushable : MonoBehaviour
 				complete = true;
 				interactable.canInteract = false;
 				onComplete.Invoke();
+
+				Packet packet = new Packet();
+				packet.type = 1;
+				packet.id = entity.id;
+				packet.action = new ActionPacket(2);
+
+				NetworkManager.Instance.SendMessage(packet);
 			}
 		}
 	}
@@ -94,6 +101,16 @@ public class Pushable : MonoBehaviour
 		packet1.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet1);
+	}
+
+	public void OtherComplete()
+	{
+		if(!complete)
+		{
+			complete = true;
+			interactable.canInteract = false;
+			onComplete.Invoke();
+		}
 	}
 
 	public void OtherPush()
