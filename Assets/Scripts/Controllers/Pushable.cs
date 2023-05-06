@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEngine.EventSystems.EventTrigger;
 
 [RequireComponent(typeof(Interactable), typeof(Entity))]
 public class Pushable : MonoBehaviour
@@ -13,7 +10,6 @@ public class Pushable : MonoBehaviour
 	[SerializeField] private UnityEvent onComplete;
 
 	private Entity entity;
-	private InteractManager manager;
 	private Interactable interactable;
 	private Vector3 initialPosition;
 	private int playerCount;
@@ -24,7 +20,6 @@ public class Pushable : MonoBehaviour
 
     void Start()
     {
-		manager = FindFirstObjectByType<InteractManager>();
 		interactable = GetComponent<Interactable>();
 		entity = GetComponent<Entity>();
 
@@ -104,11 +99,13 @@ public class Pushable : MonoBehaviour
 	public void OtherPush()
 	{
 		++playerCount;
+		Debug.Log(playerCount);
 	}
 
 	public void OtherStop()
 	{
 		--playerCount;
+		Debug.Log(playerCount);
 	}
 
 	private void OnTriggerEnter(Collider other)
