@@ -55,7 +55,7 @@ public class GameManager : Singleton<GameManager>
 
 		tempPlayers = new ushort[4] { INVALID_ID, INVALID_ID, INVALID_ID, INVALID_ID };
 
-		entities = new Entity[256];
+		entities = new Entity[65536];
 
 		for (ushort i = 4; i < 34; ++i) { enemyIndices.Push(i); }
 		for (ushort i = 44; i < 10001; ++i) { interactableIndices.Push(i); }
