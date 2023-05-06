@@ -51,6 +51,7 @@ public class InteractManager : MonoBehaviour
 				if (lastHover.hold && interacting) { lastHover.onStopInteract.Invoke(); interacting = false; }
 				lastHover = null;
 			}
+			else { hudManager.HideToolTip(); }
 		}
 	}
 }

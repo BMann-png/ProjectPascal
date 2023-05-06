@@ -167,10 +167,6 @@ public class GameManager : Singleton<GameManager>
 
 	private void FinishLoading()
 	{
-		SceneLoader.SetLoadingScreen(false);
-		SceneLoader.ResetScreen();
-		Loading = false;
-
 		if(IsServer)
 		{
 			for (ushort i = 0; i < level.InteractableSpawnCount(); ++i)
@@ -185,12 +181,12 @@ public class GameManager : Singleton<GameManager>
 
 					if(spawner.type < 100)
 					{
-						entities[id] = Instantiate(prefabManager.Pickups[spawner.type], spawner.transform.position, spawner.transform.rotation).GetComponent<Entity>();
+						entities[id] = Instantiate(prefabManager.Pickups[spawner.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
 					}
 					else if(spawner.type < 255)
 					{
-						entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponent<Entity>();
+						entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
 					}
 
@@ -229,6 +225,10 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 		}
+
+		SceneLoader.SetLoadingScreen(false);
+		SceneLoader.ResetScreen();
+		Loading = false;
 	}
 
 	public async void CreateLobby(string lobbyName)
@@ -555,12 +555,12 @@ public class GameManager : Singleton<GameManager>
 
 			if (packet.spawn.type < 100)
 			{
-				entities[packet.id] = Instantiate(prefabManager.Pickups[packet.spawn.type], spawner.position, spawner.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.Pickups[packet.spawn.type - 1], spawner.position, spawner.rotation).GetComponentInChildren<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 			else if (packet.spawn.type < 255)
 			{
-				entities[packet.id] = Instantiate(prefabManager.Pushables[packet.spawn.type - 100], spawner.position, spawner.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.Pushables[packet.spawn.type - 100], spawner.position, spawner.rotation).GetComponentInChildren<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 		}
