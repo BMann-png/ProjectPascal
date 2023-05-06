@@ -478,7 +478,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void Action(Packet action)
 	{
-		if (action.action.data == INVALID_ID) //Loaded into level
+		if (action.action.data == 255) //Loaded into level
 		{
 			if (++loadedPlayers == PlayerCount) { FinishLoading(); }
 		}
