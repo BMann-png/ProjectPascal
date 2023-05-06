@@ -44,7 +44,7 @@ public class Entity : MonoBehaviour
 
 	private void Update()
 	{
-		if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && !GameManager.Instance.IsServer))
+		if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && (id < 44 || id > 10000) && !GameManager.Instance.IsServer))
 		{
 			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
