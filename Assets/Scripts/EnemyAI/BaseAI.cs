@@ -23,7 +23,6 @@ public class BaseAI : MonoBehaviour
 	[HideInInspector] public Entity entity;
 
 	private Health health;
-	private LayerMask attackMask;
 
 	private void Start()
 	{
@@ -31,7 +30,6 @@ public class BaseAI : MonoBehaviour
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
-		attackMask = LayerMask.GetMask("Player");
 
 		stateMachine.AddState(new AttackState(typeof(AttackState).Name, this));
 		stateMachine.AddState(new IdleState(typeof(IdleState).Name, this));
@@ -73,21 +71,5 @@ public class BaseAI : MonoBehaviour
 		agentHealth.value = health.health;
 
 		stateMachine.OnUpdate();
-	}
-
-	public void Attack()
-	{
-		Quaternion rot = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
-
-		Collider[] colliders = Physics.OverlapBox(transform.position + rot * Vector3.forward, new Vector3(0.75f, 0.75f, 0.45f), rot, attackMask.value);
-
-		foreach (Collider collider in colliders)
-		{
-			if (collider.gameObject.TryGetComponent(out Health health))
-			{
-				if(health.down > 0) { health.OnDownDamage(3); }
-				else { health.OnDamaged(10); }
-			}
-		}
 	}
 }

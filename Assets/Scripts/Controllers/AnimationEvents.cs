@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class AnimationEvents : MonoBehaviour
 {
-	private BaseAI ai;
+	private Attack attack;
 
 	private void Awake()
 	{
-		ai = GetComponentInParent<BaseAI>();
+		attack = GetComponentInParent<Attack>();
 	}
 
 	public void Attack()
 	{
-		ai.Attack();
+		attack.OnAttack();
 	}
 }
