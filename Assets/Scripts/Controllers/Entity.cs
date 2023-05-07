@@ -65,7 +65,6 @@ public class Entity : MonoBehaviour
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
 		targetRotation = tp.yRot;
 
-
 		if (id > 48)
 		{
 			transform.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f); //TODO: Lerp smoothly
@@ -117,65 +116,107 @@ public class Entity : MonoBehaviour
 		model.TryGetComponent(out animator);
 	}
 
-	//TODO: Health, Inventory
-
-    public void DoAction(ActionPacket packet)
-    {
-        if (id < 4)
-        {
-            switch (packet.data)
-            {
-                case 0: //Sprint
-                    {
-                        CapsuleCollider collider = GetComponent<CapsuleCollider>();
-                        collider.height = 2.2f;
-                        collider.radius = 0.3f;
-                        collider.center = Vector3.up * 1.1f;
-                        animator.SetTrigger("Sprint");
-                    }
-                    break;
-                case 1: //Crawl
-                    {
-                        CapsuleCollider collider = GetComponent<CapsuleCollider>();
-                        collider.height = 1.0f;
-                        collider.radius = 0.5f;
-                        collider.center = Vector3.up * 0.5f;
-                        animator.SetTrigger("Crawl");
-                    }
-                    break;
-                case 2: //Idle
-                    {
-                        animator.SetTrigger("Idle");
-                    }
-					break;
+	public void DoAction(ActionPacket packet)
+	{
+		if (id < 4)
+		{
+			switch (packet.data)
+			{
+				case 0: //Idle
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("Idle");
+				}
+				break;
+				case 1: //Crawl
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("Crawl");
+				}
+				break;
+				case 2: //Sprint
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 2.2f;
+					collider.radius = 0.3f;
+					collider.center = Vector3.up * 1.1f;
+					animator.SetTrigger("Sprint");
+				}
+				break;
 				case 3: //Down
-					{
-						animator.SetTrigger("Down");
-					}
-                    break;
-            }
-        }
-        else if (id < 34)
-        {
-            switch (packet.data)
-            {
-                case 0: //Attack
-                    {
-                        animator.SetBool("isAttacking", true);
-                    }
-                    break;
-                case 1: //Attack
-                    {
-                        animator.SetBool("isAttacking", false);
-                    }
-                    break;
-                case 2: //Death
-                    {
-                        animator.SetTrigger("isDead");
-                    }
-                    break;
-            }
-        }
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("Down");
+					GetComponent<Revive>().OnDown();
+				}
+				break;
+				case 4: //Push
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 2.2f;
+					collider.radius = 0.3f;
+					collider.center = Vector3.up * 1.1f;
+					animator.SetTrigger("Push");
+				}
+				break;
+				case 5: //Fall
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("Fall");
+				}
+				break;
+				case 6: //Revive
+				{
+					animator.SetTrigger("Revive");
+					GetComponent<Revive>().OnRevive();
+				}
+				break;
+
+				case 10: //StartRevive
+				{
+					GetComponent<PlayerController>().StartRevive();
+				}
+				break;
+				case 11: //EndRevive
+				{
+					GetComponent<PlayerController>().EndRevive();
+				}
+				break;
+			}
+		}
+		else if (id < 34)
+		{
+			switch (packet.data)
+			{
+				case 0: //Attack
+				{
+					animator.SetBool("isAttacking", true);
+				}
+				break;
+				case 1: //Attack
+				{
+					animator.SetBool("isAttacking", false);
+				}
+				break;
+				case 2: //Death
+				{
+					animator.SetTrigger("isDead");
+				}
+				break;
+			}
+		}
 		else if (id < 44)
 		{
 

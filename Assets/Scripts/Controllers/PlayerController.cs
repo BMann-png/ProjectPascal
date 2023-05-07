@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-[RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Entity))]
+[RequireComponent(typeof(CharacterController), typeof(Entity))]
 public class PlayerController : MonoBehaviour
 {
 	private static readonly float SPRINT_TIME = 3.0f;
@@ -19,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private new Transform camera;
 	private CharacterController controller;
+	private Interactable interactable;
 	private Entity entity;
 	private Health health;
 	private Vector3 movement;
@@ -31,12 +30,21 @@ public class PlayerController : MonoBehaviour
 	private float tripTimer = 0.0f;
 	private float reviveTimer = 0.0f;
 	private bool reviving = false;
+	private byte playersReviving = 0;
 
 	private void Awake()
 	{
 		controller = GetComponent<CharacterController>();
+		interactable = GetComponent<Interactable>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
+
+		interactable.onInteract.RemoveAllListeners();
+		interactable.onInteract.AddListener(StartRevive);
+		interactable.onStopInteract.RemoveAllListeners();
+		interactable.onStopInteract.AddListener(EndRevive);
+		interactable.canInteract = false;
+		interactable.hold = true;
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
 	}
@@ -49,6 +57,13 @@ public class PlayerController : MonoBehaviour
 			{
 				tripped = true;
 				tripTimer = TRIP_TIME;
+
+				Packet action = new Packet();
+				action.type = 1;
+				action.id = entity.id;
+				action.action = new ActionPacket(5);
+
+				NetworkManager.Instance.SendMessage(action);
 
 				EndSprint();
 			}
@@ -107,8 +122,7 @@ public class PlayerController : MonoBehaviour
 
 				if (health.down == 0)
 				{
-					Debug.Log("Death");
-					//TODO: DIE!!!!
+					//TODO: Die
 				}
 			}
 			else if(reviveTimer <= 0.0f)
@@ -178,6 +192,8 @@ public class PlayerController : MonoBehaviour
 		packet.id = entity.id;
 		packet.action = new ActionPacket(3);
 
+		NetworkManager.Instance.SendMessage(packet);
+
 		health.OnDown();
 	}
 
@@ -185,19 +201,33 @@ public class PlayerController : MonoBehaviour
 	{
 		down = false;
 		reviving = false;
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = entity.id;
+		packet.action = new ActionPacket(6);
+
+		NetworkManager.Instance.SendMessage(packet);
+
 		health.Revive(20);
 	}
 
-	private void StartRevive()
+	public void StartRevive()
 	{
-		reviving = true;
-		reviveTimer = REVIVE_TIME + health.trauma * addedReviveTime;
+		if (++playersReviving == 1)
+		{
+			reviving = true;
+			reviveTimer = REVIVE_TIME + health.trauma * addedReviveTime;
+		}
 	}
 
-	private void EndRevive()
+	public void EndRevive()
 	{
-		reviving = false;
-		reviveTimer = 0.0f;
+		if (--playersReviving == 0)
+		{
+			reviving = false;
+			reviveTimer = 0.0f;
+		}
 	}
 
 	private void Shoot()
