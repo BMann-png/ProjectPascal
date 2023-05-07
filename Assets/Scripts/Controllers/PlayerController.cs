@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_COOLDOWN = 6.0f;
 	private static readonly float TRIP_TIME = 1.0f;
 	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
-	private static readonly float MOVEMENT_SPEED = 6.66f;
+	private static readonly float MOVEMENT_SPEED = 3.0f;
 	private static readonly float SPRINT_MOD = 1.5f;
 	private static readonly float TRIP_MOD = 0.5f;
 	private static readonly float REVIVE_TIME = 3.0f;
@@ -76,8 +76,13 @@ public class PlayerController : MonoBehaviour
 			{
 				OnDown();
 			}
+			else if(health.health == 0 && health.down == 0)
+			{
+				//TODO: Die
+			}
 
 			movement = Vector3.down * 10.0f * Time.deltaTime;
+			reviveTimer -= Time.deltaTime;
 
 			if (!down)
 			{
@@ -110,11 +115,6 @@ public class PlayerController : MonoBehaviour
 			else if(!reviving)
 			{
 				health.OnDownDamage(Time.deltaTime);
-
-				if (health.down == 0)
-				{
-					//TODO: Die
-				}
 			}
 			else if(reviveTimer <= 0.0f)
 			{
