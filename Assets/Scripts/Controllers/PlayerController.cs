@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private new Transform camera;
 	private CharacterController controller;
-	private Interactable interactable;
 	private Entity entity;
 	private Health health;
 	private Vector3 movement;
@@ -35,16 +34,8 @@ public class PlayerController : MonoBehaviour
 	private void Awake()
 	{
 		controller = GetComponent<CharacterController>();
-		interactable = GetComponent<Interactable>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
-
-		interactable.onInteract.RemoveAllListeners();
-		interactable.onInteract.AddListener(StartRevive);
-		interactable.onStopInteract.RemoveAllListeners();
-		interactable.onStopInteract.AddListener(EndRevive);
-		interactable.canInteract = false;
-		interactable.hold = true;
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
 	}

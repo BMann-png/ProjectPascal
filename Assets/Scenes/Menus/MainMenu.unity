@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8614,9 +8614,9 @@ MonoBehaviour:
   - {fileID: 6340218635557562471, guid: 17cdb47879c4bf64199403658b815b1b, type: 3}
   - {fileID: 943251903415590955, guid: 21bbf640bf652094ca7eb27d81ab26e9, type: 3}
   specialModels:
-  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
-  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
-  - {fileID: 6269947633801537743, guid: d9888f145a4aa14458a0e506ba0ce555, type: 3}
+  - {fileID: 440804869201003401, guid: 6f595e1b43026814ab89fa0823bb93a1, type: 3}
+  - {fileID: 440804869201003401, guid: 6f595e1b43026814ab89fa0823bb93a1, type: 3}
+  - {fileID: 440804869201003401, guid: 6f595e1b43026814ab89fa0823bb93a1, type: 3}
   pickups:
   - {fileID: 5591334031132746420, guid: cbb2c32d98be87c458ccd8ad699c904e, type: 3}
   pushables:

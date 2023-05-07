@@ -77,7 +77,6 @@ public class BaseAI : MonoBehaviour
 
 	public void Attack()
 	{
-		Debug.Log("Attack");
 		Quaternion rot = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
 
 		Collider[] colliders = Physics.OverlapBox(transform.position + rot * Vector3.forward, new Vector3(0.75f, 0.75f, 0.45f), rot, attackMask.value);
