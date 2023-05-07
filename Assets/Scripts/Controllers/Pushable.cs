@@ -98,7 +98,7 @@ public class Pushable : MonoBehaviour
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = GameManager.Instance.ThisPlayer;
-		packet.action = new ActionPacket(2);
+		packet.action = new ActionPacket(7);
 
 		NetworkManager.Instance.SendMessage(packet);
 

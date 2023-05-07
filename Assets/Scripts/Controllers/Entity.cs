@@ -183,6 +183,15 @@ public class Entity : MonoBehaviour
 					GetComponent<Revive>().OnRevive();
 				}
 				break;
+				case 7: //StopPush
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("StopPush");
+				}
+				break;
 
 				case 10: //StartRevive
 				{
