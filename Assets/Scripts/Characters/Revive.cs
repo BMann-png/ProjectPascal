@@ -7,6 +7,7 @@ public class Revive : MonoBehaviour
 {
 	private Entity entity;
 	private Interactable interactable;
+	private bool reviving = false;
 
 	private void Awake()
 	{
@@ -26,16 +27,21 @@ public class Revive : MonoBehaviour
 
 	public void BeginRevive()
 	{
-		Packet packet = new Packet();
-		packet.type = 1;
-		packet.id = entity.id;
-		packet.action = new ActionPacket(10);
+		if (!reviving)
+		{
+			reviving = true;
+			Packet packet = new Packet();
+			packet.type = 1;
+			packet.id = entity.id;
+			packet.action = new ActionPacket(10);
 
-		NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	public void EndRevive()
 	{
+		reviving = false;
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = entity.id;
