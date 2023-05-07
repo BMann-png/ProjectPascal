@@ -179,6 +179,7 @@ public class Entity : MonoBehaviour
 					collider.radius = 0.5f;
 					collider.center = Vector3.up * 0.5f;
 					GetComponent<Revive>().OnDown();
+					animator.SetTrigger("Down");
 				}
 				break;
 				case 6: //Revive
