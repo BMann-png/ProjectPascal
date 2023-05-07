@@ -98,22 +98,27 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 20001) // Water Projectile
 		{
-			//TODO: Set Item Model
+			//TODO: Set Model
 		}
 		else if (id < 20001) // Bubble Projectile
 		{
-			//TODO: Set Item Model
+			//TODO: Set Model
 		}
 		else if (id < 20001) // Dart Projectile
 		{
-			//TODO: Set Item Model
+			//TODO: Set Model
 		}
 		else if (id < 20001) // Other Projectile
 		{
-			//TODO: Set Item Model
+			//TODO: Set Model
 		}
 
 		model.TryGetComponent(out animator);
+
+		if(id < 4 && GameManager.Instance.InLobby)
+		{
+			animator.SetBool("InLobby", true);
+		}
 	}
 
 	public void DoAction(ActionPacket packet)
@@ -122,25 +127,7 @@ public class Entity : MonoBehaviour
 		{
 			switch (packet.data)
 			{
-				case 0: //Idle
-				{
-					CapsuleCollider collider = GetComponent<CapsuleCollider>();
-					collider.height = 1.0f;
-					collider.radius = 0.5f;
-					collider.center = Vector3.up * 0.5f;
-					animator.SetTrigger("Idle");
-				}
-				break;
-				case 1: //Crawl
-				{
-					CapsuleCollider collider = GetComponent<CapsuleCollider>();
-					collider.height = 1.0f;
-					collider.radius = 0.5f;
-					collider.center = Vector3.up * 0.5f;
-					animator.SetTrigger("Crawl");
-				}
-				break;
-				case 2: //Sprint
+				case 0: //Sprint
 				{
 					CapsuleCollider collider = GetComponent<CapsuleCollider>();
 					collider.height = 2.2f;
@@ -149,17 +136,16 @@ public class Entity : MonoBehaviour
 					animator.SetTrigger("Sprint");
 				}
 				break;
-				case 3: //Down
+				case 1: //Stop Sprint
 				{
 					CapsuleCollider collider = GetComponent<CapsuleCollider>();
 					collider.height = 1.0f;
 					collider.radius = 0.5f;
 					collider.center = Vector3.up * 0.5f;
-					animator.SetTrigger("Down");
-					GetComponent<Revive>().OnDown();
+					animator.SetTrigger("StopSprint");
 				}
 				break;
-				case 4: //Push
+				case 2: //Push
 				{
 					CapsuleCollider collider = GetComponent<CapsuleCollider>();
 					collider.height = 2.2f;
@@ -168,22 +154,7 @@ public class Entity : MonoBehaviour
 					animator.SetTrigger("Push");
 				}
 				break;
-				case 5: //Fall
-				{
-					CapsuleCollider collider = GetComponent<CapsuleCollider>();
-					collider.height = 1.0f;
-					collider.radius = 0.5f;
-					collider.center = Vector3.up * 0.5f;
-					animator.SetTrigger("Fall");
-				}
-				break;
-				case 6: //Revive
-				{
-					animator.SetTrigger("Revive");
-					GetComponent<Revive>().OnRevive();
-				}
-				break;
-				case 7: //StopPush
+				case 3: //Stop Push
 				{
 					CapsuleCollider collider = GetComponent<CapsuleCollider>();
 					collider.height = 1.0f;
@@ -192,6 +163,31 @@ public class Entity : MonoBehaviour
 					animator.SetTrigger("StopPush");
 				}
 				break;
+				case 4: //Trip
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					animator.SetTrigger("Trip");
+				}
+				break;
+				case 5: //Down
+				{
+					CapsuleCollider collider = GetComponent<CapsuleCollider>();
+					collider.height = 1.0f;
+					collider.radius = 0.5f;
+					collider.center = Vector3.up * 0.5f;
+					GetComponent<Revive>().OnDown();
+				}
+				break;
+				case 6: //Revive
+				{
+					animator.SetTrigger("Revive");
+					GetComponent<Revive>().OnRevive();
+				}
+				break;
+				
 
 				case 10: //StartRevive
 				{

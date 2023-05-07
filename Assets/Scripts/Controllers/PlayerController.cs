@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 				Packet action = new Packet();
 				action.type = 1;
 				action.id = entity.id;
-				action.action = new ActionPacket(5);
+				action.action = new ActionPacket(4);
 
 				NetworkManager.Instance.SendMessage(action);
 
@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = entity.id;
-		packet.action = new ActionPacket(4);
+		packet.action = new ActionPacket(0);
 
 		NetworkManager.Instance.SendMessage(packet);
 	}
@@ -169,8 +169,7 @@ public class PlayerController : MonoBehaviour
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = entity.id;
-		if (movement.sqrMagnitude > 0.01f) { packet.action = new ActionPacket(1); }
-		else { packet.action = new ActionPacket(2); }
+		packet.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet);
 	}
@@ -181,7 +180,7 @@ public class PlayerController : MonoBehaviour
 		Packet packet = new Packet();
 		packet.type = 1;
 		packet.id = entity.id;
-		packet.action = new ActionPacket(3);
+		packet.action = new ActionPacket(5);
 
 		NetworkManager.Instance.SendMessage(packet);
 

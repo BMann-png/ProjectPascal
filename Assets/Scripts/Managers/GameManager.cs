@@ -18,7 +18,7 @@ public class GameManager : Singleton<GameManager>
 	public static readonly ushort INVALID_ID = 65535;
 
 	public bool IsServer { get; private set; }
-	private bool inLobby;
+	public bool InLobby { get; private set; }
 	private byte levelNum;
 
 	private ushort[] tempPlayers;
@@ -71,7 +71,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if (IsServer && !inLobby && playerLocations.Count > 0) //TODO: potential bigger problem
+		if (IsServer && !InLobby && playerLocations.Count > 0) //TODO: potential bigger problem
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
@@ -159,7 +159,7 @@ public class GameManager : Singleton<GameManager>
 	public void OnLevelLoad(LevelManager level)
 	{
 		this.level = level;
-		inLobby = false;
+		InLobby = false;
 		PlayerDeaths = 0;
 
 		if (++loadedPlayers == PlayerCount) { FinishLoading(); }
@@ -283,7 +283,7 @@ public class GameManager : Singleton<GameManager>
 	public void OnJoinLobby(Transform[] spawnPoints)
 	{
 		lobbySpawnpoints = spawnPoints;
-		inLobby = true;
+		InLobby = true;
 		PlayerCount = 1;
 
 		if (IsServer)
@@ -364,7 +364,7 @@ public class GameManager : Singleton<GameManager>
 		PlayerCount = 0;
 		ThisPlayer = INVALID_ID;
 		IsServer = false;
-		inLobby = false;
+		InLobby = false;
 	}
 
 	public void PickupItem(byte id)
@@ -459,7 +459,7 @@ public class GameManager : Singleton<GameManager>
 			if (steamId == 0)
 			{
 				Transform transform;
-				if (inLobby) { transform = lobbySpawnpoints[i]; }
+				if (InLobby) { transform = lobbySpawnpoints[i]; }
 				else { transform = level.GetPlayerSpawn(i); }
 
 				entities[i] = Instantiate(prefabManager.LobbyPlayer, transform.position, transform.rotation).GetComponent<Entity>();
