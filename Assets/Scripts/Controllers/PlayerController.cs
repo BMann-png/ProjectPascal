@@ -204,8 +204,6 @@ public class PlayerController : MonoBehaviour
 
 	public void StartRevive()
 	{
-		Debug.Log("Revive");
-
 		if (++playersReviving == 1)
 		{
 			reviving = true;
@@ -215,8 +213,6 @@ public class PlayerController : MonoBehaviour
 
 	public void EndRevive()
 	{
-		Debug.Log("Stop");
-
 		if (--playersReviving == 0)
 		{
 			reviving = false;

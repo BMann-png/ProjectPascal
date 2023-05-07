@@ -430,7 +430,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				specialsSpawned[obj.id - 34] = false;
 			}
-			else if(obj.id < 49)
+			else if(obj.id < 10001)
 			{
 				interactableIndices.Push(obj.id);
 			}
