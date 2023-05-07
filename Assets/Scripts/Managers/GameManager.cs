@@ -55,7 +55,7 @@ public class GameManager : Singleton<GameManager>
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
 		healthBars = FindObjectsByType<HealthBar>(FindObjectsSortMode.InstanceID);
 
-		foreach(HealthBar healthBar in healthBars)
+		foreach (HealthBar healthBar in healthBars)
 		{
 			healthBar.gameObject.SetActive(false);
 		}
@@ -174,7 +174,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void FinishLoading()
 	{
-		if(IsServer)
+		if (IsServer)
 		{
 			for (ushort i = 0; i < level.InteractableSpawnCount(); ++i)
 			{
@@ -184,9 +184,9 @@ public class GameManager : Singleton<GameManager>
 				{
 					ushort id = interactableIndices.Pop();
 
-					if(spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
+					if (spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
 
-					if(spawner.type < 100)
+					if (spawner.type < 100)
 					{
 						entities[id] = Instantiate(prefabManager.Pickups[spawner.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
@@ -194,7 +194,7 @@ public class GameManager : Singleton<GameManager>
 						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
 						inter.id = spawner.id;
 					}
-					else if(spawner.type < 255)
+					else if (spawner.type < 255)
 					{
 						entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
@@ -416,35 +416,32 @@ public class GameManager : Singleton<GameManager>
 
 	public void Destroy(Entity obj)
 	{
-		if (IsServer)
+		if (obj.id < 4) //Player
 		{
-			if(obj.id < 4) //Player
-			{
 
-			}
-			else if(obj.id < 34) //Common Enemy
-			{
-				enemyIndices.Push(obj.id);
-			}
-			else if (obj.id < 44) //Special Enemy
-			{
-				specialsSpawned[obj.id - 34] = false;
-			}
-			else if(obj.id < 10001)
-			{
-				interactableIndices.Push(obj.id);
-			}
-			else if (obj.id < INVALID_ID)
-			{
-				projectileIndices.Push(obj.id);
-			}
-
-			Packet packet = new Packet();
-			packet.id = obj.id;
-			packet.type = 7;
-
-			NetworkManager.Instance.SendMessage(packet);
 		}
+		else if (obj.id < 34) //Common Enemy
+		{
+			enemyIndices.Push(obj.id);
+		}
+		else if (obj.id < 44) //Special Enemy
+		{
+			specialsSpawned[obj.id - 34] = false;
+		}
+		else if (obj.id < 10001)
+		{
+			interactableIndices.Push(obj.id);
+		}
+		else if (obj.id < INVALID_ID)
+		{
+			projectileIndices.Push(obj.id);
+		}
+
+		Packet packet = new Packet();
+		packet.id = obj.id;
+		packet.type = 7;
+
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	//Callbacks
@@ -576,7 +573,7 @@ public class GameManager : Singleton<GameManager>
 		else if (packet.id < 44)
 		{
 			Transform spawner = level.GetEnemySpawn(packet.spawn.spawn);
-			if(IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, spawner.position, spawner.rotation).GetComponent<Entity>(); }
+			if (IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, spawner.position, spawner.rotation).GetComponent<Entity>(); }
 			else { entities[packet.id] = Instantiate(prefabManager.NetworkEnemy, spawner.position, spawner.rotation).GetComponent<Entity>(); }
 			entities[packet.id].id = packet.id;
 			entities[packet.id].SetModel();
