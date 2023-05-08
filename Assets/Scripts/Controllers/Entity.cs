@@ -106,7 +106,7 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 20001) // Water Projectile
 		{
-			//TODO: Set Item Model
+			//model = Instantiate(GameManager.Instance.PrefabManager.);
 		}
 		else if (id < 20001) // Bubble Projectile
 		{
