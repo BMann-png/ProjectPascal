@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviour
 			else if(health.health == 0 && health.down == 0)
 			{
 				//TODO: Die
+				controller.enabled = false;
+				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
 			}
 
 			movement = Vector3.down * 10.0f * Time.deltaTime;
@@ -121,7 +123,7 @@ public class PlayerController : MonoBehaviour
 				OnRevive();
 			}
 
-			controller.Move(movement);
+			if(controller.enabled) controller.Move(movement);
 
 			if (entity.shoot)
 			{
