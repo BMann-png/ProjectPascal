@@ -12347,11 +12347,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCondition: 2
   closeCondition: 0
-  startClosed: 1
+  startClosed: 0
   openCloseTime: 4
-  closePosition: {x: 0, y: 0, z: 0}
+  closePosition: {x: -10.28, y: 2.077, z: 24.1167}
   closeRotation: {x: 0, y: 0, z: 0}
-  openPosition: {x: 0, y: 100, z: 0}
+  openPosition: {x: -10.28, y: 100, z: 24.1167}
   openRotation: {x: 0, y: 0, z: 0}
 --- !u!1001 &2065696928
 PrefabInstance:
@@ -14119,7 +14119,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1656729144998168, guid: d445669194dc91442925ac8bff6f4d67, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4132216680873226, guid: d445669194dc91442925ac8bff6f4d67, type: 3}
       propertyPath: m_RootOrder
@@ -18981,7 +18981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3400123760247285217
 Transform:
   m_ObjectHideFlags: 0
@@ -19191,7 +19191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &5191075083818643403
 GameObject:
   m_ObjectHideFlags: 0
@@ -22143,7 +22143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1656729144998168, guid: d445669194dc91442925ac8bff6f4d67, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4132216680873226, guid: d445669194dc91442925ac8bff6f4d67, type: 3}
       propertyPath: m_RootOrder
