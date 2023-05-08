@@ -418,7 +418,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (obj.id < 4) //Player
 		{
-
+			return;
 		}
 		else if (obj.id < 34) //Common Enemy
 		{
