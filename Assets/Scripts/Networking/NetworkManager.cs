@@ -389,7 +389,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 3: size = 6; break;    //Inventory
 			case 4: size = 3; break;    //Game Trigger
 			case 5: size = 3; break;    //Scene Load
-			case 6: size = 7; break;    //Game Spawn
+			case 6: size = 6; break;    //Game Spawn
 			case 7: size = 3; break;    //Game Despawn
 			case 8: size = 11; break;   //Owner Change
 			default: return false;
