@@ -20,6 +20,7 @@ public class Health : MonoBehaviour
 	private float decayRate;
 
 	private HealthBar healthBar;
+	private Entity entity;
 
 	public float health { get { return healthVal; } set { 
 			healthVal = Mathf.Clamp(value, 0, maxHealth - trauma); 
@@ -38,6 +39,7 @@ public class Health : MonoBehaviour
 
 	private void Awake()
 	{
+		entity = GetComponent<Entity>();
 		health = maxHealth;
 		traumaVal = 0;
 		downVal = 0;
@@ -55,6 +57,7 @@ public class Health : MonoBehaviour
 
 		Packet packet = new Packet();
 		packet.type = 2;
+		packet.id = entity.id;
 		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 		NetworkManager.Instance.SendMessage(packet);
 	}
@@ -65,6 +68,7 @@ public class Health : MonoBehaviour
 
 		Packet packet = new Packet();
 		packet.type = 2;
+		packet.id = entity.id;
 		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 		NetworkManager.Instance.SendMessage(packet);
 	}
@@ -75,6 +79,7 @@ public class Health : MonoBehaviour
 
 		Packet packet = new Packet();
 		packet.type = 2;
+		packet.id = entity.id;
 		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 		NetworkManager.Instance.SendMessage(packet);
 	}
@@ -85,6 +90,7 @@ public class Health : MonoBehaviour
 
 		Packet packet = new Packet();
 		packet.type = 2;
+		packet.id = entity.id;
 		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 		NetworkManager.Instance.SendMessage(packet);
 	}
@@ -95,6 +101,7 @@ public class Health : MonoBehaviour
 
 		Packet packet = new Packet();
 		packet.type = 2;
+		packet.id = entity.id;
 		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 		NetworkManager.Instance.SendMessage(packet);
 	}
