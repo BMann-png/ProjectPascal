@@ -46,15 +46,16 @@ public struct ActionPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HealthPacket
 {
-	public HealthPacket(byte data)
+	public HealthPacket(byte health, byte trauma, byte down)
 	{
-		this.data = data;
+		this.health = health;
+		this.trauma = trauma;
+		this.down = down;
 	}
 
-	public byte data;
-	//FOR PLAYERS:
-	//0 - sprint
-	//1 - stop sprint
+	public byte health;
+	public byte trauma;
+	public byte down;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -73,12 +74,14 @@ public struct InventoryPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct SpawnPacket
 {
-	public SpawnPacket(byte spawn)
+	public SpawnPacket(ushort spawn, byte type = 255)
 	{
 		this.spawn = spawn;
+		this.type = type;
 	}
 
-	public byte spawn;
+	public ushort spawn;
+	public byte type;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -96,14 +99,14 @@ public struct OwnerPacket
 public struct Packet
 {
 	[FieldOffset(0)] public byte type;
-	[FieldOffset(1)] public byte id;
+	[FieldOffset(1)] public ushort id;
 
-	[FieldOffset(2)] public TransformPacket transform;
-	[FieldOffset(2)] public ActionPacket action;
-	[FieldOffset(2)] public HealthPacket health;
-	[FieldOffset(2)] public InventoryPacket inventory;
-	[FieldOffset(2)] public SpawnPacket spawn;
-	[FieldOffset(2)] public OwnerPacket owner;
+	[FieldOffset(3)] public TransformPacket transform;
+	[FieldOffset(3)] public ActionPacket action;
+	[FieldOffset(3)] public HealthPacket health;
+	[FieldOffset(3)] public InventoryPacket inventory;
+	[FieldOffset(3)] public SpawnPacket spawn;
+	[FieldOffset(3)] public OwnerPacket owner;
 }
 
 public class NetworkManager : Singleton<NetworkManager>
@@ -112,7 +115,6 @@ public class NetworkManager : Singleton<NetworkManager>
 	public SteamId PlayerId { get; private set; }
 
 	private string playerIdString;
-	private bool connectedToSteam;
 
 	private Pascal.SocketManager socketManager;
 	private Pascal.ConnectionManager connectionManager;
@@ -144,7 +146,6 @@ public class NetworkManager : Singleton<NetworkManager>
 			PlayerId = SteamClient.SteamId;
 			playerIdString = PlayerId.ToString();
 			activeLobbies = new List<Lobby>();
-			connectedToSteam = true;
 
 			SteamNetworkingUtils.InitRelayNetworkAccess();
 
@@ -304,7 +305,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		try
 		{
 			activeLobbies.Clear();
-			activeLobbies = (await SteamMatchmaking.LobbyList.WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
+			activeLobbies = (await SteamMatchmaking.LobbyList.FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
 		}
 		catch (Exception e)
 		{
@@ -383,15 +384,15 @@ public class NetworkManager : Singleton<NetworkManager>
 		int size;
 		switch (packet.type)
 		{
-			case 0: size = 22; break;   //Transform
-			case 1: size = 3; break;    //Action
-			case 2: size = 3; break;    //Health
-			case 3: size = 5; break;    //Inventory
-			case 4: size = 2; break;    //Game Trigger
-			case 5: size = 2; break;    //Scene Load
-			case 6: size = 3; break;    //Game Spawn
-			case 7: size = 2; break;    //Game Despawn
-			case 8: size = 10; break;   //Owner Change
+			case 0: size = 23; break;   //Transform
+			case 1: size = 4; break;    //Action
+			case 2: size = 6; break;    //Health
+			case 3: size = 6; break;    //Inventory
+			case 4: size = 3; break;    //Game Trigger
+			case 5: size = 3; break;    //Scene Load
+			case 6: size = 6; break;    //Game Spawn
+			case 7: size = 3; break;    //Game Despawn
+			case 8: size = 11; break;   //Owner Change
 			default: return false;
 		}
 

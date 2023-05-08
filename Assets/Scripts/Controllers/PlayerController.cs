@@ -2,33 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Entity))]
+[RequireComponent(typeof(CharacterController), typeof(Entity))]
 public class PlayerController : MonoBehaviour
 {
 	private static readonly float SPRINT_TIME = 3.0f;
 	private static readonly float SPRINT_COOLDOWN = 6.0f;
 	private static readonly float TRIP_TIME = 1.0f;
 	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
-	private static readonly float MOVEMENT_SPEED = 6.66f;
-	private static readonly float SPRINT_MOD = 1.5f;
+	private static readonly float MOVEMENT_SPEED = 3.0f;
+	private static readonly float SPRINT_MOD = 2.0f;
 	private static readonly float TRIP_MOD = 0.5f;
+	private static readonly float REVIVE_TIME = 3.0f;
+	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
 	private CharacterController controller;
 	private Entity entity;
+	private Health health;
 	private Vector3 movement;
 
 	private bool sprinting = false;
 	private bool tripped = false;
+	private bool down = false;
 	private float sprintTimer = 0.0f;
 	private float sprintCooldownTimer = 0.0f;
 	private float tripTimer = 0.0f;
+	private float reviveTimer = 0.0f;
+	private bool reviving = false;
+	private byte playersReviving = 0;
 
 	private void Awake()
 	{
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
+		health = GetComponent<Health>();
+
+		addedReviveTime = 6.0f / health.MaxTrauma;
 	}
 
 	private void FixedUpdate()
@@ -39,6 +48,13 @@ public class PlayerController : MonoBehaviour
 			{
 				tripped = true;
 				tripTimer = TRIP_TIME;
+
+				Packet action = new Packet();
+				action.type = 1;
+				action.id = entity.id;
+				action.action = new ActionPacket(4);
+
+				NetworkManager.Instance.SendMessage(action);
 
 				EndSprint();
 			}
@@ -56,33 +72,54 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!GameManager.Instance.Loading)
 		{
+			if(health.health == 0 && !down)
+			{
+				OnDown();
+			}
+			else if(health.health == 0 && health.down == 0)
+			{
+				//TODO: Die
+			}
+
 			movement = Vector3.down * 10.0f * Time.deltaTime;
+			reviveTimer -= Time.deltaTime;
 
-			float vertInput = Input.GetAxis("Vertical");
-			float HoriInput = Input.GetAxis("Horizontal");
-
-			sprintTimer -= Time.deltaTime;
-			sprintCooldownTimer -= Time.deltaTime;
-			tripTimer -= Time.deltaTime;
-
-			tripped = tripTimer > 0.0f;
-
-			if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
+			if (!down)
 			{
-				StartSprint();
-			}
+				float vertInput = Input.GetAxis("Vertical");
+				float HoriInput = Input.GetAxis("Horizontal");
 
-			if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
+				sprintTimer -= Time.deltaTime;
+				sprintCooldownTimer -= Time.deltaTime;
+				tripTimer -= Time.deltaTime;
+
+				tripped = tripTimer > 0.0f;
+
+				if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
+				{
+					StartSprint();
+				}
+
+				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
+				{
+					if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
+
+					EndSprint();
+				}
+
+				movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
+				movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
+
+				movement *= tripped ? TRIP_MOD : 1.0f;
+			}
+			else if(!reviving)
 			{
-				if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
-
-				EndSprint();
+				health.OnDownDamage(Time.deltaTime);
 			}
-
-			movement += transform.forward * vertInput * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
-			movement += transform.right * HoriInput * MOVEMENT_SPEED * Time.deltaTime;
-
-			movement *= tripped ? TRIP_MOD : 1.0f;
+			else if(reviveTimer <= 0.0f)
+			{
+				OnRevive();
+			}
 
 			controller.Move(movement);
 
@@ -91,7 +128,7 @@ public class PlayerController : MonoBehaviour
 				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
 			}
 
-			if (Input.GetKeyDown(KeyCode.Mouse0))
+			if (Input.GetKeyDown(KeyCode.Mouse0) && !down)
 			{
 				Shoot();
 			}
@@ -135,6 +172,52 @@ public class PlayerController : MonoBehaviour
 		packet.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	private void OnDown()
+	{
+		down = true;
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = entity.id;
+		packet.action = new ActionPacket(5);
+
+		NetworkManager.Instance.SendMessage(packet);
+
+		health.OnDown();
+	}
+
+	private void OnRevive()
+	{
+		down = false;
+		reviving = false;
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = entity.id;
+		packet.action = new ActionPacket(6);
+
+		NetworkManager.Instance.SendMessage(packet);
+
+		health.Revive(20);
+	}
+
+	public void StartRevive()
+	{
+		if (++playersReviving == 1)
+		{
+			reviving = true;
+			reviveTimer = REVIVE_TIME + health.trauma * addedReviveTime;
+		}
+	}
+
+	public void EndRevive()
+	{
+		if (--playersReviving == 0)
+		{
+			reviving = false;
+			reviveTimer = 0.0f;
+		}
 	}
 
 	private void Shoot()
