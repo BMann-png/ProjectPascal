@@ -26,14 +26,13 @@ public class BaseAI : MonoBehaviour
 
 	private void Start()
 	{
-		obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count - 1)];
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
 
-		stateMachine.AddState(new AttackState(typeof(AttackState).Name, this));
 		stateMachine.AddState(new IdleState(typeof(IdleState).Name, this));
 		stateMachine.AddState(new MoveState(typeof(MoveState).Name, this));
+		stateMachine.AddState(new AttackState(typeof(AttackState).Name, this));
 		stateMachine.AddState(new WanderState(typeof(WanderState).Name, this));
 		stateMachine.AddState(new DeathState(typeof(DeathState).Name, this));
 		//stateMachine.AddState(new FleeState(typeof(FleeState).Name, this));
@@ -60,8 +59,6 @@ public class BaseAI : MonoBehaviour
 			new Condition<float>(agentHealth, Predicate.LessOrEqual, 0.0f)), typeof(DeathState).Name);
 
 		stateMachine.SetState(stateMachine.GetState(typeof(IdleState).Name));
-
-		isAgitated.value = true;
 	}
 
 	private void Update()
