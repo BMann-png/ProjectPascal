@@ -11,9 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Daycare/c1m1_NapRoom.unity
     guid: dbba48c08a56a4b419c4e5564294202c
-  - enabled: 1
-    path: Assets/Scenes/Daycare/c1m2_Library.unity
-    guid: 93b6f722da9efa14cade5eecc86eefb3
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Daycare/c1m3_Playground.unity
     guid: 148908a7fe3fb2846817ba65b0f00800
