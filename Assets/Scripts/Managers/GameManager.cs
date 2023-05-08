@@ -406,10 +406,12 @@ public class GameManager : Singleton<GameManager>
 			}
 			else if(obj.id < 34) //Common Enemy
 			{
+				--enemyCount;
 				enemyIndices.Push(obj.id);
 			}
 			else if (obj.id < 44) //Special Enemy
 			{
+				--specialCount;
 				specialsSpawned[obj.id - 34] = false;
 			}
 			else if(obj.id < 49)
