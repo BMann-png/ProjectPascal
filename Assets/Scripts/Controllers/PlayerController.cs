@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 	private static readonly float TRIP_TIME = 1.0f;
 	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
 	private static readonly float MOVEMENT_SPEED = 3.0f;
-	private static readonly float SPRINT_MOD = 1.5f;
+	private static readonly float SPRINT_MOD = 2.0f;
 	private static readonly float TRIP_MOD = 0.5f;
 	private static readonly float REVIVE_TIME = 3.0f;
 	private float addedReviveTime;

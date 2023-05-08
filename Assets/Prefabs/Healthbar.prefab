@@ -322,10 +322,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: 21300000, guid: ddf2e76e8a1f88f46ae1e42277850b48, type: 3}
-  - {fileID: 21300000, guid: f09eae8c0ea04254b90c5386a034a225, type: 3}
-  - {fileID: 21300000, guid: 02800fb9cff14da47a04572790384d8b, type: 3}
-  - {fileID: 21300000, guid: 65f0e363b74cf5845ab8c3fbc14f39ac, type: 3}
+  - {fileID: 21300000, guid: 42cfbc9edd2edbe44b955196eead4063, type: 3}
+  - {fileID: 21300000, guid: 8195578dac5135448a6b9393c205ee36, type: 3}
+  - {fileID: 21300000, guid: 248be61cbab47d84b8aa73c0a4cf0096, type: 3}
+  - {fileID: 21300000, guid: aa4d2eaf06f6f514c8a80371fe7cbde5, type: 3}
   image: {fileID: 2787168536356614135}
   backing: {fileID: 8246028373689675948}
   tantrumFill: {fileID: 8246028373803953838}

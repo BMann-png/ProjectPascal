@@ -22,7 +22,8 @@ public class GameManager : Singleton<GameManager>
 	private byte levelNum;
 
 	private ushort[] tempPlayers;
-	private HealthBar[] healthBars;
+	private Transform healthBarHolder;
+	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities;
 	private Transform[] lobbySpawnpoints;
 	private Stack<ushort> enemyIndices = new Stack<ushort>(30);
@@ -51,14 +52,9 @@ public class GameManager : Singleton<GameManager>
 	{
 		base.Awake();
 
+		healthBarHolder = GameObject.FindGameObjectWithTag("HealthBars").transform;
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
-		healthBars = FindObjectsByType<HealthBar>(FindObjectsSortMode.InstanceID);
-
-		foreach (HealthBar healthBar in healthBars)
-		{
-			healthBar.gameObject.SetActive(false);
-		}
 
 		tempPlayers = new ushort[4] { INVALID_ID, INVALID_ID, INVALID_ID, INVALID_ID };
 
@@ -230,9 +226,12 @@ public class GameManager : Singleton<GameManager>
 					entities[id].id = id;
 					playerLocations.Add(entities[id].gameObject);
 
-					entities[id].GetComponent<Health>().AttachHealthBar(healthBars[0]);
-					healthBars[0].SetImage(id);
-					healthBars[0].gameObject.SetActive(true);
+					HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
+					healthBars.Add(bar.gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(bar);
+					bar.SetImage(id);
+					bar.gameObject.SetActive(true);
 				}
 				else
 				{
@@ -241,9 +240,12 @@ public class GameManager : Singleton<GameManager>
 					entities[id].SetModel();
 					playerLocations.Add(entities[id].gameObject);
 
-					entities[id].GetComponent<Health>().AttachHealthBar(healthBars[healthBarId]);
-					healthBars[healthBarId].SetImage(id);
-					healthBars[healthBarId].gameObject.SetActive(true);
+					HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
+					healthBars.Add(bar.gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(bar);
+					bar.SetImage(id);
+					bar.gameObject.SetActive(true);
 
 					++healthBarId;
 				}
@@ -542,10 +544,12 @@ public class GameManager : Singleton<GameManager>
 		Loading = true;
 		loadedPlayers = 0;
 
-		foreach (HealthBar healthBar in healthBars)
+		foreach (GameObject healthBar in healthBars)
 		{
-			healthBar.gameObject.SetActive(false);
+			Destroy(healthBar);
 		}
+
+		healthBars.Clear();
 
 		SceneLoader.SetLoadingScreen(true);
 		playerLocations.Clear();
