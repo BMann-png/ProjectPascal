@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 7020814129244520254}
   m_Layer: 3
   m_Name: NetworkPlayer
-  m_TagString: Player
+  m_TagString: NetPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

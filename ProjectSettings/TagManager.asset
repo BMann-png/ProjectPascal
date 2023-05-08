@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Interactable
+  - Pushable
+  - NetPlayer
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - Enemy
   - Projectile
   - Light
-  - 
+  - Interactable
   - 
   - 
   - 
