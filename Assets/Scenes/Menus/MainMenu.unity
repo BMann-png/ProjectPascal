@@ -8308,6 +8308,7 @@ MonoBehaviour:
   networkEnemy: {fileID: 3679776979875976132, guid: 4d4811ffde64b5149af9da4fa70fd791, type: 3}
   projectile: {fileID: 6882036858200203642, guid: 1cbd2021d6892ff44958521db52598e1, type: 3}
   networkProjectile: {fileID: 2722898603441365745, guid: 761c7053444668f4ab0f9c8878b24883, type: 3}
+  healthBar: {fileID: 8246028373689675949, guid: 4da834b750230584787988a5271b7ad9, type: 3}
 --- !u!4 &2100438794
 Transform:
   m_ObjectHideFlags: 0
