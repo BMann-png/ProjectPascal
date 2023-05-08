@@ -6012,7 +6012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 374309172}
-  fade: {fileID: 0}
+  fade: {fileID: 940041483}
 --- !u!4 &283486393
 Transform:
   m_ObjectHideFlags: 0
