@@ -2,14 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animation))]
+[RequireComponent(typeof(Interactable), typeof(Entity))]
 public class Animate : MonoBehaviour
 {
-	private new Animation animation;
+	[SerializeField] bool canInteract = true;
+	[SerializeField] private new Animation animation;
+
+	private Interactable interactable;
 
 	private void Awake()
 	{
-		animation = GetComponent<Animation>();
+		interactable = GetComponent<Interactable>();
+
+		interactable.canInteract = canInteract;
+		interactable.onInteract.RemoveAllListeners();
+		interactable.onInteract.AddListener(StartAnimation);
 	}
 
 	public void StartAnimation()
