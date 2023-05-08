@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8554377753278710101}
   - component: {fileID: 4273527358352398452}
   - component: {fileID: 5219680128140481305}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5815770943539118094}
   - component: {fileID: 8137960612420763310}
   - component: {fileID: 6882036858200203633}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NetworkBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,3 +162,5 @@ MonoBehaviour:
   id: 0
   shoot: {fileID: 0}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 0
