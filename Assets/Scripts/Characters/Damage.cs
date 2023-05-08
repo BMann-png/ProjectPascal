@@ -8,20 +8,26 @@ public class Damage : MonoBehaviour
     public bool dealsDamage = true;
     [SerializeField] bool damageOverTime = false;
     [SerializeField] int damage = 0;
+    [SerializeField] int trauma = 0;
 
     private void OnCollisionEnter(Collision collision)
     {
         Health collisionHealth;
-        if (!dealsDamage || !collision.gameObject.TryGetComponent(out collisionHealth)) return;
+		if (!dealsDamage || !collision.gameObject.TryGetComponent(out collisionHealth)) { return; }
 
         if (damageOverTime)
         {
-            collisionHealth.decayRate = damage;
+            collisionHealth.Decay(damage);
         }
         else
         {
             collisionHealth.OnDamaged(damage);
         }
+
+		if(trauma > 0)
+		{
+			collisionHealth.OnTrauma(trauma);
+		}
     }
 
     private void OnCollisionExit(Collision collision)
@@ -29,7 +35,7 @@ public class Damage : MonoBehaviour
         Health collisionHealth;
         if (damageOverTime && !collision.gameObject.TryGetComponent(out collisionHealth))
         {
-            collisionHealth.decayRate = 0;
+            collisionHealth.Decay(0);
         }
     }
 }

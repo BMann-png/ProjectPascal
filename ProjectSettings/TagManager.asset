@@ -9,6 +9,7 @@ TagManager:
   - Interactable
   - Pushable
   - NetPlayer
+  - HealthBars
   layers:
   - Default
   - TransparentFX
