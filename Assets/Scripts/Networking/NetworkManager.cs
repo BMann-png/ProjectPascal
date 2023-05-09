@@ -182,14 +182,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
 	{
-		if(info.State == ConnectionState.ProblemDetectedLocally)
-		{
-			Debug.Log("Fail");
-			LeaveLobby();
-			currentLobby.Join();
-			JoinSocketServer(currentLobby);
-		}
-
 		if(info.State == ConnectionState.Connected)
 		{
 			Packet packet = new Packet();
