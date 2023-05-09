@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 			}
 
             Weapon weapon = hand.GetComponentInChildren<Weapon>();
-			if (Input.GetKey(KeyCode.Mouse0))
+			if (Input.GetKeyDown(KeyCode.Mouse0))
 			{
 				weapon.IsFiring = true;
 				weapon.Shoot();
