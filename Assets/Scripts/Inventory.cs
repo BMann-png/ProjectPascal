@@ -82,7 +82,7 @@ public class Inventory : MonoBehaviour
                 if (id == 255) return;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
-                secondaryWeapons[secondaryIndex].TryGetComponent<Weapon>(out weapon);
+                weapon = primaryWeapons[primaryIndex].GetComponent<Weapon>();
                 break;
             case 1:
                 ResetWeapons(secondaryWeapons);
@@ -90,7 +90,7 @@ public class Inventory : MonoBehaviour
                 if (id == 255) return;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
-                secondaryWeapons[secondaryIndex].TryGetComponent<Weapon>(out weapon);
+                weapon = secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
                 break;
             case 2:
                 // TODO: Pacifier
