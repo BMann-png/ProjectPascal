@@ -184,9 +184,10 @@ public class NetworkManager : Singleton<NetworkManager>
 	{
 		if(info.State == ConnectionState.ProblemDetectedLocally)
 		{
+			Debug.Log("Fail");
 			LeaveLobby();
-			JoinSocketServer(currentLobby);
 			currentLobby.Join();
+			JoinSocketServer(currentLobby);
 		}
 
 		if(info.State == ConnectionState.Connected)
@@ -267,11 +268,11 @@ public class NetworkManager : Singleton<NetworkManager>
 		return activeLobbies;
 	}
 
-	public void JoinLobby(Lobby lobby)
+	public async void JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
+		await currentLobby.Join();
 		JoinSocketServer(lobby);
-		currentLobby.Join();
 	}
 
 	public void LeaveLobby()
