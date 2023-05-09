@@ -19,6 +19,9 @@ public class MenuHandler : MonoBehaviour
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(false);
 		createLobby.SetActive(false);
+
+		//This is to initialize the GameManager
+		GameManager manager = GameManager.Instance;
 	}
 
 	public void GoToMainMenu()

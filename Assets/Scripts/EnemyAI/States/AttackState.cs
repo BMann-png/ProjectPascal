@@ -28,6 +28,6 @@ public class AttackState : State
 
 	public override void OnUpdate()
 	{
-		//throw new System.NotImplementedException();
+
 	}
 }
