@@ -254,7 +254,8 @@ public class NetworkManager : Singleton<NetworkManager>
 		try
 		{
 			activeLobbies.Clear();
-			activeLobbies = (await SteamMatchmaking.LobbyList.FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
+			activeLobbies = (await SteamMatchmaking.LobbyList.WithKeyValue("DaycareDescent", "true").
+				FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
 		}
 		catch (Exception e)
 		{

@@ -289,6 +289,7 @@ public class GameManager : Singleton<GameManager>
 
 			ThisPlayer = 0;
 
+			NetworkManager.Instance.currentLobby.SetData("DaycareDescent", "true");
 			NetworkManager.Instance.currentLobby.SetData("Player0", NetworkManager.Instance.PlayerId.Value.ToString());
 
 			PlayerCount = 1;
