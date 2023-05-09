@@ -182,7 +182,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
 	{
-		connection.Accept();
+		Debug.Log(info.State);
+
 		if(info.State == ConnectionState.Connected)
 		{
 			Packet packet = new Packet();
@@ -256,11 +257,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			activeLobbies.Clear();
 			activeLobbies = (await SteamMatchmaking.LobbyList.FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
 		}
-		catch (Exception e)
-		{
-			Debug.Log("Error fetching multiplayer lobbies");
-			Debug.Log(e.ToString());
-		}
+		catch {}
 
 		return activeLobbies;
 	}
