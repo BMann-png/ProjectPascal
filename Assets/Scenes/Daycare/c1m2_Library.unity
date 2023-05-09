@@ -16029,23 +16029,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4672307632666870, guid: 5540f817262b3d64d9a2d324489403c7, type: 3}
   m_PrefabInstance: {fileID: 1411412145174956690}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1411412145174956692 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1458701171501712, guid: 5540f817262b3d64d9a2d324489403c7, type: 3}
-  m_PrefabInstance: {fileID: 1411412145174956690}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1411412145174956693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1411412145174956692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c02d6f87947ecdd43a02f6124fefed0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1411412145196578469
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19033,6 +19016,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c02d6f87947ecdd43a02f6124fefed0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canInteract: 1
+  animation: {fileID: 0}
 --- !u!65 &4638395750243090481
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21435,23 +21420,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4672307632666870, guid: 5540f817262b3d64d9a2d324489403c7, type: 3}
   m_PrefabInstance: {fileID: 9040640486781183599}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &9040640486781183601 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1458701171501712, guid: 5540f817262b3d64d9a2d324489403c7, type: 3}
-  m_PrefabInstance: {fileID: 9040640486781183599}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9040640486781183602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9040640486781183601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c02d6f87947ecdd43a02f6124fefed0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &9040640486810131032
 PrefabInstance:
   m_ObjectHideFlags: 0

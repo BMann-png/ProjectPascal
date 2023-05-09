@@ -9114,7 +9114,7 @@ MonoBehaviour:
   onComplete:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1389749314}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Animate, Assembly-CSharp
         m_MethodName: StartAnimation
         m_Mode: 1
@@ -27145,11 +27145,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cf28e6ce49b39242964fb88b34eef36, type: 3}
---- !u!1 &1389749311 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4376606015372468336, guid: 1cf28e6ce49b39242964fb88b34eef36, type: 3}
-  m_PrefabInstance: {fileID: 1389749310}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1389749312 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4371135026193887766, guid: 1cf28e6ce49b39242964fb88b34eef36, type: 3}
@@ -27160,20 +27155,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2910169573837908238, guid: 1cf28e6ce49b39242964fb88b34eef36, type: 3}
   m_PrefabInstance: {fileID: 1389749310}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1389749314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1389749311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c02d6f87947ecdd43a02f6124fefed0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canInteract: 1
-  animation: {fileID: 0}
 --- !u!1 &1392097903
 GameObject:
   m_ObjectHideFlags: 0
