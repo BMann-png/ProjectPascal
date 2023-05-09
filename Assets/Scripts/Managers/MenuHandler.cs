@@ -85,8 +85,8 @@ public class MenuHandler : MonoBehaviour
 		int count = 0;
 		foreach (Lobby lobby in lobbies)
 		{
-			string name = lobby.GetData("Name");
-			if(name == null || name.Length == 0) { continue; }
+			string value = lobby.GetData("DaycareDescent");
+			if(value == null || value != "true") { continue; }
 
 			GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
 			go.GetComponent<LobbyEntry>().CreateLobby(lobby);
