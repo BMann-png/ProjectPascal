@@ -180,13 +180,9 @@ public class NetworkManager : Singleton<NetworkManager>
 		GameManager.Instance.PlayerLeft(friend);
 	}
 
-	private void OnLobbyEnteredCallback(Lobby obj)
-	{
-		
-	}
-
 	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
 	{
+		connection.Accept();
 		if(info.State == ConnectionState.Connected)
 		{
 			Packet packet = new Packet();
