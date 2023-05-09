@@ -542,7 +542,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void PlayerJoined(Packet packet)
 	{
-		if (IsServer && packet.id == 255)
+		if (IsServer && packet.id == INVALID_ID)
 		{
 			lock (joinLock)
 			{

@@ -101,12 +101,10 @@ public struct JoinPacket
 	{
 		this.steamId = steamId;
 		level = 255;
-		unused = 255;
 	}
 
 	public ulong steamId;
 	public byte level;
-	public byte unused; 
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
@@ -172,51 +170,9 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void Start()
 	{
 		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
-		//SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
-		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
-		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
-		SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
-		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
-		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
-		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
-		//SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
-		//SceneManager.sceneLoaded += OnSceneLoaded;
+		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
+		SteamNetworkingSockets.OnConnectionStatusChanged += OnConnectionStatusChanged;
 	}
-
-	#region Obsolete
-
-
-	//private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	//private void OnDlcInstalledCallback(AppId obj)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	///// <summary>
-	///// 
-	///// </summary>
-	///// <param name="lobby"></param>
-	///// <param name="id"></param>
-	//[Obsolete("This is deprecated, please use JoinSocketServer instead.")]
-	//async private void OnGameLobbyJoinRequestedCallback(Lobby lobby, SteamId id)
-	//{
-	//    RoomEnter joinedLobby = await lobby.Join();
-
-	//    if (joinedLobby == RoomEnter.Success)
-	//    {
-	//        currentLobby = lobby;
-	//        //AcceptP2P(OpponentSteamId);
-	//        SceneManager.LoadScene("Scene to load");
-	//    }
-	//    else
-	//    {
-	//        Debug.Log("failed to join lobby");
-	//    }
-	//}
 
 	private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
 	{
@@ -224,43 +180,23 @@ public class NetworkManager : Singleton<NetworkManager>
 		GameManager.Instance.PlayerLeft(friend);
 	}
 
-	//private void OnLobbyMemberDisconnectedCallback(Lobby lobby, Friend friend)
-	//{
-	//	if (friend.IsMe) { return; } //ignore yourself disconnected
-	//	FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
-	//}
-
-	//private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	//private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
-	//{
-	//	if (friend.IsMe) { return; } //ignore yourself joining
-	//	GameManager.Instance.PlayerJoined(friend);
-	//}
-
 	private void OnLobbyEnteredCallback(Lobby obj)
 	{
-		Packet packet = new Packet();
-		packet.type = 9;
-		packet.id = 255;
-		packet.join = new JoinPacket(PlayerId);
-
-		Instance.SendMessage(packet);
+		
 	}
 
-	//private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
-	//{
-	//    throw new NotImplementedException();
-	//}
+	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
+	{
+		if(info.State == ConnectionState.Connected)
+		{
+			Packet packet = new Packet();
+			packet.type = 9;
+			packet.id = GameManager.INVALID_ID;
+			packet.join = new JoinPacket(PlayerId);
 
-	//private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
-	//{
-	//    throw new NotImplementedException();
-	//}
-	#endregion
+			Instance.SendMessage(packet);
+		}
+	}
 
 	void Update()
 	{
@@ -407,7 +343,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 6: size = 6; break;    //Game Spawn
 			case 7: size = 3; break;    //Game Despawn
 			case 8: size = 11; break;   //Owner Change
-			case 9: size = 13; break;   //Player Joined
+			case 9: size = 12; break;   //Player Joined
 			default: return false;
 		}
 
