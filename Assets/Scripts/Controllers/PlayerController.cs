@@ -93,11 +93,19 @@ public class PlayerController : MonoBehaviour
 				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
 			}
 
-			if (Input.GetKeyDown(KeyCode.Mouse0))
+            Weapon weapon = hand.GetComponentInChildren<Weapon>();
+			if (Input.GetKey(KeyCode.Mouse0))
 			{
-				Shoot();
+				weapon.IsFiring = true;
+				weapon.Shoot();
 			}
-		}
+
+			if (Input.GetKeyUp(KeyCode.Mouse0))
+			{
+				weapon.IsFiring = false;
+			}
+
+        }
 	}
 
 	private void StartSprint()
@@ -139,10 +147,4 @@ public class PlayerController : MonoBehaviour
 
 		NetworkManager.Instance.SendMessage(packet);
 	}
-
-	private void Shoot()
-	{
-		Weapon weapon = hand.GetComponentInChildren<Weapon>();
-		if (weapon != null) weapon.Shoot();
-    }
 }

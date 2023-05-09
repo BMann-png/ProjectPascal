@@ -12,13 +12,15 @@ public class Inventory : MonoBehaviour
     private Entity entity;
 
     [SerializeField] private byte primaryIndex = 255;
-    [SerializeField] private byte secondaryIndex = 0;
+    [SerializeField] private byte secondaryIndex = 0; 
 
     private bool hasPacifier = false;
     private bool hasMission = false;
 
     private byte equipItem = 0;
     private byte prevEquipItem = 0;
+
+    private Weapon weapon = null;
 
     private void Awake()
     {
@@ -32,14 +34,16 @@ public class Inventory : MonoBehaviour
         {
             prevEquipItem = equipItem;
 
+            if (weapon == null || weapon.IsFiring) return;
+
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (scroll < 0.0f) { equipItem = (byte)(++equipItem % 3); }
             else if (scroll > 0.0f) { equipItem = (byte)(--equipItem % 3); }
-
+             
             if (Input.GetKeyDown(KeyCode.Alpha1)) { equipItem = 0; }
             else if (Input.GetKeyDown(KeyCode.Alpha2)) { equipItem = 1; }
             else if (Input.GetKeyDown(KeyCode.Alpha3)) { equipItem = 2; }
-
+            
             if (prevEquipItem != equipItem)
             {
                 byte id = 255;
@@ -59,6 +63,10 @@ public class Inventory : MonoBehaviour
 
                 SetupPacket(equipItem, id);
             }
+            else
+            {
+                equipItem = prevEquipItem;
+            }
         }
     }
 
@@ -74,6 +82,7 @@ public class Inventory : MonoBehaviour
                 if (id == 255) return;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
+                secondaryWeapons[secondaryIndex].TryGetComponent<Weapon>(out weapon);
                 break;
             case 1:
                 ResetWeapons(secondaryWeapons);
@@ -81,6 +90,7 @@ public class Inventory : MonoBehaviour
                 if (id == 255) return;
                 if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
                 if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
+                secondaryWeapons[secondaryIndex].TryGetComponent<Weapon>(out weapon);
                 break;
             case 2:
                 // TODO: Pacifier
