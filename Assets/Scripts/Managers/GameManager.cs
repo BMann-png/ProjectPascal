@@ -88,7 +88,7 @@ public class GameManager : Singleton<GameManager>
 				ushort id = INVALID_ID;
 				while (true)
 				{
-					id = (byte)Random.Range(0, 3);
+					id = (ushort)Random.Range(0, 3);
 
 					if (specialsSpawned[id] == false) { break; }
 				}
@@ -123,7 +123,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void StartGame()
 	{
-		if (IsServer && !Loading)
+		if (IsServer && !Loading && !Fading)
 		{
 			Packet packet = new Packet();
 			packet.type = 5;
