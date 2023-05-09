@@ -573,9 +573,9 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 		}
-		else if (packet.id != 255 && !IsServer)
+		else if (packet.id != INVALID_ID && !IsServer)
 		{
-			if (ThisPlayer == 255)
+			if (ThisPlayer == INVALID_ID)
 			{
 				if (packet.join.steamId == NetworkManager.Instance.PlayerId.Value)
 				{

@@ -268,8 +268,8 @@ public class NetworkManager : Singleton<NetworkManager>
 	public void JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
-		currentLobby.Join();
 		JoinSocketServer(lobby);
+		currentLobby.Join();
 	}
 
 	public void LeaveLobby()
