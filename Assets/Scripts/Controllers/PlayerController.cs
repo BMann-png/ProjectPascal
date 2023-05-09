@@ -81,6 +81,8 @@ public class PlayerController : MonoBehaviour
 				//TODO: Die
 				controller.enabled = false;
 				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
+
+				if(transform.position.y > 10) { Destroy(this.gameObject); }
 			}
 
 			movement = Vector3.down * 10.0f * Time.deltaTime;
