@@ -306,12 +306,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		{
 			activeLobbies.Clear();
 			activeLobbies = (await SteamMatchmaking.LobbyList.FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
-		}
-		catch (Exception e)
-		{
-			Debug.Log("Error fetching multiplayer lobbies");
-			Debug.Log(e.ToString());
-		}
+		} catch { }
 
 		return activeLobbies;
 	}
