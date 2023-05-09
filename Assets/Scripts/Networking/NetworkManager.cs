@@ -290,6 +290,8 @@ public class NetworkManager : Singleton<NetworkManager>
 	private void JoinSocketServer(Lobby lobby)
 	{
 		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
+		connectionManager.Close();
+		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
 	}
