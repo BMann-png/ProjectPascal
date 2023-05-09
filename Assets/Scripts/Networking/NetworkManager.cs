@@ -184,8 +184,9 @@ public class NetworkManager : Singleton<NetworkManager>
 	{
 		if(info.State == ConnectionState.ProblemDetectedLocally)
 		{
-			Debug.Log(info.EndReason);
-			Debug.Log(connection.DetailedStatus());
+			LeaveLobby();
+			JoinSocketServer(currentLobby);
+			currentLobby.Join();
 		}
 
 		if(info.State == ConnectionState.Connected)
@@ -289,8 +290,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void JoinSocketServer(Lobby lobby)
 	{
-		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
-		connectionManager.Close();
 		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
