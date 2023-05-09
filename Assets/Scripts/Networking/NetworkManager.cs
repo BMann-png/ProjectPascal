@@ -182,7 +182,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
 	{
-		Debug.Log(info.State);
+		if(info.State == ConnectionState.ProblemDetectedLocally)
+		{
+			Debug.Log(info.EndReason);
+			Debug.Log(connection.DetailedStatus());
+		}
 
 		if(info.State == ConnectionState.Connected)
 		{
