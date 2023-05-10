@@ -227,8 +227,8 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 10001)
 		{
-			if(packet.data < 100) { GetComponent<Pushable>().OtherPush(id); }
-			else if(packet.data < 255) { GetComponent<Pushable>().OtherStop((byte)(id - 100)); }
+			if(packet.data < 100) { GetComponent<Pushable>().OtherPush(packet.data); }
+			else if(packet.data < 255) { GetComponent<Pushable>().OtherStop((byte)(packet.data - 100)); }
 			else { GetComponent<Pushable>().OtherComplete(); }
 		}
 	}
