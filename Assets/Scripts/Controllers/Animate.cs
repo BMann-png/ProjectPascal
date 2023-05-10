@@ -28,6 +28,8 @@ public class Animate : MonoBehaviour
 		packet.type = 1;
 		packet.id = entity.id;
 		packet.action = new ActionPacket(255);
+
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	public void OtherPlay()
