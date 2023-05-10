@@ -229,8 +229,8 @@ public class Entity : MonoBehaviour
 		{
 			switch (packet.data)
 			{
-				case 0: GetComponent<Pushable>().OtherPush(); break;
-				case 1: GetComponent<Pushable>().OtherStop(); break;
+				case 0: GetComponent<Pushable>().OtherPush(id); break;
+				case 1: GetComponent<Pushable>().OtherStop(id); break;
 				case 2: GetComponent<Pushable>().OtherComplete(); break;
 			}
 		}

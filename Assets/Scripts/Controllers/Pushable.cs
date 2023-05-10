@@ -10,6 +10,7 @@ public class Pushable : MonoBehaviour
 	public UnityEvent onComplete;
 	public UnityEvent onCompleteOther;
 
+	private bool[] othersPushing = new bool[4];
 	private Entity entity;
 	private Interactable interactable;
 	private Vector3 initialPosition;
@@ -92,22 +93,25 @@ public class Pushable : MonoBehaviour
 
 	public void StopPush()
 	{
-		pushing = false;
-		--playerCount;
+		if (pushing)
+		{
+			pushing = false;
+			--playerCount;
 
-		Packet packet = new Packet();
-		packet.type = 1;
-		packet.id = GameManager.Instance.ThisPlayer;
-		packet.action = new ActionPacket(3);
+			Packet packet = new Packet();
+			packet.type = 1;
+			packet.id = GameManager.Instance.ThisPlayer;
+			packet.action = new ActionPacket(3);
 
-		NetworkManager.Instance.SendMessage(packet);
+			NetworkManager.Instance.SendMessage(packet);
 
-		Packet packet1 = new Packet();
-		packet1.type = 1;
-		packet1.id = entity.id;
-		packet1.action = new ActionPacket(1);
+			Packet packet1 = new Packet();
+			packet1.type = 1;
+			packet1.id = entity.id;
+			packet1.action = new ActionPacket(1);
 
-		NetworkManager.Instance.SendMessage(packet1);
+			NetworkManager.Instance.SendMessage(packet1);
+		}
 	}
 
 	public void OtherComplete()
@@ -121,14 +125,20 @@ public class Pushable : MonoBehaviour
 		}
 	}
 
-	public void OtherPush()
+	public void OtherPush(ushort id)
 	{
-		++playerCount;
+		if (!othersPushing[id])
+		{
+			++playerCount;
+		}
 	}
 
-	public void OtherStop()
+	public void OtherStop(ushort id)
 	{
-		--playerCount;
+		if (othersPushing[id])
+		{
+			--playerCount;
+		}
 	}
 
 	private void OnTriggerEnter(Collider other)
