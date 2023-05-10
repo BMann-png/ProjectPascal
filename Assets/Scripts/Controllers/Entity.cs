@@ -223,13 +223,37 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 44)
 		{
-
+			switch (packet.data)
+			{
+				case 0: //Attack
+					{
+						animator.SetBool("isAttacking", true);
+					}
+					break;
+				case 1: //Attack
+					{
+						animator.SetBool("isAttacking", false);
+					}
+					break;
+				case 2: //Death
+					{
+						animator.SetTrigger("isDead");
+					}
+					break;
+			}
 		}
 		else if (id < 10001)
 		{
-			if(packet.data < 100) { GetComponent<Pushable>().OtherPush(packet.data); }
-			else if(packet.data < 255) { GetComponent<Pushable>().OtherStop((byte)(packet.data - 100)); }
-			else { GetComponent<Pushable>().OtherComplete(); }
+			if(TryGetComponent(out Pushable p))
+			{
+				if (packet.data < 100) { p.OtherPush(packet.data); }
+				else if (packet.data < 255) { p.OtherStop((byte)(packet.data - 100)); }
+				else { p.OtherComplete(); }
+			}
+			else if(TryGetComponent(out Animate a))
+			{
+				a.OtherPlay();
+			}
 		}
 	}
 
