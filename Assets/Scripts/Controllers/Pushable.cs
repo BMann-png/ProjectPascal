@@ -61,7 +61,7 @@ public class Pushable : MonoBehaviour
 				Packet packet = new Packet();
 				packet.type = 1;
 				packet.id = entity.id;
-				packet.action = new ActionPacket(2);
+				packet.action = new ActionPacket(255);
 
 				NetworkManager.Instance.SendMessage(packet);
 			}
@@ -85,7 +85,7 @@ public class Pushable : MonoBehaviour
 			Packet packet1 = new Packet();
 			packet1.type = 1;
 			packet1.id = entity.id;
-			packet1.action = new ActionPacket(0);
+			packet1.action = new ActionPacket((byte)GameManager.Instance.ThisPlayer);
 
 			NetworkManager.Instance.SendMessage(packet1);
 		}
@@ -108,7 +108,7 @@ public class Pushable : MonoBehaviour
 			Packet packet1 = new Packet();
 			packet1.type = 1;
 			packet1.id = entity.id;
-			packet1.action = new ActionPacket(1);
+			packet1.action = new ActionPacket((byte)(100 + GameManager.Instance.ThisPlayer));
 
 			NetworkManager.Instance.SendMessage(packet1);
 		}
@@ -131,7 +131,6 @@ public class Pushable : MonoBehaviour
 		if (!othersPushing[id])
 		{
 			++playerCount;
-			Debug.Log(playerCount);
 		}
 	}
 
@@ -140,7 +139,6 @@ public class Pushable : MonoBehaviour
 		if (othersPushing[id])
 		{
 			--playerCount;
-			Debug.Log(playerCount);
 		}
 	}
 

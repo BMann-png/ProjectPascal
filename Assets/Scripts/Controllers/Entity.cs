@@ -227,12 +227,9 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 10001)
 		{
-			switch (packet.data)
-			{
-				case 0: GetComponent<Pushable>().OtherPush(id); break;
-				case 1: GetComponent<Pushable>().OtherStop(id); break;
-				case 2: GetComponent<Pushable>().OtherComplete(); break;
-			}
+			if(packet.data < 100) { GetComponent<Pushable>().OtherPush(id); }
+			else if(packet.data < 255) { GetComponent<Pushable>().OtherStop((byte)(id - 100)); }
+			else { GetComponent<Pushable>().OtherComplete(); }
 		}
 	}
 
