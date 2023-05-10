@@ -131,6 +131,7 @@ public class Pushable : MonoBehaviour
 		if (!othersPushing[id])
 		{
 			++playerCount;
+			Debug.Log(playerCount);
 		}
 	}
 
@@ -139,6 +140,7 @@ public class Pushable : MonoBehaviour
 		if (othersPushing[id])
 		{
 			--playerCount;
+			Debug.Log(playerCount);
 		}
 	}
 
