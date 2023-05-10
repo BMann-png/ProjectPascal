@@ -8,12 +8,12 @@ public class Weapon : MonoBehaviour
     [SerializeField] private byte type = 0;
     [SerializeField] private float delay = 0.1f;
     [SerializeField] [Range(0, 45)] private float spreadAngle = 15f;
-    [SerializeField] private float duration = 2f;
     [SerializeField] private int numsOfShots = 1;
 
     public bool IsFiring { get; set; } = false;
 
     private float timer = 0f;
+    private readonly float duration = 0.25f;
     private void Update()
     {
         timer -= Time.deltaTime;
