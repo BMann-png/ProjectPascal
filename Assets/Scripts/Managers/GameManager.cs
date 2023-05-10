@@ -85,7 +85,7 @@ public class GameManager : Singleton<GameManager>
 
 			if (specialCount < MAX_SPECIAL_COUNT)
 			{
-				ushort id = INVALID_ID;
+				ushort id;
 				while (true)
 				{
 					id = (ushort)Random.Range(0, 3);
