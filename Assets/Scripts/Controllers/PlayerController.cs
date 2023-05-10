@@ -99,12 +99,6 @@ public class PlayerController : MonoBehaviour
 				weapon.IsFiring = true;
 				weapon.Shoot();
 			}
-
-			if (Input.GetKeyUp(KeyCode.Mouse0))
-			{
-				weapon.IsFiring = false;
-			}
-
         }
 	}
 

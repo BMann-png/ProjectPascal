@@ -22,11 +22,13 @@ public class Weapon : MonoBehaviour
         {
             IsFiring = false;
         }
+        print(IsFiring);
+        print(timer);
     }
 
     public void Shoot() 
     {
-        timer = delay;
+        timer = duration;
         StartCoroutine(Fire());
     }
 

@@ -59,6 +59,7 @@ MonoBehaviour:
   type: 2
   delay: 0.01
   spreadAngle: 15
+  duration: 0.5
   numsOfShots: 7
 --- !u!23 &2893438902006871896
 MeshRenderer:
