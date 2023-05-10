@@ -344,11 +344,11 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 		}
-		else if (data > 200)
+		else if (data > 199)
 		{
 			StartLoad(data - 200);
 		}
-		else if (data > 100)
+		else if (data > 99)
 		{
 			InLobby = true;
 			IEnumerable<Friend> members = lobby.Members;
