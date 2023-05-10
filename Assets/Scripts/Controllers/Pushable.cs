@@ -120,6 +120,7 @@ public class Pushable : MonoBehaviour
 		{
 			complete = true;
 			interactable.canInteract = false;
+			transform.position = endPosition;
 			onComplete.Invoke();
 			onCompleteOther.Invoke();
 		}
