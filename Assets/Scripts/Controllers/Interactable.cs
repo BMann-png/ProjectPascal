@@ -8,13 +8,11 @@ public class Interactable : MonoBehaviour
 	public bool canInteract = true;
 	public byte id;
 	public UnityEvent onInteract;
-	public UnityEvent onInteractOther;
 	public UnityEvent onStopInteract;
-	public UnityEvent onStopInteractOther;
+	[HideInInspector] public UnityEvent onInteractOther;
+	[HideInInspector] public UnityEvent onStopInteractOther;
 
 	[HideInInspector] public Outline outline;
-
-	//Reviving - Gotta merge first
 
 	private void Awake()
 	{

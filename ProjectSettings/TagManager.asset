@@ -5,9 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - EnemySpawner
   - Interactable
   - Pushable
   - NetPlayer
+  - HealthBars
   layers:
   - Default
   - TransparentFX

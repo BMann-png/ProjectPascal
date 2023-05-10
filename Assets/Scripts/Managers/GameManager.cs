@@ -13,15 +13,17 @@ using UnityEngine.UIElements;
 public class GameManager : Singleton<GameManager>
 {
 	public List<GameObject> playerLocations = new List<GameObject>();
-	private static readonly int MAX_ENEMY_COUNT = 15;
+	private static readonly int MAX_ENEMY_COUNT = 30;
 	private static readonly int MAX_SPECIAL_COUNT = 2;
 	public static readonly ushort INVALID_ID = 65535;
 
 	public bool IsServer { get; private set; }
-	private bool inLobby;
+	public bool InLobby { get; private set; }
 	private byte levelNum;
 
 	private ushort[] tempPlayers;
+	private Transform healthBarHolder;
+	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities;
 	private Transform[] lobbySpawnpoints;
 	private Stack<ushort> enemyIndices = new Stack<ushort>(30);
@@ -50,6 +52,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		base.Awake();
 
+		healthBarHolder = GameObject.FindGameObjectWithTag("HealthBars").transform;
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
@@ -64,7 +67,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if (IsServer && !inLobby && playerLocations.Count > 0) //TODO: potential bigger problem
+		if (IsServer && !InLobby && playerLocations.Count > 0) //TODO: potential bigger problem
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
@@ -152,7 +155,7 @@ public class GameManager : Singleton<GameManager>
 	public void OnLevelLoad(LevelManager level)
 	{
 		this.level = level;
-		inLobby = false;
+		InLobby = false;
 		PlayerDeaths = 0;
 
 		if (++loadedPlayers == PlayerCount) { FinishLoading(); }
@@ -167,7 +170,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void FinishLoading()
 	{
-		if(IsServer)
+		if (IsServer)
 		{
 			for (ushort i = 0; i < level.InteractableSpawnCount(); ++i)
 			{
@@ -177,9 +180,9 @@ public class GameManager : Singleton<GameManager>
 				{
 					ushort id = interactableIndices.Pop();
 
-					if(spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
+					if (spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
 
-					if(spawner.type < 100)
+					if (spawner.type < 100)
 					{
 						entities[id] = Instantiate(prefabManager.Pickups[spawner.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
@@ -187,7 +190,7 @@ public class GameManager : Singleton<GameManager>
 						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
 						inter.id = spawner.id;
 					}
-					else if(spawner.type < 255)
+					else if (spawner.type < 255)
 					{
 						entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
@@ -210,6 +213,7 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
+		byte healthBarId = 1;
 		foreach (ushort id in tempPlayers)
 		{
 			if (id != INVALID_ID)
@@ -221,6 +225,13 @@ public class GameManager : Singleton<GameManager>
 					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 					entities[id].id = id;
 					playerLocations.Add(entities[id].gameObject);
+
+					HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
+					healthBars.Add(bar.gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(bar);
+					bar.SetImage(id);
+					bar.gameObject.SetActive(true);
 				}
 				else
 				{
@@ -228,6 +239,15 @@ public class GameManager : Singleton<GameManager>
 					entities[id].id = id;
 					entities[id].SetModel();
 					playerLocations.Add(entities[id].gameObject);
+
+					HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
+					healthBars.Add(bar.gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(bar);
+					bar.SetImage(id);
+					bar.gameObject.SetActive(true);
+
+					++healthBarId;
 				}
 			}
 		}
@@ -265,7 +285,7 @@ public class GameManager : Singleton<GameManager>
 	public void OnJoinLobby(Transform[] spawnPoints)
 	{
 		lobbySpawnpoints = spawnPoints;
-		inLobby = true;
+		InLobby = true;
 		PlayerCount = 1;
 
 		if (IsServer)
@@ -346,7 +366,7 @@ public class GameManager : Singleton<GameManager>
 		PlayerCount = 0;
 		ThisPlayer = INVALID_ID;
 		IsServer = false;
-		inLobby = false;
+		InLobby = false;
 	}
 
 	public void PickupItem(byte id)
@@ -400,35 +420,34 @@ public class GameManager : Singleton<GameManager>
 
 	public void Destroy(Entity obj)
 	{
-		if (IsServer)
+		if (obj.id < 4) //Player
 		{
-			if(obj.id < 4) //Player
-			{
-
-			}
-			else if(obj.id < 34) //Common Enemy
-			{
-				enemyIndices.Push(obj.id);
-			}
-			else if (obj.id < 44) //Special Enemy
-			{
-				specialsSpawned[obj.id - 34] = false;
-			}
-			else if(obj.id < 49)
-			{
-				interactableIndices.Push(obj.id);
-			}
-			else if (obj.id < INVALID_ID)
-			{
-				projectileIndices.Push(obj.id);
-			}
-
-			Packet packet = new Packet();
-			packet.id = obj.id;
-			packet.type = 7;
-
-			NetworkManager.Instance.SendMessage(packet);
+			return;
 		}
+		else if (obj.id < 34) //Common Enemy
+		{
+			--enemyCount;
+			enemyIndices.Push(obj.id);
+		}
+		else if (obj.id < 44) //Special Enemy
+		{
+			--specialCount;
+			specialsSpawned[obj.id - 34] = false;
+		}
+		else if (obj.id < 10001)
+		{
+			interactableIndices.Push(obj.id);
+		}
+		else if (obj.id < INVALID_ID)
+		{
+			projectileIndices.Push(obj.id);
+		}
+
+		Packet packet = new Packet();
+		packet.id = obj.id;
+		packet.type = 7;
+
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	//Callbacks
@@ -443,7 +462,7 @@ public class GameManager : Singleton<GameManager>
 			if (steamId == 0)
 			{
 				Transform transform;
-				if (inLobby) { transform = lobbySpawnpoints[i]; }
+				if (InLobby) { transform = lobbySpawnpoints[i]; }
 				else { transform = level.GetPlayerSpawn(i); }
 
 				entities[i] = Instantiate(prefabManager.LobbyPlayer, transform.position, transform.rotation).GetComponent<Entity>();
@@ -495,7 +514,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void Health(Packet health)
 	{
-
+		Health h = entities[health.id].GetComponent<Health>();
+		h.health = health.health.health;
+		h.trauma = health.health.trauma;
+		h.down = health.health.down;
 	}
 
 	public void Inventory(Packet inventory)
@@ -526,6 +548,13 @@ public class GameManager : Singleton<GameManager>
 		Loading = true;
 		loadedPlayers = 0;
 
+		foreach (GameObject healthBar in healthBars)
+		{
+			Destroy(healthBar);
+		}
+
+		healthBars.Clear();
+
 		SceneLoader.SetLoadingScreen(true);
 		playerLocations.Clear();
 
@@ -552,7 +581,7 @@ public class GameManager : Singleton<GameManager>
 		else if (packet.id < 44)
 		{
 			Transform spawner = level.GetEnemySpawn(packet.spawn.spawn);
-			if(IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, spawner.position, spawner.rotation).GetComponent<Entity>(); }
+			if (IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, spawner.position, spawner.rotation).GetComponent<Entity>(); }
 			else { entities[packet.id] = Instantiate(prefabManager.NetworkEnemy, spawner.position, spawner.rotation).GetComponent<Entity>(); }
 			entities[packet.id].id = packet.id;
 			entities[packet.id].SetModel();
