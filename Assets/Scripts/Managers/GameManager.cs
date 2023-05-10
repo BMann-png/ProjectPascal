@@ -165,6 +165,8 @@ public class GameManager : Singleton<GameManager>
 
 	private void FinishLoading()
 	{
+		loadedPlayers = 0;
+
 		if (IsServer)
 		{
 			for (ushort i = 0; i < level.InteractableSpawnCount(); ++i)
@@ -664,7 +666,6 @@ public class GameManager : Singleton<GameManager>
 		Loading = true;
 		Fading = false;
 		InLobby = false;
-		loadedPlayers = 0;
 
 		foreach (GameObject healthBar in healthBars)
 		{
