@@ -223,9 +223,4 @@ public class PlayerController : MonoBehaviour
 			reviveTimer = 0.0f;
 		}
 	}
-
-	private void Shoot()
-	{
-		GameManager.Instance.Shoot(0);
-	}
 }
