@@ -130,7 +130,7 @@ public class GameManager : Singleton<GameManager>
 			packet.id = levelNum;
 
 			NetworkManager.Instance.SendMessage(packet);
-			LoadLevel(packet);
+			LoadLevel(levelNum);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class GameManager : Singleton<GameManager>
 			packet.id = level;
 
 			NetworkManager.Instance.SendMessage(packet);
-			LoadLevel(packet);
+			LoadLevel(level);
 		}
 	}
 
@@ -350,6 +350,7 @@ public class GameManager : Singleton<GameManager>
 		}
 		else if (data > 100)
 		{
+			InLobby = true;
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (byte i = 0; i < 4; ++i)
@@ -382,7 +383,7 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 
-			StartLoad(data - 100);
+			LoadLevel((byte)(data - 100));
 		}
 		else
 		{
@@ -650,12 +651,12 @@ public class GameManager : Singleton<GameManager>
 
 	}
 
-	public void LoadLevel(Packet packet)
+	public void LoadLevel(byte level)
 	{
 		for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
 
 		Fading = true;
-		StartCoroutine(SceneLoader.FadeToLoad(3.0f, packet.id, StartLoad));
+		StartCoroutine(SceneLoader.FadeToLoad(3.0f, level, StartLoad));
 	}
 
 	public void StartLoad(int i)

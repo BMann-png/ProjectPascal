@@ -372,7 +372,7 @@ public class NetworkManager : Singleton<NetworkManager>
 				case 2: GameManager.Instance.Health(packet); break;				//Health
 				case 3: GameManager.Instance.Inventory(packet); break;			//Inventory
 				case 4: GameManager.Instance.GameTrigger(packet); break;		//Game Trigger
-				case 5: GameManager.Instance.LoadLevel(packet); break;			//Scene Load
+				case 5: GameManager.Instance.LoadLevel((byte)packet.id); break;	//Scene Load
 				case 6: GameManager.Instance.Spawn(packet); break;				//Game Spawn
 				case 7: GameManager.Instance.Despawn(packet); break;			//Game Despawn
 				case 8: GameManager.Instance.OwnerChange(packet); break;		//Owner Change
