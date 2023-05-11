@@ -61,10 +61,10 @@ public class Projectile : MonoBehaviour
 	{
 		rigidbody.AddForce(transform.up * speed, ForceMode.VelocityChange);
 	}
-
+	
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.layer == PLAYER_MASK.value) return;
+		if (1 << collision.gameObject.layer == PLAYER_MASK.value) return;
 
         //TODO: Darts should stick if normal is within a range
         if (!hasDamage) return;
