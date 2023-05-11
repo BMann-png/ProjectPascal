@@ -145,7 +145,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 		try
 		{
-			SteamClient.Init(480, true);
+			SteamClient.Init(2429260, true);
 			if (!SteamClient.IsValid)
 			{
 				throw new Exception("Client is not valid");
