@@ -36,7 +36,10 @@ public class GameManager : Singleton<GameManager>
 	private LevelManager level;
 
 	private PrefabManager prefabManager;
-	public PrefabManager PrefabManager { get => prefabManager; }
+    public PrefabManager PrefabManager { get => prefabManager; }
+
+    private AudioManager audioManager;
+	public AudioManager AudioManager { get => audioManager; }
 
 	private SceneLoader sceneLoader;
 	public SceneLoader SceneLoader { get => sceneLoader; }
@@ -54,6 +57,7 @@ public class GameManager : Singleton<GameManager>
 
 		healthBarHolder = GameObject.FindGameObjectWithTag("HealthBars").transform;
 		prefabManager = FindFirstObjectByType<PrefabManager>();
+		audioManager = FindFirstObjectByType<AudioManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
 		tempPlayers = new ushort[4] { INVALID_ID, INVALID_ID, INVALID_ID, INVALID_ID };
