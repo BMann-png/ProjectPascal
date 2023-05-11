@@ -182,7 +182,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
 	{
-		if(info.State == ConnectionState.Connected)
+		if (info.State == ConnectionState.Connected)
 		{
 			Packet packet = new Packet();
 			packet.type = 9;
@@ -255,7 +255,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			activeLobbies.Clear();
 			activeLobbies = (await SteamMatchmaking.LobbyList.FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
 		}
-		catch {}
+		catch { }
 
 		return activeLobbies;
 	}
@@ -367,22 +367,24 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			switch (packet.type)
 			{
-				case 0: GameManager.Instance.ReceiveTransform(packet); break;	//Transform
-				case 1: GameManager.Instance.Action(packet); break;				//Action
-				case 2: GameManager.Instance.Health(packet); break;				//Health
-				case 3: GameManager.Instance.Inventory(packet); break;			//Inventory
-				case 4: GameManager.Instance.GameTrigger(packet); break;		//Game Trigger
-				case 5: GameManager.Instance.LoadLevel((byte)packet.id); break;	//Scene Load
-				case 6: GameManager.Instance.Spawn(packet); break;				//Game Spawn
-				case 7: GameManager.Instance.Despawn(packet); break;			//Game Despawn
-				case 8: GameManager.Instance.OwnerChange(packet); break;		//Owner Change
-				case 9: GameManager.Instance.PlayerJoined(packet); break;		//Player Joined
+				case 0: GameManager.Instance.ReceiveTransform(packet); break;   //Transform
+				case 1: GameManager.Instance.Action(packet); break;             //Action
+				case 2: GameManager.Instance.Health(packet); break;             //Health
+				case 3: GameManager.Instance.Inventory(packet); break;          //Inventory
+				case 4: GameManager.Instance.GameTrigger(packet); break;        //Game Trigger
+				case 5: GameManager.Instance.LoadLevel((byte)packet.id); break; //Scene Load
+				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
+				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
+				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
+				case 9: GameManager.Instance.PlayerJoined(packet); break;       //Player Joined
 				default: break;
 			}
 		}
 		catch
 		{
-			Debug.Log("Unable to process message from socket server");
+			Packet packet = Marshal.PtrToStructure<Packet>(message);
+
+			Debug.Log($"Packet Failed: ID: {packet.id}, Type: {packet.type}");
 		}
 	}
 
