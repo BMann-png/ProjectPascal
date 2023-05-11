@@ -393,7 +393,7 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	public void AddPlayer(ushort id)
+	public void AddPlayer(ushort id, ulong steamId)
 	{
 		Transform transform;
 		if (InLobby)
@@ -405,7 +405,6 @@ public class GameManager : Singleton<GameManager>
 
 			Lobby lobby = NetworkManager.Instance.currentLobby;
 			IEnumerable<Friend> members = lobby.Members;
-			ulong steamId = ulong.Parse(lobby.GetData("Player" + id));
 
 			string steamName = "";
 			foreach (Friend f in members)
@@ -568,7 +567,7 @@ public class GameManager : Singleton<GameManager>
 						else { packet.join.level = 255; }
 
 						NetworkManager.Instance.SendMessage(packet);
-						AddPlayer(i);
+						AddPlayer(i, packet.join.steamId);
 
 						break;
 					}
@@ -588,7 +587,7 @@ public class GameManager : Singleton<GameManager>
 			else
 			{
 				++PlayerCount;
-				AddPlayer(packet.id);
+				AddPlayer(packet.id, packet.join.steamId);
 			}
 		}
 	}
