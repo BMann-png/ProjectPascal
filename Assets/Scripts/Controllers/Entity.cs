@@ -92,7 +92,7 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 111)
 		{
-			model = Instantiate(GameManager.Instance.PrefabManager.SpecialModels[id - 34], transform);
+			model = Instantiate(GameManager.Instance.PrefabManager.SpecialModels[id - 100], transform);
 		}
 		else if (id < 20001) // Water Projectile
 		{
