@@ -13,6 +13,10 @@ public class AudioManager : MonoBehaviour
 	[SerializeField] private AudioSource source;
 
 	public AudioSource Source { get { return source; } }
+	private void Awake()
+	{
+		DontDestroyOnLoad(gameObject);
+	}
 
 	public void ChangeMasterVolume(float volume)
 	{
