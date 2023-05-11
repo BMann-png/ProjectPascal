@@ -251,8 +251,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  maxTrauma: 50
+  maxDown: 100
   healthVal: 100
-  decayRate: 0
+  traumaVal: 0
+  downVal: 0
 --- !u!1001 &1292954915292431108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -347,6 +350,10 @@ PrefabInstance:
     - target: {fileID: 6499522961762826845, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499522961762826845, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_LocalPosition.x
