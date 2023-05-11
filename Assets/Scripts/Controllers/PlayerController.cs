@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
 
 				Vector3 move = transform.forward * vertInput + transform.right * HoriInput;
 
-				movement += move.normalized * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
+				movement += Vector3.ClampMagnitude(move, 1.0f) * MOVEMENT_SPEED * Time.deltaTime * (sprinting ? SPRINT_MOD : 1.0f);
 
 				movement *= tripped ? TRIP_MOD : 1.0f;
 			}
