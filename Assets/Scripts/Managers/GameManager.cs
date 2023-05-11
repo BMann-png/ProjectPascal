@@ -22,8 +22,8 @@ public class GameManager : Singleton<GameManager>
 	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities = new Entity[65536];
 	private Transform[] lobbySpawnpoints;
-	private Queue<ushort> enemyIndices = new Queue<ushort>(30);
-	private Queue<ushort> interactableIndices = new Queue<ushort>(9957);
+	private Queue<ushort> enemyIndices = new Queue<ushort>(97);
+	private Queue<ushort> interactableIndices = new Queue<ushort>(9890);
 	private Queue<ushort> projectileIndices = new Queue<ushort>(40000);
 	private bool[] specialsSpawned = new bool[10];
 	private int enemyCount = 0;
@@ -53,8 +53,8 @@ public class GameManager : Singleton<GameManager>
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
-		for (ushort i = 4; i < 34; ++i) { enemyIndices.Enqueue(i); }
-		for (ushort i = 44; i < 10001; ++i) { interactableIndices.Enqueue(i); }
+		for (ushort i = 4; i < 101; ++i) { enemyIndices.Enqueue(i); }
+		for (ushort i = 111; i < 10001; ++i) { interactableIndices.Enqueue(i); }
 		for (ushort i = 10001; i < INVALID_ID; ++i) { projectileIndices.Enqueue(i); }
 	}
 
@@ -86,13 +86,13 @@ public class GameManager : Singleton<GameManager>
 				ushort id;
 				while (true)
 				{
-					id = (ushort)Random.Range(0, 3);
+					id = (ushort)Random.Range(0, 3); //TODO: Widen range to later specials
 
 					if (specialsSpawned[id] == false) { break; }
 				}
 
 				specialsSpawned[id] = true;
-				id += 34;
+				id += 100;
 				ushort spawn = level.RandomEnemySpawn();
 				Transform transform = level.GetEnemySpawn(spawn);
 				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
@@ -514,15 +514,15 @@ public class GameManager : Singleton<GameManager>
 		{
 			return;
 		}
-		else if (obj.id < 34) //Common Enemy
+		else if (obj.id < 101) //Common Enemy
 		{
 			--enemyCount;
 			enemyIndices.Enqueue(obj.id);
 		}
-		else if (obj.id < 44) //Special Enemy
+		else if (obj.id < 111) //Special Enemy
 		{
 			--specialCount;
-			specialsSpawned[obj.id - 34] = false;
+			specialsSpawned[obj.id - 100] = false;
 		}
 		else if (obj.id < 10001)
 		{
@@ -696,7 +696,7 @@ public class GameManager : Singleton<GameManager>
 		{
 
 		}
-		else if (packet.id < 44)
+		else if (packet.id < 111)
 		{
 			Transform transform = level.GetEnemySpawn(packet.spawn.spawn);
 			if (IsServer) { entities[packet.id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>(); }

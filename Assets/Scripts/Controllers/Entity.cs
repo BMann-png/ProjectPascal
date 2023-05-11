@@ -1,18 +1,18 @@
 using UnityEngine;
 
 //ID 0-3 - player
-//ID 4-33 - common enemy
-//ID 34 - Spitter
-//ID 35 - Alarmer
-//ID 36 - Lurker
-//ID 37 - Hurler
-//ID 38 - Snatcher
-//ID 39 - Corrupted Spitter
-//ID 40 - Corrupted Alarmer
-//ID 41 - Corrupted Lurker
-//ID 42 - Corrupted Hurler
-//ID 43 - Corrupted Snatcher
-//ID 44-10000 is an interactable
+//ID 4-100 - common enemy
+//ID 101 - Spitter
+//ID 102 - Alarmer
+//ID 103 - Lurker
+//ID 104 - Hurler
+//ID 105 - Snatcher
+//ID 106 - Corrupted Spitter
+//ID 107 - Corrupted Alarmer
+//ID 108 - Corrupted Lurker
+//ID 109 - Corrupted Hurler
+//ID 110 - Corrupted Snatcher
+//ID 111-10000 is an interactable
 //ID 10001-20000 is a water projectile
 //ID 20001-30000 is a bubble projectile
 //ID 30001-40000 is a dart projectile
@@ -42,7 +42,7 @@ public class Entity : MonoBehaviour
 
 	private void Update()
 	{
-		if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && (id < 44 || id > 10000) && !GameManager.Instance.IsServer))
+		if ((id < 4 && GameManager.Instance.ThisPlayer != id) || (id > 3 && (id < 111 || id > 10000) && !GameManager.Instance.IsServer))
 		{
 			transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f);
 			//transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
@@ -63,7 +63,7 @@ public class Entity : MonoBehaviour
 		targetPosition = new Vector3(tp.xPos, tp.yPos, tp.zPos);
 		targetRotation = tp.yRot;
 
-		if (id > 48)
+		if (id > 10000)
 		{
 			transform.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f); //TODO: Lerp smoothly
 		}
@@ -86,11 +86,11 @@ public class Entity : MonoBehaviour
 		{
 			model = Instantiate(GameManager.Instance.PrefabManager.PlayerModels[id], transform);
 		}
-		else if (id < 34)
+		else if (id < 101)
 		{
 			model = Instantiate(GameManager.Instance.PrefabManager.RandomCommon(), transform);
 		}
-		else if (id < 44)
+		else if (id < 111)
 		{
 			model = Instantiate(GameManager.Instance.PrefabManager.SpecialModels[id - 34], transform);
 		}
@@ -200,7 +200,7 @@ public class Entity : MonoBehaviour
 				break;
 			}
 		}
-		else if (id < 34)
+		else if (id < 101)
 		{
 			switch (packet.data)
 			{
@@ -221,7 +221,7 @@ public class Entity : MonoBehaviour
 				break;
 			}
 		}
-		else if (id < 44)
+		else if (id < 111)
 		{
 			switch (packet.data)
 			{
