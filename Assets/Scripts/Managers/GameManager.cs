@@ -20,11 +20,11 @@ public class GameManager : Singleton<GameManager>
 	private Queue<ushort> unspawnedPlayers = new Queue<ushort>();
 	private Transform healthBarHolder;
 	private List<GameObject> healthBars = new List<GameObject>();
-	private Entity[] entities;
+	private Entity[] entities = new Entity[65536];
 	private Transform[] lobbySpawnpoints;
-	private Stack<ushort> enemyIndices = new Stack<ushort>(30);
-	private Stack<ushort> interactableIndices = new Stack<ushort>(5);
-	private Stack<ushort> projectileIndices = new Stack<ushort>(206);
+	private Queue<ushort> enemyIndices = new Queue<ushort>(30);
+	private Queue<ushort> interactableIndices = new Queue<ushort>(9957);
+	private Queue<ushort> projectileIndices = new Queue<ushort>(40000);
 	private bool[] specialsSpawned = new bool[10];
 	private int enemyCount = 0;
 	private int specialCount = 0;
@@ -53,11 +53,9 @@ public class GameManager : Singleton<GameManager>
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
-		entities = new Entity[65536];
-
-		for (ushort i = 4; i < 34; ++i) { enemyIndices.Push(i); }
-		for (ushort i = 44; i < 10001; ++i) { interactableIndices.Push(i); }
-		for (ushort i = 10001; i < INVALID_ID; ++i) { projectileIndices.Push(i); }
+		for (ushort i = 4; i < 34; ++i) { enemyIndices.Enqueue(i); }
+		for (ushort i = 44; i < 10001; ++i) { interactableIndices.Enqueue(i); }
+		for (ushort i = 10001; i < INVALID_ID; ++i) { projectileIndices.Enqueue(i); }
 	}
 
 	private void Update()
@@ -66,7 +64,7 @@ public class GameManager : Singleton<GameManager>
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
-				ushort id = enemyIndices.Pop();
+				ushort id = enemyIndices.Dequeue();
 				ushort spawn = level.RandomEnemySpawn();
 				Transform transform = level.GetEnemySpawn(spawn);
 				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
@@ -175,7 +173,7 @@ public class GameManager : Singleton<GameManager>
 
 				if (spawner.guaranteeSpawn)
 				{
-					ushort id = interactableIndices.Pop();
+					ushort id = interactableIndices.Dequeue();
 
 					if (spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
 
@@ -484,7 +482,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (IsServer)
 		{
-			ushort id = projectileIndices.Pop();
+			ushort id = projectileIndices.Dequeue();
 
 			Entity entity = entities[ThisPlayer];
 
@@ -519,7 +517,7 @@ public class GameManager : Singleton<GameManager>
 		else if (obj.id < 34) //Common Enemy
 		{
 			--enemyCount;
-			enemyIndices.Push(obj.id);
+			enemyIndices.Enqueue(obj.id);
 		}
 		else if (obj.id < 44) //Special Enemy
 		{
@@ -528,11 +526,11 @@ public class GameManager : Singleton<GameManager>
 		}
 		else if (obj.id < 10001)
 		{
-			interactableIndices.Push(obj.id);
+			interactableIndices.Enqueue(obj.id);
 		}
 		else if (obj.id < INVALID_ID)
 		{
-			projectileIndices.Push(obj.id);
+			projectileIndices.Enqueue(obj.id);
 		}
 
 		Packet packet = new Packet();
@@ -731,7 +729,7 @@ public class GameManager : Singleton<GameManager>
 		{
 			if (IsServer && packet.id == INVALID_ID)
 			{
-				ushort id = projectileIndices.Pop();
+				ushort id = projectileIndices.Dequeue();
 
 				Entity entity = entities[packet.spawn.spawn];
 
