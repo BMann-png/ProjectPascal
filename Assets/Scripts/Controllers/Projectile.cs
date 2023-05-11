@@ -64,7 +64,7 @@ public class Projectile : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (1 << collision.gameObject.layer == PLAYER_MASK.value) return;
+		if (collision.gameObject.layer == PLAYER_MASK.value) return;
 
         //TODO: Darts should stick if normal is within a range
         if (!hasDamage) return;
