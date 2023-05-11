@@ -1,11 +1,5 @@
-using Steamworks;
-using Steamworks.Data;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LobbyHandler : MonoBehaviour
 {
@@ -15,11 +9,12 @@ public class LobbyHandler : MonoBehaviour
 
 	private void Awake()
 	{
-		GameManager.Instance.OnJoinLobby(spawnPoints);
+		GameManager.Instance.SetupLobby(spawnPoints);
 	}
 
 	private void Update()
 	{
+		//TODO: This is brain dead
 		if (GameManager.Instance.IsServer)
 		{
 			startButton.SetActive(true);
@@ -34,9 +29,12 @@ public class LobbyHandler : MonoBehaviour
 
 	public void LeaveLobby()
 	{
-		GameManager.Instance.LeaveLobby();
-		NetworkManager.Instance.LeaveLobby();
-		GameManager.Instance.SceneLoader.LoadScene("MainMenu");
+		if (!GameManager.Instance.Fading)
+		{
+			GameManager.Instance.LeaveLobby();
+			NetworkManager.Instance.LeaveLobby();
+			GameManager.Instance.SceneLoader.LoadScene("MainMenu");
+		}
 	}
 
 	public void StartGame()
