@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
+	[SerializeField] private Animator animator;
 	private CharacterController controller;
 	private Entity entity;
 	private Health health;
@@ -35,6 +36,8 @@ public class PlayerController : MonoBehaviour
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
 
+		entity.animator = animator;
+
 		addedReviveTime = 6.0f / health.MaxTrauma;
 	}
 
@@ -55,6 +58,8 @@ public class PlayerController : MonoBehaviour
 				NetworkManager.Instance.SendMessage(action);
 
 				EndSprint();
+
+				animator.SetTrigger("Trip");
 			}
 
 			Packet packet = new Packet();
@@ -152,6 +157,8 @@ public class PlayerController : MonoBehaviour
 		packet.action = new ActionPacket(0);
 
 		NetworkManager.Instance.SendMessage(packet);
+
+		animator.SetTrigger("Sprint");
 	}
 
 	private void EndSprint()
@@ -171,6 +178,8 @@ public class PlayerController : MonoBehaviour
 		packet.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet);
+
+		animator.SetTrigger("StopSprint");
 	}
 
 	private void OnDown()
@@ -184,6 +193,8 @@ public class PlayerController : MonoBehaviour
 		NetworkManager.Instance.SendMessage(packet);
 
 		health.OnDown();
+
+		animator.SetTrigger("Down");
 	}
 
 	private void OnRevive()
@@ -199,6 +210,8 @@ public class PlayerController : MonoBehaviour
 		NetworkManager.Instance.SendMessage(packet);
 
 		health.Revive(20);
+
+		animator.SetTrigger("Revive");
 	}
 
 	public void StartRevive()
