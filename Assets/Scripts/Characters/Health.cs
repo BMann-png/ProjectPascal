@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
@@ -66,11 +64,14 @@ public class Health : MonoBehaviour
 	{
 		health -= damage;
 
-		Packet packet = new Packet();
-		packet.type = 2;
-		packet.id = entity.id;
-		packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
-		NetworkManager.Instance.SendMessage(packet);
+		if (entity.id < 4)
+		{
+			Packet packet = new Packet();
+			packet.type = 2;
+			packet.id = entity.id;
+			packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
+			NetworkManager.Instance.SendMessage(packet);
+		}
 	}
 
 	public void OnTrauma(float traumaDamage)
