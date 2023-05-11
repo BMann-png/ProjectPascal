@@ -7,6 +7,8 @@ public class LobbyHandler : MonoBehaviour
 	[SerializeField] private GameObject startButton;
 	[SerializeField] private GameObject levelSelect;
 
+	[SerializeField] private GameManager[] levels;
+
 	private void Awake()
 	{
 		GameManager.Instance.SetupLobby(spawnPoints);
