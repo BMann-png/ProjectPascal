@@ -2,7 +2,6 @@ using Steamworks;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -95,6 +94,19 @@ public struct OwnerPacket
 	public ulong steamId;
 }
 
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct JoinPacket
+{
+	public JoinPacket(ulong steamId)
+	{
+		this.steamId = steamId;
+		level = 255;
+	}
+
+	public ulong steamId;
+	public byte level;
+}
+
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
 public struct Packet
 {
@@ -107,14 +119,13 @@ public struct Packet
 	[FieldOffset(3)] public InventoryPacket inventory;
 	[FieldOffset(3)] public SpawnPacket spawn;
 	[FieldOffset(3)] public OwnerPacket owner;
+	[FieldOffset(3)] public JoinPacket join;
 }
 
 public class NetworkManager : Singleton<NetworkManager>
 {
 	public string PlayerName { get; private set; }
 	public SteamId PlayerId { get; private set; }
-
-	private string playerIdString;
 
 	private Pascal.SocketManager socketManager;
 	private Pascal.ConnectionManager connectionManager;
@@ -137,21 +148,20 @@ public class NetworkManager : Singleton<NetworkManager>
 			SteamClient.Init(480, true);
 			if (!SteamClient.IsValid)
 			{
-				throw new System.Exception("Client is not valid");
+				throw new Exception("Client is not valid");
 			}
 
 			message = Marshal.AllocHGlobal(22);
 
 			PlayerName = SteamClient.Name;
 			PlayerId = SteamClient.SteamId;
-			playerIdString = PlayerId.ToString();
 			activeLobbies = new List<Lobby>();
 
 			SteamNetworkingUtils.InitRelayNetworkAccess();
 
 			Debug.Log("Steam initialized: " + PlayerName);
 		}
-		catch (System.Exception e)
+		catch (Exception e)
 		{
 			Debug.Log(e.Message);
 		}
@@ -159,52 +169,10 @@ public class NetworkManager : Singleton<NetworkManager>
 
 	private void Start()
 	{
-		//SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreatedCallback;
-		//SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
-		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
-		SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
-		//SteamMatchmaking.OnChatMessage += OnChatMessageCallback;
-		//SteamMatchmaking.OnLobbyMemberDisconnected += OnLobbyMemberDisconnectedCallback;
 		SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
-		//SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequestedCallback;
-		//SteamApps.OnDlcInstalled += OnDlcInstalledCallback;
-		//SceneManager.sceneLoaded += OnSceneLoaded;
+		//SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
+		SteamNetworkingSockets.OnConnectionStatusChanged += OnConnectionStatusChanged;
 	}
-
-	#region Obsolete
-
-
-	//private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	//private void OnDlcInstalledCallback(AppId obj)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	///// <summary>
-	///// 
-	///// </summary>
-	///// <param name="lobby"></param>
-	///// <param name="id"></param>
-	//[Obsolete("This is deprecated, please use JoinSocketServer instead.")]
-	//async private void OnGameLobbyJoinRequestedCallback(Lobby lobby, SteamId id)
-	//{
-	//    RoomEnter joinedLobby = await lobby.Join();
-
-	//    if (joinedLobby == RoomEnter.Success)
-	//    {
-	//        currentLobby = lobby;
-	//        //AcceptP2P(OpponentSteamId);
-	//        SceneManager.LoadScene("Scene to load");
-	//    }
-	//    else
-	//    {
-	//        Debug.Log("failed to join lobby");
-	//    }
-	//}
 
 	private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
 	{
@@ -212,38 +180,18 @@ public class NetworkManager : Singleton<NetworkManager>
 		GameManager.Instance.PlayerLeft(friend);
 	}
 
-	//private void OnLobbyMemberDisconnectedCallback(Lobby lobby, Friend friend)
-	//{
-	//	if (friend.IsMe) { return; } //ignore yourself disconnected
-	//	FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
-	//}
-
-	//private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
+	private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
 	{
-		if (friend.IsMe) { return; } //ignore yourself joining
-		GameManager.Instance.PlayerJoined(friend);
+		if (info.State == ConnectionState.Connected)
+		{
+			Packet packet = new Packet();
+			packet.type = 9;
+			packet.id = GameManager.INVALID_ID;
+			packet.join = new JoinPacket(PlayerId);
+
+			Instance.SendMessage(packet);
+		}
 	}
-
-	//private void OnLobbyEnteredCallback(Lobby obj)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	//private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
-	//{
-	//    throw new NotImplementedException();
-	//}
-
-	//private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
-	//{
-	//    throw new NotImplementedException();
-	//}
-	#endregion
 
 	void Update()
 	{
@@ -307,23 +255,16 @@ public class NetworkManager : Singleton<NetworkManager>
 			activeLobbies.Clear();
 			activeLobbies = (await SteamMatchmaking.LobbyList.FilterDistanceFar().WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
 		}
-		catch (Exception e)
-		{
-			Debug.Log("Error fetching multiplayer lobbies");
-			Debug.Log(e.ToString());
-		}
+		catch { }
 
 		return activeLobbies;
 	}
 
-	public async Task<bool> JoinLobby(Lobby lobby)
+	public async void JoinLobby(Lobby lobby)
 	{
 		currentLobby = lobby;
-		RoomEnter result = await currentLobby.Join();
-
-		JoinSocketServer();
-
-		return result == RoomEnter.Success;
+		await currentLobby.Join();
+		JoinSocketServer(lobby);
 	}
 
 	public void LeaveLobby()
@@ -340,9 +281,9 @@ public class NetworkManager : Singleton<NetworkManager>
 		activeSocketConnection = true;
 	}
 
-	private void JoinSocketServer()
+	private void JoinSocketServer(Lobby lobby)
 	{
-		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(currentLobby.Owner.Id);
+		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
 		activeSocketServer = false;
 		activeSocketConnection = true;
 	}
@@ -393,6 +334,7 @@ public class NetworkManager : Singleton<NetworkManager>
 			case 6: size = 6; break;    //Game Spawn
 			case 7: size = 3; break;    //Game Despawn
 			case 8: size = 11; break;   //Owner Change
+			case 9: size = 12; break;   //Player Joined
 			default: return false;
 		}
 
@@ -425,21 +367,24 @@ public class NetworkManager : Singleton<NetworkManager>
 
 			switch (packet.type)
 			{
-				case 0: GameManager.Instance.ReceiveTransform(packet); break;	//Transform
-				case 1: GameManager.Instance.Action(packet); break;				//Action
-				case 2: GameManager.Instance.Health(packet); break;				//Health
-				case 3: GameManager.Instance.Inventory(packet); break;			//Inventory
-				case 4: GameManager.Instance.GameTrigger(packet); break;		//Game Trigger
-				case 5: GameManager.Instance.LoadLevel(packet); break;          //Scene Load
+				case 0: GameManager.Instance.ReceiveTransform(packet); break;   //Transform
+				case 1: GameManager.Instance.Action(packet); break;             //Action
+				case 2: GameManager.Instance.Health(packet); break;             //Health
+				case 3: GameManager.Instance.Inventory(packet); break;          //Inventory
+				case 4: GameManager.Instance.GameTrigger(packet); break;        //Game Trigger
+				case 5: GameManager.Instance.LoadLevel((byte)packet.id); break; //Scene Load
 				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
 				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
 				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
+				case 9: GameManager.Instance.PlayerJoined(packet); break;       //Player Joined
 				default: break;
 			}
 		}
 		catch
 		{
-			Debug.Log("Unable to process message from socket server");
+			Packet packet = Marshal.PtrToStructure<Packet>(message);
+
+			Debug.Log($"Packet Failed: ID: {packet.id}, Type: {packet.type}");
 		}
 	}
 
