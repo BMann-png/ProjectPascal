@@ -5,6 +5,10 @@ public class HUDManager : MonoBehaviour
 {
 	[SerializeField] private TMP_Text toolTip;
 	[SerializeField] private GameObject pauseMenu;
+	[SerializeField] private RectTransform progress;
+	[SerializeField] private RectTransform fill;
+
+	private float length;
 
 	public bool Paused { get; private set; }
 
@@ -13,6 +17,10 @@ public class HUDManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 		toolTip.gameObject.SetActive(false);
 		pauseMenu.SetActive(false);
+
+		length = progress.sizeDelta.x;
+		fill.gameObject.SetActive(false);
+		progress.gameObject.SetActive(false);
 	}
 
 	private void Update()
@@ -44,5 +52,20 @@ public class HUDManager : MonoBehaviour
     public void HideToolTip()
     {
         toolTip.gameObject.SetActive(false);
+	}
+
+	public void SetProgress(float percent)
+	{
+		if(percent == 0)
+		{
+			fill.gameObject.SetActive(false);
+			progress.gameObject.SetActive(false);
+		}
+		else
+		{
+			fill.gameObject.SetActive(true);
+			progress.gameObject.SetActive(true);
+			fill.sizeDelta = new Vector2(percent * length, fill.sizeDelta.y);
+		}
 	}
 }

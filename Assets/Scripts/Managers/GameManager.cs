@@ -680,6 +680,7 @@ public class GameManager : Singleton<GameManager>
 			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
 
 			Fading = true;
+			lobby.DisableUI();
 			StartCoroutine(SceneLoader.FadeToLoad(3.0f, level, StartLoad));
 		}
 	}

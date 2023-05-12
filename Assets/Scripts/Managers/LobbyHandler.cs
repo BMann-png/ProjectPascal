@@ -1,9 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LobbyHandler : MonoBehaviour
 {
 	[SerializeField] private Transform[] spawnPoints;
+	[SerializeField] private GameObject leaveButton;
 	[SerializeField] private GameObject startButton;
 	[SerializeField] private GameObject levelSelect;
 
@@ -67,5 +69,12 @@ public class LobbyHandler : MonoBehaviour
 		levels[level].SetActive(true);
 
 		levelSelect.GetComponent<TMP_Dropdown>().SetValueWithoutNotify(id);
+	}
+
+	public void DisableUI()
+	{
+		levelSelect.GetComponent<TMP_Dropdown>().interactable = false;
+		startButton.GetComponent<Button>().interactable = false;
+		leaveButton.GetComponent<Button>().interactable = false;
 	}
 }
