@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
 			else if(health.health == 0 && health.down == 0)
 			{
 				//TODO: Die
+				GameManager.Instance.AudioManager.StopCry();
 			}
 
 			movement = Vector3.down * 10.0f * Time.deltaTime;
