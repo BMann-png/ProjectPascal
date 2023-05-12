@@ -7,14 +7,17 @@ public class LobbyHandler : MonoBehaviour
 	[SerializeField] private GameObject startButton;
 	[SerializeField] private GameObject levelSelect;
 
+	[SerializeField] private GameObject[] levels;
+	private int level;
+
 	private void Awake()
 	{
-		GameManager.Instance.SetupLobby(spawnPoints);
-	}
+		level = 0;
+		levels[0].SetActive(true);
+		for (int i = 1; i < levels.Length; ++i) { levels[1].SetActive(false); }
 
-	private void Update()
-	{
-		//TODO: This is brain dead
+		GameManager.Instance.SetupLobby(spawnPoints);
+
 		if (GameManager.Instance.IsServer)
 		{
 			startButton.SetActive(true);
@@ -25,6 +28,12 @@ public class LobbyHandler : MonoBehaviour
 			startButton.SetActive(false);
 			levelSelect.SetActive(false);
 		}
+	}
+
+	public void SetOwner()
+	{
+		startButton.SetActive(true);
+		levelSelect.SetActive(true);
 	}
 
 	public void LeaveLobby()
@@ -44,6 +53,19 @@ public class LobbyHandler : MonoBehaviour
 
 	public void SelectLevel(TMP_Dropdown change)
 	{
+		levels[level].SetActive(false);
+		level = change.value;
+		levels[level].SetActive(true);
+
 		GameManager.Instance.SelectLevel(change);
+	}
+
+	public void SelectLevel(byte id)
+	{
+		levels[level].SetActive(false);
+		level = id;
+		levels[level].SetActive(true);
+
+		levelSelect.GetComponent<TMP_Dropdown>().SetValueWithoutNotify(id);
 	}
 }

@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 	private Entity entity;
 	private Health health;
 	private Vector3 movement;
+	private HUDManager hudManager;
 
 	private bool sprinting = false;
 	private bool tripped = false;
@@ -36,6 +37,8 @@ public class PlayerController : MonoBehaviour
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
+
+		hudManager = FindAnyObjectByType<HUDManager>();
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
 	}
@@ -84,7 +87,7 @@ public class PlayerController : MonoBehaviour
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 			reviveTimer -= Time.deltaTime;
 
-			if (!down)
+			if (!down && !hudManager.Paused)
 			{
 				float vertInput = Input.GetAxis("Vertical");
 				float HoriInput = Input.GetAxis("Horizontal");
@@ -127,20 +130,20 @@ public class PlayerController : MonoBehaviour
 			if (entity.weapon)
 			{
 				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
+ 
 
+        entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
 
-                entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
-
-                Packet packet = new Packet();
-                packet.type = 10;
-                packet.id = entity.id;
-                packet.rotation = new RotationPacket(x, y);
-
-                NetworkManager.Instance.SendMessage(packet);
-            }
+        Packet packet = new Packet();
+        packet.type = 10;
+        packet.id = entity.id;
+        packet.rotation = new RotationPacket(x, y);
+               
+        NetworkManager.Instance.SendMessage(packet);
+      }
 			
             Weapon weapon = hand.GetComponentInChildren<Weapon>();
-			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down)
+			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
 			{
 				weapon.IsFiring = true;
 				weapon.Shoot();
