@@ -13,11 +13,11 @@ GameObject:
   - component: {fileID: 6882036858200203644}
   - component: {fileID: 6882036858200203645}
   - component: {fileID: 8137960612420763310}
-  - component: {fileID: 4253807583030171502}
   - component: {fileID: 6882036858200203632}
+  - component: {fileID: -160492087663534930}
   - component: {fileID: 6882036858200203633}
-  m_Layer: 0
-  m_Name: Projectile
+  m_Layer: 8
+  m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,7 @@ CapsuleCollider:
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
-  m_Direction: 1
+  m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8137960612420763310
 Rigidbody:
@@ -118,7 +118,22 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &4253807583030171502
+--- !u!114 &6882036858200203632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6882036858200203642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4002e2c61bd45cd438d3fcf0fd60d186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 15
+  gravityModifier: -9.81
+  destoryOnCollide: 1
+--- !u!114 &-160492087663534930
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,18 +148,7 @@ MonoBehaviour:
   dealsDamage: 1
   damageOverTime: 0
   damage: 25
---- !u!114 &6882036858200203632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6882036858200203642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4002e2c61bd45cd438d3fcf0fd60d186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  trauma: 0
 --- !u!114 &6882036858200203633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,3 +164,5 @@ MonoBehaviour:
   id: 0
   shoot: {fileID: 0}
   model: {fileID: 0}
+  animator: {fileID: 0}
+  inLobby: 0
