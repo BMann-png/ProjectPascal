@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
+	[SerializeField] private GameObject hand;
 	private CharacterController controller;
 	private Entity entity;
 	private Health health;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
 	private bool sprinting = false;
 	private bool tripped = false;
+
 	private bool down = false;
 	private float sprintTimer = 0.0f;
 	private float sprintCooldownTimer = 0.0f;
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
 			Packet packet = new Packet();
 			packet.type = 0;
 			packet.id = entity.id;
-			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
+			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -125,16 +127,28 @@ public class PlayerController : MonoBehaviour
 
 			controller.Move(movement);
 
-			if (entity.shoot)
+			if (entity.weapon)
 			{
-				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
-			}
+				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
+ 
 
-			if (Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
+        entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
+
+        Packet packet = new Packet();
+        packet.type = 10;
+        packet.id = entity.id;
+        packet.rotation = new RotationPacket(x, y);
+               
+        NetworkManager.Instance.SendMessage(packet);
+      }
+			
+            Weapon weapon = hand.GetComponentInChildren<Weapon>();
+			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
 			{
-				Shoot();
+				weapon.IsFiring = true;
+				weapon.Shoot();
 			}
-		}
+        }
 	}
 
 	private void StartSprint()
@@ -220,10 +234,5 @@ public class PlayerController : MonoBehaviour
 			reviving = false;
 			reviveTimer = 0.0f;
 		}
-	}
-
-	private void Shoot()
-	{
-		GameManager.Instance.Shoot(0);
 	}
 }

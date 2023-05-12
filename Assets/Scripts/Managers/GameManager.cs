@@ -24,6 +24,7 @@ public class GameManager : Singleton<GameManager>
 	private Transform healthBarHolder;
 	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities = new Entity[65536];
+	public Entity[] Entities { get { return entities; } }
 	private Transform[] lobbySpawnpoints;
 	private Queue<ushort> enemyIndices = new Queue<ushort>(97);
 	private Queue<ushort> interactableIndices = new Queue<ushort>(9890);
@@ -481,11 +482,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void PickupItem(byte id)
 	{
-		//0 - sqirt gun
-		//1 - bubble gun
-		//2 - dart gun
-		//3 - gun
-		//4 - pacifier
+		//0, 1 - bubble gun
+		//0, 0 - dart gun
+		//1, 0 - squirt gun
+		//2, 0 - pacifier
 
 		//TODO: Not sure which weapons go in which slot
 		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(0, id);
@@ -496,22 +496,28 @@ public class GameManager : Singleton<GameManager>
 		entities[ThisPlayer].GetComponent<CharacterController>().Move(dir);
 	}
 
-	public void Shoot(byte type)
+	public void Shoot(Transform shoot, byte type, Vector2 variation, Entity owner)
 	{
 		if (IsServer)
 		{
 			ushort id = projectileIndices.Dequeue();
 
-			Entity entity = entities[ThisPlayer];
+			//Entity entity = entities[ThisPlayer];
 
-			entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
+
+			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
+
+			go.GetComponent<Damage>().Owner = owner.gameObject;
+
+            entities[id] = go.GetComponent<Entity>();
 			entities[id].id = id;
-			entities[id].GetComponent<Projectile>().SetSpeed(100);
+			entities[id].GetComponent<Projectile>().SetSpeed();
 
 			Packet packet = new Packet();
 			packet.id = id;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer, type);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -520,7 +526,7 @@ public class GameManager : Singleton<GameManager>
 			Packet packet = new Packet();
 			packet.id = INVALID_ID;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer, type);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -661,8 +667,11 @@ public class GameManager : Singleton<GameManager>
 
 	public void Inventory(Packet inventory)
 	{
+		entities[inventory.id].DisplayInventory(inventory.inventory);
+        entities[inventory.id].shoot = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
+		
 
-	}
+    }
 
 	public void GameTrigger(Packet packet)
 	{
@@ -758,9 +767,10 @@ public class GameManager : Singleton<GameManager>
 
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[id].id = id;
-				entities[id].GetComponent<Projectile>().SetSpeed(100);
+				entities[id].GetComponent<Damage>().Owner = entities[packet.spawn.spawn].gameObject;
+				entities[id].GetComponent<Projectile>().SetSpeed();
 
 				Packet newPacket = new Packet();
 				newPacket.id = id;
@@ -773,10 +783,15 @@ public class GameManager : Singleton<GameManager>
 			{
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 		}
+	}
+
+	public void RotateShoot(Packet packet)
+	{
+		entities[packet.id].weapon.eulerAngles = new Vector3(packet.rotation.xRot, packet.rotation.yRot); 
 	}
 
 	public void Despawn(Packet packet)
