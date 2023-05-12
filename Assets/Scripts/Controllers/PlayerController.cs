@@ -126,11 +126,11 @@ public class PlayerController : MonoBehaviour
 
 			if (entity.shoot)
 			{
-				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
+				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, transform.eulerAngles.y, 0.0f);
 			}
 			
             Weapon weapon = hand.GetComponentInChildren<Weapon>();
-			if (Input.GetKeyDown(KeyCode.Mouse0) && !down)
+			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down)
 			{
 				weapon.IsFiring = true;
 				weapon.Shoot();

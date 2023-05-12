@@ -62,52 +62,52 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (IsServer && !InLobby && playerLocations.Count == AlivePlayers)
 		{
-			if (enemyCount < MAX_ENEMY_COUNT)
-			{
-				ushort id = enemyIndices.Dequeue();
-				ushort spawn = level.RandomEnemySpawn();
-				Transform transform = level.GetEnemySpawn(spawn);
-				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].SetModel();
+			//if (enemyCount < MAX_ENEMY_COUNT)
+			//{
+			//	ushort id = enemyIndices.Dequeue();
+			//	ushort spawn = level.RandomEnemySpawn();
+			//	Transform transform = level.GetEnemySpawn(spawn);
+			//	entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+			//	entities[id].id = id;
+			//	entities[id].SetModel();
 
-				Packet packet = new Packet();
-				packet.id = id;
-				packet.type = 6;
-				packet.spawn = new SpawnPacket(spawn);
+			//	Packet packet = new Packet();
+			//	packet.id = id;
+			//	packet.type = 6;
+			//	packet.spawn = new SpawnPacket(spawn);
 
-				NetworkManager.Instance.SendMessage(packet);
+			//	NetworkManager.Instance.SendMessage(packet);
 
-				++enemyCount;
-			}
+			//	++enemyCount;
+			//}
 
-			if (specialCount < MAX_SPECIAL_COUNT)
-			{
-				ushort id;
-				while (true)
-				{
-					id = (ushort)Random.Range(0, 3); //TODO: Widen range to later specials
+			//if (specialCount < MAX_SPECIAL_COUNT)
+			//{
+			//	ushort id;
+			//	while (true)
+			//	{
+			//		id = (ushort)Random.Range(0, 3); //TODO: Widen range to later specials
 
-					if (specialsSpawned[id] == false) { break; }
-				}
+			//		if (specialsSpawned[id] == false) { break; }
+			//	}
 
-				specialsSpawned[id] = true;
-				id += 100;
-				ushort spawn = level.RandomEnemySpawn();
-				Transform transform = level.GetEnemySpawn(spawn);
-				entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].SetModel();
+			//	specialsSpawned[id] = true;
+			//	id += 100;
+			//	ushort spawn = level.RandomEnemySpawn();
+			//	Transform transform = level.GetEnemySpawn(spawn);
+			//	entities[id] = Instantiate(prefabManager.Enemy, transform.position, transform.rotation).GetComponent<Entity>();
+			//	entities[id].id = id;
+			//	entities[id].SetModel();
 
-				Packet packet = new Packet();
-				packet.id = id;
-				packet.type = 6;
-				packet.spawn = new SpawnPacket(spawn);
+			//	Packet packet = new Packet();
+			//	packet.id = id;
+			//	packet.type = 6;
+			//	packet.spawn = new SpawnPacket(spawn);
 
-				NetworkManager.Instance.SendMessage(packet);
+			//	NetworkManager.Instance.SendMessage(packet);
 
-				++specialCount;
-			}
+			//	++specialCount;
+			//}
 		}
 	}
 
@@ -478,7 +478,7 @@ public class GameManager : Singleton<GameManager>
 		entities[ThisPlayer].GetComponent<CharacterController>().Move(dir);
 	}
 
-	public void Shoot(Transform shoot, byte type, Vector2 variation)
+	public void Shoot(Transform shoot, byte type, Vector2 variation, GameObject owner)
 	{
 		if (IsServer)
 		{
@@ -488,7 +488,11 @@ public class GameManager : Singleton<GameManager>
 
 			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
 
-			entities[id] = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation).GetComponent<Entity>();
+			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
+
+			go.GetComponent<Damage>().Owner = owner;
+
+            entities[id] = go.GetComponent<Entity>();
 			entities[id].id = id;
 			entities[id].GetComponent<Projectile>().SetSpeed();
 

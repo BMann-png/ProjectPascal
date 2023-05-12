@@ -37,7 +37,7 @@ public class Weapon : MonoBehaviour
         Vector2 variation = Vector2.zero;
         for (int i = 0; i < numsOfShots; i++)
         {
-            GameManager.Instance.Shoot(shoot, type, variation);
+            GameManager.Instance.Shoot(shoot, type, variation, transform.parent.parent.gameObject);
             variation.x = Random.Range(-spreadAngle, spreadAngle + 1);
             variation.y = Random.Range(-spreadAngle, spreadAngle + 1);
             yield return new WaitForSeconds(delay);

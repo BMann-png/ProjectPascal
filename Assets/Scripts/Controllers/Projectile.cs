@@ -59,27 +59,11 @@ public class Projectile : MonoBehaviour
 
     public void SetSpeed()
 	{
-		rigidbody.AddForce(transform.up * speed, ForceMode.VelocityChange);
+		rigidbody.AddForce(transform.forward * speed, ForceMode.VelocityChange);
 	}
 	
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (1 << collision.gameObject.layer == PLAYER_MASK.value) return;
-
-        //TODO: Darts should stick if normal is within a range
-        if (!hasDamage) return;
-
-		if (damage.dealsDamage && 1 << collision.gameObject.layer == ENEMY_MASK.value)
-		{
-			//TODO: Deal damage
-			Destroy(gameObject);
-			damage.dealsDamage = false;
-		}
-		else if (1 << collision.gameObject.layer == GROUND_MASK.value)
-		{
-			damage.dealsDamage = false;
-		}
-
 		if (destoryOnCollide) 
 		{ 
             Destroy(gameObject);

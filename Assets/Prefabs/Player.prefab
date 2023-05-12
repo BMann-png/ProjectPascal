@@ -263,6 +263,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4249420564580342456}
     m_Modifications:
+    - target: {fileID: 1298453045960056545, guid: cd529566155a0be45a2295afc82ffa91, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1714632598187998691, guid: cd529566155a0be45a2295afc82ffa91, type: 3}
       propertyPath: m_Name
       value: BubbleGun
@@ -339,6 +343,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4249420564580342456}
     m_Modifications:
+    - target: {fileID: 1298453045960056545, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1714632598187998691, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_Name
       value: DartGun
@@ -415,6 +423,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4249420564580342456}
     m_Modifications:
+    - target: {fileID: 1298453045960056545, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1714632598187998691, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
       propertyPath: m_Name
       value: WaterGun
