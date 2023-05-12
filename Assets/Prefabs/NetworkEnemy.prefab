@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2570642374804220492}
   - component: {fileID: 5143000052480828670}
   - component: {fileID: 4758868484594245739}
+  - component: {fileID: 161555222727580336}
   m_Layer: 0
   m_Name: NetworkEnemy
   m_TagString: Untagged
@@ -80,3 +81,16 @@ MonoBehaviour:
   shoot: {fileID: 0}
   model: {fileID: 0}
   animator: {fileID: 0}
+  inLobby: 0
+--- !u!114 &161555222727580336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3679776979875976132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbe2c88e076d3814981e7254e192125d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

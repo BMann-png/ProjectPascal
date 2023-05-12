@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 
 public class Door : MonoBehaviour
@@ -107,7 +105,7 @@ public class Door : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if(other.tag == "Player")
+		if(other.tag == "Player" || other.tag == "NetPlayer")
 		{
 			++playerCount;
 
@@ -125,7 +123,7 @@ public class Door : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
-		if (other.tag == "Player")
+		if (other.tag == "Player" || other.tag == "NetPlayer")
 		{
 			--playerCount;
 		}

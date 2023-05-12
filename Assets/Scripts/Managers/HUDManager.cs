@@ -1,16 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class HUDManager : MonoBehaviour
 {
-    void Awake()
+    [SerializeField] private TMP_Text toolTip;
+
+    private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-    }
+		toolTip.gameObject.SetActive(false);
+	}
 
-    void Update()
+	public void SetTooltip(string text)
+	{
+		toolTip.gameObject.SetActive(true);
+		toolTip.text = text;
+	}
+
+    public void HideToolTip()
     {
-        
-    }
+        toolTip.gameObject.SetActive(false);
+	}
 }

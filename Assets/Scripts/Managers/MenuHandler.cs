@@ -1,7 +1,5 @@
 using Steamworks.Data;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
 
@@ -21,6 +19,9 @@ public class MenuHandler : MonoBehaviour
 		lobbyBrowser.SetActive(false);
 		settings.SetActive(false);
 		createLobby.SetActive(false);
+
+		//This is to initialize the GameManager
+		GameManager manager = GameManager.Instance;
 	}
 
 	public void GoToMainMenu()
@@ -84,8 +85,8 @@ public class MenuHandler : MonoBehaviour
 		int count = 0;
 		foreach (Lobby lobby in lobbies)
 		{
-			string name = lobby.GetData("Name");
-			if(name == null || name.Length == 0) { continue; }
+			string value = lobby.GetData("DaycareDescent");
+			if(value == null || value != "true") { continue; }
 
 			GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
 			go.GetComponent<LobbyEntry>().CreateLobby(lobby);

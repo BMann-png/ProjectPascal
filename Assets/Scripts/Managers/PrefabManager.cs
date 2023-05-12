@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
@@ -12,6 +10,12 @@ public class PrefabManager : MonoBehaviour
 
 	[SerializeField] private GameObject[] specialModels;
 	public GameObject[] SpecialModels { get => specialModels; }
+
+	[SerializeField] private GameObject[] pickups;
+	public GameObject[] Pickups { get => pickups; }
+
+	[SerializeField] private GameObject[] pushables;
+	public GameObject[] Pushables { get => pushables; }
 
 	[SerializeField] private GameObject player;
 	public GameObject Player { get => player; }
@@ -33,6 +37,9 @@ public class PrefabManager : MonoBehaviour
 
 	[SerializeField] private GameObject networkProjectile;
 	public GameObject NetworkProjectile { get => networkProjectile; }
+
+	[SerializeField] private GameObject healthBar;
+	public GameObject HealthBar { get => healthBar; }
 
 	private void Awake()
 	{

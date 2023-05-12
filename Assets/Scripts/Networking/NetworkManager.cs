@@ -3,7 +3,6 @@ using Steamworks.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -49,15 +48,16 @@ public struct ActionPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HealthPacket
 {
-    public HealthPacket(byte data)
-    {
-        this.data = data;
-    }
+	public HealthPacket(byte health, byte trauma, byte down)
+	{
+		this.health = health;
+		this.trauma = trauma;
+		this.down = down;
+	}
 
-    public byte data;
-    //FOR PLAYERS:
-    //0 - sprint
-    //1 - stop sprint
+	public byte health;
+	public byte trauma;
+	public byte down;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -76,12 +76,14 @@ public struct InventoryPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct SpawnPacket
 {
-    public SpawnPacket(byte spawn)
-    {
-        this.spawn = spawn;
-    }
+	public SpawnPacket(ushort spawn, byte type = 255)
+	{
+		this.spawn = spawn;
+		this.type = type;
+	}
 
-    public byte spawn;
+	public ushort spawn;
+	public byte type;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -95,18 +97,32 @@ public struct OwnerPacket
     public ulong steamId;
 }
 
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct JoinPacket
+{
+	public JoinPacket(ulong steamId)
+	{
+		this.steamId = steamId;
+		level = 255;
+	}
+
+	public ulong steamId;
+	public byte level;
+}
+
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
 public struct Packet
 {
-    [FieldOffset(0)] public byte type;
-    [FieldOffset(1)] public byte id;
+	[FieldOffset(0)] public byte type;
+	[FieldOffset(1)] public ushort id;
 
-    [FieldOffset(2)] public TransformPacket transform;
-    [FieldOffset(2)] public ActionPacket action;
-    [FieldOffset(2)] public HealthPacket health;
-    [FieldOffset(2)] public InventoryPacket inventory;
-    [FieldOffset(2)] public SpawnPacket spawn;
-    [FieldOffset(2)] public OwnerPacket owner;
+	[FieldOffset(3)] public TransformPacket transform;
+	[FieldOffset(3)] public ActionPacket action;
+	[FieldOffset(3)] public HealthPacket health;
+	[FieldOffset(3)] public InventoryPacket inventory;
+	[FieldOffset(3)] public SpawnPacket spawn;
+	[FieldOffset(3)] public OwnerPacket owner;
+	[FieldOffset(3)] public JoinPacket join;
 }
 #endregion
 
@@ -116,8 +132,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private const float TICK_TIME = 1.0f / TICK_RATE;
 
     private int tick;
-
-    public Queue<Packet> QueuedPackets = new Queue<Packet>();
 
     public string PlayerName { get; private set; }
     public SteamId PlayerId { get; private set; }
@@ -145,7 +159,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         try
         {
-            SteamClient.Init(480, true);
+            SteamClient.Init(2429260, true);
             if (!SteamClient.IsValid)
             {
                 throw new System.Exception("Client is not valid");
@@ -356,12 +370,12 @@ public class NetworkManager : Singleton<NetworkManager>
         activeSocketConnection = true;
     }
 
-    private void JoinSocketServer()
-    {
-        connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(currentLobby.Owner.Id);
-        activeSocketServer = false;
-        activeSocketConnection = true;
-    }
+	private void JoinSocketServer(Lobby lobby)
+	{
+		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
+		activeSocketServer = false;
+		activeSocketConnection = true;
+	}
 
     private void LeaveSocketServer()
     {
@@ -398,19 +412,20 @@ public class NetworkManager : Singleton<NetworkManager>
     public bool SendMessage(Packet packet)
     {
         int size;
-        switch (packet.type)
-        {
-            case 0: size = 22; break;   //Transform
-            case 1: size = 3; break;    //Action
-            case 2: size = 3; break;    //Health
-            case 3: size = 5; break;    //Inventory
-            case 4: size = 2; break;    //Game Trigger
-            case 5: size = 2; break;    //Scene Load
-            case 6: size = 3; break;    //Game Spawn
-            case 7: size = 2; break;    //Game Despawn
-            case 8: size = 10; break;   //Owner Change
-            default: return false;
-        }
+		switch (packet.type)
+		{
+			case 0: size = 23; break;   //Transform
+			case 1: size = 4; break;    //Action
+			case 2: size = 6; break;    //Health
+			case 3: size = 6; break;    //Inventory
+			case 4: size = 3; break;    //Game Trigger
+			case 5: size = 3; break;    //Scene Load
+			case 6: size = 6; break;    //Game Spawn
+			case 7: size = 3; break;    //Game Despawn
+			case 8: size = 11; break;   //Owner Change
+			case 9: size = 12; break;   //Player Joined
+			default: return false;
+		}
 
         try
         {
@@ -435,28 +450,32 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void ProcessMessage(IntPtr message, int dataBlockSize)
     {
-        try
-        {
-            Packet packet = Marshal.PtrToStructure<Packet>(message);
+		try
+		{
+			Packet packet = Marshal.PtrToStructure<Packet>(message);
 
-            switch (packet.type)
-            {
-                case 0: GameManager.Instance.ReceiveTransform(packet); break;   //Transform
-                case 1: GameManager.Instance.Action(packet); break;             //Action
-                case 2: GameManager.Instance.Health(packet); break;             //Health
-                case 3: GameManager.Instance.Inventory(packet); break;          //Inventory
-                case 4: GameManager.Instance.GameTrigger(packet); break;        //Game Trigger
-                case 5: GameManager.Instance.LoadLevel(packet); break;          //Scene Load
-                case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
-                case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
-                case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
-                default: break;
-            }
-        }
-        catch
-        {
-            Debug.Log("Unable to process message from socket server");
-        }
+			switch (packet.type)
+			{
+				case 0: GameManager.Instance.ReceiveTransform(packet); break;   //Transform
+				case 1: GameManager.Instance.Action(packet); break;             //Action
+				case 2: GameManager.Instance.Health(packet); break;             //Health
+				case 3: GameManager.Instance.Inventory(packet); break;          //Inventory
+				case 4: GameManager.Instance.GameTrigger(packet); break;        //Game Trigger
+				case 5: GameManager.Instance.LoadLevel((byte)packet.id); break; //Scene Load
+				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
+				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
+				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
+				case 9: GameManager.Instance.PlayerJoined(packet); break;       //Player Joined
+				default: break;
+			}
+		}
+		catch
+		{
+			Packet packet = Marshal.PtrToStructure<Packet>(message);
+
+			Debug.Log($"Packet Failed: ID: {packet.id}, Type: {packet.type}");
+		}
+
     }
 
     private void OnDisable()

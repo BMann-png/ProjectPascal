@@ -1,21 +1,19 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> primaryWeapons;
-    [SerializeField] private List<GameObject> secondaryWeapons;
+	[SerializeField] private List<GameObject> primaryWeapons;
+	[SerializeField] private List<GameObject> secondaryWeapons;
 	[SerializeField] private GameManager pacifier;
 
 	private Entity entity;
 
-    private byte primaryIndex = 255;
-    private byte secondaryIndex = 255;
+	private byte primaryIndex = 255;
+	private byte secondaryIndex = 255;
 
-    private bool hasPacifier = false;
+	private bool hasPacifier = false;
 	private bool hasMission = false;
 
 	private byte equippedItem = 0;
@@ -42,13 +40,13 @@ public class Inventory : MonoBehaviour
 			packet.id = entity.id;
 			packet.inventory = new InventoryPacket(equippedItem, 255);
 
-			NetworkManager.Instance.SendMessage(packet);
+			//NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
 	public void EquipWeapon(byte slot, byte id)
 	{
-		switch(slot)
+		switch (slot)
 		{
 			case 0: primaryIndex = id; break;
 			case 1: secondaryIndex = id; break;
@@ -61,7 +59,7 @@ public class Inventory : MonoBehaviour
 		packet.id = entity.id;
 		packet.inventory = new InventoryPacket(equippedItem, id);
 
-		NetworkManager.Instance.SendMessage(packet);
+		//NetworkManager.Instance.SendMessage(packet);
 	}
 
 	public void SetWeapon(byte slot, byte id)

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,26 +5,29 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class BaseAI : MonoBehaviour
 {
-	[SerializeField] Perception playerPerception;
-	[SerializeField] Perception allyPerception;
+	[SerializeField] private Perception playerPerception;
+	[SerializeField] private Perception allyPerception;
 
-	[SerializeField] float aiRange = 0.0f;
+	[SerializeField] private float aiRange = 0.0f;
 
-	BAIStateMachine stateMachine = new BAIStateMachine();
+	private BAIStateMachine stateMachine = new BAIStateMachine();
 
-	RefValue<float> distanceToPlayer = new RefValue<float>();
-	RefValue<bool> isAgitated = new RefValue<bool>();
-	RefValue<float> agentHealth = new RefValue<float>();
+	private RefValue<float> distanceToPlayer = new RefValue<float>();
+	private RefValue<bool> isAgitated = new RefValue<bool>();
+	private RefValue<float> agentHealth = new RefValue<float>();
 
 	[HideInInspector] public GameObject obsession;
 	[HideInInspector] public NavMeshAgent navMeshAgent;
 	[HideInInspector] public Entity entity;
+
+	private Health health;
 
 	private void Start()
 	{
 		obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count - 1)];
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		entity = GetComponent<Entity>();
+		health = GetComponent<Health>();
 
 		stateMachine.AddState(new AttackState(typeof(AttackState).Name, this));
 		stateMachine.AddState(new IdleState(typeof(IdleState).Name, this));
@@ -65,7 +66,7 @@ public class BaseAI : MonoBehaviour
 	{
 		distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
 
-		agentHealth.value = GetComponent<Health>().health;
+		agentHealth.value = health.health;
 
 		stateMachine.OnUpdate();
 	}
