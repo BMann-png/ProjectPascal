@@ -3,6 +3,7 @@ using Steamworks.Data;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static UnityEngine.UI.GridLayoutGroup;
 
 public class GameManager : Singleton<GameManager>
@@ -55,6 +56,8 @@ public class GameManager : Singleton<GameManager>
 		healthBarHolder = GameObject.FindGameObjectWithTag("HealthBars").transform;
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
+
+		DontDestroyOnLoad(FindAnyObjectByType<EventSystem>().gameObject);
 
 		for (ushort i = 4; i < 101; ++i) { enemyIndices.Enqueue(i); }
 		for (ushort i = 111; i < 10001; ++i) { interactableIndices.Enqueue(i); }
