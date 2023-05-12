@@ -24922,8 +24922,14 @@ MonoBehaviour:
   lobbyPlayer: {fileID: 7710098097953584521, guid: 2db0c05ceb18f8e45a2e3aeeeb5f76ea, type: 3}
   enemy: {fileID: 186295321234899170, guid: 514e832a0046b174f93bca97fdd70383, type: 3}
   networkEnemy: {fileID: 3679776979875976132, guid: 4d4811ffde64b5149af9da4fa70fd791, type: 3}
-  projectile: {fileID: 6882036858200203642, guid: 1cbd2021d6892ff44958521db52598e1, type: 3}
-  networkProjectile: {fileID: 2722898603441365745, guid: 761c7053444668f4ab0f9c8878b24883, type: 3}
+  projectiles:
+  - {fileID: 6882036858200203642, guid: 1cbd2021d6892ff44958521db52598e1, type: 3}
+  - {fileID: 6882036858200203642, guid: 4d56700dd20313b41b93b44948bd977b, type: 3}
+  - {fileID: 6882036858200203642, guid: 0c7b9bc60c01c5341b50adb8d788e86d, type: 3}
+  networkProjectiles:
+  - {fileID: 2722898603441365745, guid: 761c7053444668f4ab0f9c8878b24883, type: 3}
+  - {fileID: 6882036858200203642, guid: cdd4b5361300201409b4836bf1552f49, type: 3}
+  - {fileID: 2722898603441365745, guid: a699f0c6ace184f479e99a73550dd860, type: 3}
   healthBar: {fileID: 8246028373689675949, guid: 4da834b750230584787988a5271b7ad9, type: 3}
 --- !u!4 &1463087899
 Transform:

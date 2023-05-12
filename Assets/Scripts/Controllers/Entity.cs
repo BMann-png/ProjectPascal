@@ -28,6 +28,7 @@ public class Entity : MonoBehaviour
 	private float targetRotation;
 
 	public Transform shoot;
+	public Transform weapon;
 	[HideInInspector] public GameObject model;
 	[HideInInspector] public Animator animator;
 
@@ -78,9 +79,16 @@ public class Entity : MonoBehaviour
 		}
 	}
 
-	public void SetModel()
-	{
-		//TODO: Check for existing model
+    public void DisplayInventory(InventoryPacket ip)
+    {
+        Inventory inventory = GetComponent<Inventory>();
+
+        inventory.EquipWeapon(ip.slot, ip.data);
+    }
+
+    public void SetModel()
+    {
+        //TODO: Check for existing model
 
 		if (id < 4)
 		{
@@ -96,6 +104,7 @@ public class Entity : MonoBehaviour
 		}
 		else if (id < 20001) // Water Projectile
 		{
+			//model = Instantiate(GameManager.Instance.PrefabManager.);
 			//TODO: Set Model
 		}
 		else if (id < 20001) // Bubble Projectile
