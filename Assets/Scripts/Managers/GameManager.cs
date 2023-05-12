@@ -21,6 +21,7 @@ public class GameManager : Singleton<GameManager>
 	private Transform healthBarHolder;
 	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities = new Entity[65536];
+	public Entity[] Entities { get { return entities; } }
 	private Transform[] lobbySpawnpoints;
 	private Queue<ushort> enemyIndices = new Queue<ushort>(97);
 	private Queue<ushort> interactableIndices = new Queue<ushort>(9890);
@@ -478,7 +479,7 @@ public class GameManager : Singleton<GameManager>
 		entities[ThisPlayer].GetComponent<CharacterController>().Move(dir);
 	}
 
-	public void Shoot(Transform shoot, byte type, Vector2 variation, GameObject owner)
+	public void Shoot(Transform shoot, byte type, Vector2 variation, Entity owner)
 	{
 		if (IsServer)
 		{
@@ -490,7 +491,7 @@ public class GameManager : Singleton<GameManager>
 
 			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
 
-			go.GetComponent<Damage>().Owner = owner;
+			go.GetComponent<Damage>().Owner = owner.gameObject;
 
             entities[id] = go.GetComponent<Entity>();
 			entities[id].id = id;
