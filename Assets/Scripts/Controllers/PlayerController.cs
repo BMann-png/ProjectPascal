@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 	private Entity entity;
 	private Health health;
 	private Vector3 movement;
+	private HUDManager hudManager;
 
 	private bool sprinting = false;
 	private bool tripped = false;
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
+
+		hudManager = FindAnyObjectByType<HUDManager>();
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
 	}
@@ -82,7 +85,7 @@ public class PlayerController : MonoBehaviour
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 			reviveTimer -= Time.deltaTime;
 
-			if (!down)
+			if (!down && !hudManager.Paused)
 			{
 				float vertInput = Input.GetAxis("Vertical");
 				float HoriInput = Input.GetAxis("Horizontal");
@@ -127,7 +130,7 @@ public class PlayerController : MonoBehaviour
 				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
 			}
 
-			if (Input.GetKeyDown(KeyCode.Mouse0) && !down)
+			if (Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
 			{
 				Shoot();
 			}

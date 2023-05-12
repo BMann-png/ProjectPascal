@@ -3,6 +3,7 @@ using Steamworks.Data;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -15,6 +16,7 @@ public class GameManager : Singleton<GameManager>
 
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
+	public bool InGame { get; private set; }
 	private byte levelNum;
 
 	private Queue<ushort> unspawnedPlayers = new Queue<ushort>();
@@ -30,6 +32,7 @@ public class GameManager : Singleton<GameManager>
 	private int specialCount = 0;
 
 	private LevelManager level;
+	private LobbyHandler lobby;
 
 	private PrefabManager prefabManager;
 	public PrefabManager PrefabManager { get => prefabManager; }
@@ -116,6 +119,12 @@ public class GameManager : Singleton<GameManager>
 		if (IsServer && !Loading)
 		{
 			levelNum = (byte)change.value;
+
+			Packet packet = new Packet();
+			packet.type = 5;
+			packet.id = (byte)(levelNum + 100);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -164,6 +173,7 @@ public class GameManager : Singleton<GameManager>
 	private void FinishLoading()
 	{
 		loadedPlayers = 0;
+		InGame = true;
 
 		if (IsServer)
 		{
@@ -277,6 +287,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void SetupLobby(Transform[] spawnPoints)
 	{
+		lobby = FindFirstObjectByType<LobbyHandler>();
 		lobbySpawnpoints = spawnPoints;
 
 		if (IsServer)
@@ -312,6 +323,7 @@ public class GameManager : Singleton<GameManager>
 		if (data == 255)
 		{
 			InLobby = true;
+			this.lobby = FindFirstObjectByType<LobbyHandler>();
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (ushort i = 0; i < 4; ++i)
@@ -351,6 +363,7 @@ public class GameManager : Singleton<GameManager>
 		else if (data > 99)
 		{
 			InLobby = true;
+			this.lobby = FindFirstObjectByType<LobbyHandler>();
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (byte i = 0; i < 4; ++i)
@@ -445,6 +458,9 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
 				{
+					//TODO: new owner
+					//NetworkManager.Instance.currentLobby.Owner = Friend
+
 					Packet packet = new Packet();
 					packet.type = 7;
 					packet.owner = new OwnerPacket(steamId);
@@ -652,10 +668,17 @@ public class GameManager : Singleton<GameManager>
 
 	public void LoadLevel(byte level)
 	{
-		for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
+		if(level > 99)
+		{
+			//visually change lobby level
+		}
+		else
+		{
+			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
 
-		Fading = true;
-		StartCoroutine(SceneLoader.FadeToLoad(3.0f, level, StartLoad));
+			Fading = true;
+			StartCoroutine(SceneLoader.FadeToLoad(3.0f, level, StartLoad));
+		}
 	}
 
 	public void StartLoad(int i)
@@ -766,6 +789,7 @@ public class GameManager : Singleton<GameManager>
 		if (packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
 			IsServer = true;
+			lobby.SetOwner();
 		}
 	}
 }

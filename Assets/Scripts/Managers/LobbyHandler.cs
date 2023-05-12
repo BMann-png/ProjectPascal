@@ -30,6 +30,12 @@ public class LobbyHandler : MonoBehaviour
 		}
 	}
 
+	public void SetOwner()
+	{
+		startButton.SetActive(true);
+		levelSelect.SetActive(true);
+	}
+
 	public void LeaveLobby()
 	{
 		if (!GameManager.Instance.Fading)
@@ -52,5 +58,14 @@ public class LobbyHandler : MonoBehaviour
 		levels[level].SetActive(true);
 
 		GameManager.Instance.SelectLevel(change);
+	}
+
+	public void SelectLevel(byte id)
+	{
+		levels[level].SetActive(false);
+		level = id;
+		levels[level].SetActive(true);
+
+		levelSelect.GetComponent<TMP_Dropdown>().SetValueWithoutNotify(id);
 	}
 }
