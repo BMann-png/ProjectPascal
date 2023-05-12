@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  shoot: {fileID: 685621538145888886}
+  shoot: {fileID: 2574005249516294315}
+  weapon: {fileID: 685621538145888886}
   model: {fileID: 0}
   animator: {fileID: 0}
   inLobby: 0
@@ -280,6 +281,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
+--- !u!4 &2574005249516294315 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1298453045960056545, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
+  m_PrefabInstance: {fileID: 3584227627219668554}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2771443620549309353 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1714632598187998691, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}

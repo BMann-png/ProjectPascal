@@ -124,12 +124,12 @@ public class PlayerController : MonoBehaviour
 
 			controller.Move(movement);
 
-			if (entity.weapons)
+			if (entity.weapon)
 			{
 				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
 
 
-                entity.weapons.eulerAngles = new Vector3(x, y, 0.0f);
+                entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
 
                 Packet packet = new Packet();
                 packet.type = 10;
