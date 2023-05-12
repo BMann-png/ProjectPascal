@@ -13,6 +13,8 @@ public class AudioManager : MonoBehaviour
 	[SerializeField] private AudioClip[] faceNoises;
 	[SerializeField] private AudioClip[] mouthNoises;
 
+	[SerializeField] private AudioClip[] shots;
+
 	[SerializeField] private AudioSource source;
 	[SerializeField] private AudioSource crySource;
 
@@ -55,6 +57,11 @@ public class AudioManager : MonoBehaviour
 	public AudioClip GetMouth()
     {
 		return mouthNoises[Random.Range(0, mouthNoises.Length)];
+	}
+
+	public AudioClip GetShots()
+    {
+		return shots[Random.Range(0, shots.Length)];
 	}
 
 	public void StartCry()

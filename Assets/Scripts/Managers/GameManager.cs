@@ -510,6 +510,8 @@ public class GameManager : Singleton<GameManager>
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
+		audioManager.Source.PlayOneShot
+			(audioManager.GetShots());
 	}
 
 	public void Destroy(Entity obj)
