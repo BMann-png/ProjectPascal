@@ -742,6 +742,7 @@ public class GameManager : Singleton<GameManager>
 
 				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[id].id = id;
+				entities[id].GetComponent<Damage>().Owner = entities[packet.spawn.spawn].gameObject;
 				entities[id].GetComponent<Projectile>().SetSpeed();
 
 				Packet newPacket = new Packet();
