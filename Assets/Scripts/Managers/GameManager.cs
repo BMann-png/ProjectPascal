@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
 
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
+	public bool InGame { get; private set; }
 	private byte levelNum;
 
 	private Queue<ushort> unspawnedPlayers = new Queue<ushort>();
@@ -164,6 +165,7 @@ public class GameManager : Singleton<GameManager>
 	private void FinishLoading()
 	{
 		loadedPlayers = 0;
+		InGame = true;
 
 		if (IsServer)
 		{
