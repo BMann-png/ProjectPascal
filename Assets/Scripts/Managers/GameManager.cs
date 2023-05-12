@@ -651,7 +651,10 @@ public class GameManager : Singleton<GameManager>
 	public void Inventory(Packet inventory)
 	{
 		entities[inventory.id].DisplayInventory(inventory.inventory);
-	}
+        entities[inventory.id].shoot = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
+		
+
+    }
 
 	public void GameTrigger(Packet packet)
 	{
