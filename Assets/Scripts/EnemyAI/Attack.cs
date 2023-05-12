@@ -21,6 +21,8 @@ public class Attack : MonoBehaviour
 			{
 				if (health.down > 0) { health.OnDownDamage(3); }
 				else { health.OnDamaged(10); }
+				GameManager.Instance.AudioManager.Source.PlayOneShot
+					(GameManager.Instance.AudioManager.GetPunch());
 			}
 		}
 	}

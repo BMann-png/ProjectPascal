@@ -9,8 +9,12 @@ public class AudioManager : MonoBehaviour
 	[SerializeField] private AudioMixer mixer;
 
 	[SerializeField] private AudioClip[] feetNoises;
+	[SerializeField] private AudioClip[] handNoises;
+	[SerializeField] private AudioClip[] faceNoises;
+	[SerializeField] private AudioClip[] mouthNoises;
 
 	[SerializeField] private AudioSource source;
+	[SerializeField] private AudioSource crySource;
 
 	public AudioSource Source { get { return source; } }
 	private void Awake()
@@ -36,5 +40,30 @@ public class AudioManager : MonoBehaviour
 	public AudioClip GetFootStep()
     {
 		return feetNoises[Random.Range(0, feetNoises.Length)];
+    }
+
+	public AudioClip GetTrip()
+    {
+		return faceNoises[Random.Range(0, faceNoises.Length)];
+    }
+
+	public AudioClip GetPunch()
+    {
+		return handNoises[Random.Range(0, handNoises.Length)];
+	}
+
+	public AudioClip GetMouth()
+    {
+		return mouthNoises[Random.Range(0, mouthNoises.Length)];
+	}
+
+	public void StartCry()
+    {
+		crySource.Play();
+    }
+
+	public void StopCry()
+    {
+		crySource.Stop();
     }
 }

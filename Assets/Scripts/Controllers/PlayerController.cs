@@ -195,6 +195,7 @@ public class PlayerController : MonoBehaviour
 		health.OnDown();
 
 		animator.SetTrigger("Down");
+		GameManager.Instance.AudioManager.StartCry();
 	}
 
 	private void OnRevive()
@@ -212,6 +213,7 @@ public class PlayerController : MonoBehaviour
 		health.Revive(20);
 
 		animator.SetTrigger("Revive");
+		GameManager.Instance.AudioManager.StopCry();
 	}
 
 	public void StartRevive()

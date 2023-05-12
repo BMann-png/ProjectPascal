@@ -19,4 +19,10 @@ public class AnimationEvents : MonoBehaviour
 		GameManager.Instance.AudioManager.Source.PlayOneShot
 			(GameManager.Instance.AudioManager.GetFootStep());
     }
+
+	public void OnTrip()
+    {
+		GameManager.Instance.AudioManager.Source.PlayOneShot
+			(GameManager.Instance.AudioManager.GetTrip());
+    }
 }
