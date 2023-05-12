@@ -27,7 +27,7 @@ public class Entity : MonoBehaviour
 	private Vector3 targetPosition;
 	private float targetRotation;
 
-	public Transform shoot;
+	public Transform weapons;
 	[HideInInspector] public GameObject model;
 	[HideInInspector] public Animator animator;
 
@@ -71,9 +71,9 @@ public class Entity : MonoBehaviour
 		{
 			transform.eulerAngles = new Vector3(0.0f, tp.yRot, 0.0f); //TODO: Lerp smoothly
 
-			if (shoot != null)
+			if (weapons != null)
 			{
-				shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
+				weapons.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
 			}
 		}
 	}

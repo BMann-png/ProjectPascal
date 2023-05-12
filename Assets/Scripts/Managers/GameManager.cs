@@ -651,7 +651,7 @@ public class GameManager : Singleton<GameManager>
 	public void Inventory(Packet inventory)
 	{
 		entities[inventory.id].DisplayInventory(inventory.inventory);
-        entities[inventory.id].shoot = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
+        entities[inventory.id].weapons = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
 		
 
     }
@@ -743,7 +743,7 @@ public class GameManager : Singleton<GameManager>
 
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.weapons.position, entity.weapons.rotation).GetComponent<Entity>();
 				entities[id].id = id;
 				entities[id].GetComponent<Damage>().Owner = entities[packet.spawn.spawn].gameObject;
 				entities[id].GetComponent<Projectile>().SetSpeed();
@@ -759,10 +759,15 @@ public class GameManager : Singleton<GameManager>
 			{
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[packet.spawn.type], entity.weapons.position, entity.weapons.rotation).GetComponent<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 		}
+	}
+
+	public void RotateShoot(Packet packet)
+	{
+		entities[packet.id].weapons.eulerAngles = new Vector3(packet.rotation.xRot, packet.rotation.yRot); 
 	}
 
 	public void Despawn(Packet packet)

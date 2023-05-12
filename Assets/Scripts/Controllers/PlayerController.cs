@@ -124,10 +124,20 @@ public class PlayerController : MonoBehaviour
 
 			controller.Move(movement);
 
-			/*if (entity.shoot)
+			if (entity.weapons)
 			{
-				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, transform.eulerAngles.y, 0.0f);
-			}*/
+				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
+
+
+                entity.weapons.eulerAngles = new Vector3(x, y, 0.0f);
+
+                Packet packet = new Packet();
+                packet.type = 10;
+                packet.id = entity.id;
+                packet.rotation = new RotationPacket(x, y);
+
+                NetworkManager.Instance.SendMessage(packet);
+            }
 			
             Weapon weapon = hand.GetComponentInChildren<Weapon>();
 			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down)
