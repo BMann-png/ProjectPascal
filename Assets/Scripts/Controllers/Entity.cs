@@ -1,4 +1,4 @@
-using UnityEngine;
+    using UnityEngine;
 
 //ID 0-3 - player
 //ID 4-100 - common enemy
@@ -27,9 +27,10 @@ public class Entity : MonoBehaviour
     private Vector3 targetPosition;
     private float targetRotation;
 
-    public Transform shoot;
-    [HideInInspector] public GameObject model;
-    [HideInInspector] public Animator animator;
+	public Transform shoot;
+	public Transform weapon;
+	[HideInInspector] public GameObject model;
+	[HideInInspector] public Animator animator;
 
     [SerializeField] bool inLobby = false;
     private bool quitting = false;
@@ -76,6 +77,13 @@ public class Entity : MonoBehaviour
                 shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
             }
         }
+    }
+
+    public void DisplayInventory(InventoryPacket ip)
+    {
+        Inventory inventory = GetComponent<Inventory>();
+
+        inventory.EquipWeapon(ip.slot, ip.data);
     }
 
     public void SetModel()

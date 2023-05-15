@@ -147,4 +147,12 @@ public class Settings : MonoBehaviour
 			sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
 		}
 	}
+
+	public void ExitGame()
+	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#endif
+		Application.Quit();
+	}
 }

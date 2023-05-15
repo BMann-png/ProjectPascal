@@ -3,6 +3,8 @@ using Steamworks.Data;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -15,12 +17,14 @@ public class GameManager : Singleton<GameManager>
 
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
+	public bool InGame { get; private set; }
 	private byte levelNum;
 
 	private Queue<ushort> unspawnedPlayers = new Queue<ushort>();
 	private Transform healthBarHolder;
 	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities = new Entity[65536];
+	public Entity[] Entities { get { return entities; } }
 	private Transform[] lobbySpawnpoints;
 	private Queue<ushort> enemyIndices = new Queue<ushort>(97);
 	private Queue<ushort> interactableIndices = new Queue<ushort>(9890);
@@ -30,6 +34,7 @@ public class GameManager : Singleton<GameManager>
 	private int specialCount = 0;
 
 	private LevelManager level;
+	private LobbyHandler lobby;
 
 	private PrefabManager prefabManager;
     public PrefabManager PrefabManager { get => prefabManager; }
@@ -56,6 +61,8 @@ public class GameManager : Singleton<GameManager>
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		audioManager = FindFirstObjectByType<AudioManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
+
+		DontDestroyOnLoad(FindAnyObjectByType<EventSystem>().gameObject);
 
 		for (ushort i = 4; i < 101; ++i) { enemyIndices.Enqueue(i); }
 		for (ushort i = 111; i < 10001; ++i) { interactableIndices.Enqueue(i); }
@@ -120,6 +127,12 @@ public class GameManager : Singleton<GameManager>
 		if (IsServer && !Loading)
 		{
 			levelNum = (byte)change.value;
+
+			Packet packet = new Packet();
+			packet.type = 5;
+			packet.id = (byte)(levelNum + 100);
+
+			NetworkManager.Instance.SendMessage(packet);
 		}
 	}
 
@@ -168,6 +181,7 @@ public class GameManager : Singleton<GameManager>
 	private void FinishLoading()
 	{
 		loadedPlayers = 0;
+		InGame = true;
 
 		if (IsServer)
 		{
@@ -281,6 +295,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void SetupLobby(Transform[] spawnPoints)
 	{
+		lobby = FindFirstObjectByType<LobbyHandler>();
 		lobbySpawnpoints = spawnPoints;
 
 		if (IsServer)
@@ -316,6 +331,7 @@ public class GameManager : Singleton<GameManager>
 		if (data == 255)
 		{
 			InLobby = true;
+			this.lobby = FindFirstObjectByType<LobbyHandler>();
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (ushort i = 0; i < 4; ++i)
@@ -355,6 +371,7 @@ public class GameManager : Singleton<GameManager>
 		else if (data > 99)
 		{
 			InLobby = true;
+			this.lobby = FindFirstObjectByType<LobbyHandler>();
 			IEnumerable<Friend> members = lobby.Members;
 
 			for (byte i = 0; i < 4; ++i)
@@ -397,7 +414,7 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	public void AddPlayer(ushort id)
+	public void AddPlayer(ushort id, ulong steamId)
 	{
 		Transform transform;
 		if (InLobby)
@@ -409,7 +426,6 @@ public class GameManager : Singleton<GameManager>
 
 			Lobby lobby = NetworkManager.Instance.currentLobby;
 			IEnumerable<Friend> members = lobby.Members;
-			ulong steamId = ulong.Parse(lobby.GetData("Player" + id));
 
 			string steamName = "";
 			foreach (Friend f in members)
@@ -450,6 +466,9 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId != 0 && steamId != NetworkManager.Instance.PlayerId.Value)
 				{
+					//TODO: new owner
+					//NetworkManager.Instance.currentLobby.Owner = Friend
+
 					Packet packet = new Packet();
 					packet.type = 7;
 					packet.owner = new OwnerPacket(steamId);
@@ -467,11 +486,10 @@ public class GameManager : Singleton<GameManager>
 
 	public void PickupItem(byte id)
 	{
-		//0 - sqirt gun
-		//1 - bubble gun
-		//2 - dart gun
-		//3 - gun
-		//4 - pacifier
+		//0, 1 - bubble gun
+		//0, 0 - dart gun
+		//1, 0 - squirt gun
+		//2, 0 - pacifier
 
 		//TODO: Not sure which weapons go in which slot
 		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(0, id);
@@ -482,22 +500,28 @@ public class GameManager : Singleton<GameManager>
 		entities[ThisPlayer].GetComponent<CharacterController>().Move(dir);
 	}
 
-	public void Shoot(byte type)
+	public void Shoot(Transform shoot, byte type, Vector2 variation, Entity owner)
 	{
 		if (IsServer)
 		{
 			ushort id = projectileIndices.Dequeue();
 
-			Entity entity = entities[ThisPlayer];
+			//Entity entity = entities[ThisPlayer];
 
-			entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
+
+			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
+
+			go.GetComponent<Damage>().Owner = owner.gameObject;
+
+            entities[id] = go.GetComponent<Entity>();
 			entities[id].id = id;
-			entities[id].GetComponent<Projectile>().SetSpeed(100);
+			entities[id].GetComponent<Projectile>().SetSpeed();
 
 			Packet packet = new Packet();
 			packet.id = id;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer, type);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -506,7 +530,7 @@ public class GameManager : Singleton<GameManager>
 			Packet packet = new Packet();
 			packet.id = INVALID_ID;
 			packet.type = 6;
-			packet.spawn = new SpawnPacket(ThisPlayer);
+			packet.spawn = new SpawnPacket(ThisPlayer, type);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -574,7 +598,7 @@ public class GameManager : Singleton<GameManager>
 						else { packet.join.level = 255; }
 
 						NetworkManager.Instance.SendMessage(packet);
-						AddPlayer(i);
+						AddPlayer(i, packet.join.steamId);
 
 						break;
 					}
@@ -594,7 +618,7 @@ public class GameManager : Singleton<GameManager>
 			else
 			{
 				++PlayerCount;
-				AddPlayer(packet.id);
+				AddPlayer(packet.id, packet.join.steamId);
 			}
 		}
 	}
@@ -649,8 +673,11 @@ public class GameManager : Singleton<GameManager>
 
 	public void Inventory(Packet inventory)
 	{
+		entities[inventory.id].DisplayInventory(inventory.inventory);
+        entities[inventory.id].shoot = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
+		
 
-	}
+    }
 
 	public void GameTrigger(Packet packet)
 	{
@@ -659,10 +686,17 @@ public class GameManager : Singleton<GameManager>
 
 	public void LoadLevel(byte level)
 	{
-		for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
+		if(level > 99)
+		{
+			//visually change lobby level
+		}
+		else
+		{
+			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
 
-		Fading = true;
-		StartCoroutine(SceneLoader.FadeToLoad(3.0f, level, StartLoad));
+			Fading = true;
+			StartCoroutine(SceneLoader.FadeToLoad(3.0f, level, StartLoad));
+		}
 	}
 
 	public void StartLoad(int i)
@@ -739,9 +773,10 @@ public class GameManager : Singleton<GameManager>
 
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[id] = Instantiate(prefabManager.Projectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[id].id = id;
-				entities[id].GetComponent<Projectile>().SetSpeed(100);
+				entities[id].GetComponent<Damage>().Owner = entities[packet.spawn.spawn].gameObject;
+				entities[id].GetComponent<Projectile>().SetSpeed();
 
 				Packet newPacket = new Packet();
 				newPacket.id = id;
@@ -754,10 +789,15 @@ public class GameManager : Singleton<GameManager>
 			{
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[packet.id] = Instantiate(prefabManager.NetworkProjectile, entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.NetworkProjectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
 				entities[packet.id].id = packet.id;
 			}
 		}
+	}
+
+	public void RotateShoot(Packet packet)
+	{
+		entities[packet.id].weapon.eulerAngles = new Vector3(packet.rotation.xRot, packet.rotation.yRot); 
 	}
 
 	public void Despawn(Packet packet)
@@ -773,6 +813,7 @@ public class GameManager : Singleton<GameManager>
 		if (packet.owner.steamId == NetworkManager.Instance.PlayerId.Value)
 		{
 			IsServer = true;
+			lobby.SetOwner();
 		}
 	}
 }
