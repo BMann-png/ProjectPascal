@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -486,13 +485,28 @@ public class GameManager : Singleton<GameManager>
 
 	public void PickupItem(byte id)
 	{
-		//0, 1 - bubble gun
-		//0, 0 - dart gun
-		//1, 0 - squirt gun
-		//2, 0 - pacifier
+		byte slot = 0;
+		byte type = 0;
 
-		//TODO: Not sure which weapons go in which slot
-		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(0, id);
+		switch(id)
+		{
+			case 0: slot = 0; type = 0; break;
+			case 1: slot = 0; type = 1; break;
+			case 2: slot = 1; type = 0; break;
+			case 3: slot = 1; type = 1; break;
+			case 4: slot = 2; type = 1; break;
+			case 5: slot = 3; type = 1; break;
+			default: break;
+		}
+
+		//0, 0 - dart gun
+		//0, 1 - bubble gun
+		//1, 0 - squirt gun
+		//1, 1 - ball gun
+		//2, 1 - pacifier
+		//2, 1 - mission
+
+		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(slot, type);
 	}
 
 	public void PushPlayer(Vector3 dir)

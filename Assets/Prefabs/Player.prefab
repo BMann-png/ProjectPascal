@@ -218,6 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 4249420563881191924}
+  animator: {fileID: 0}
   hand: {fileID: 4249420564580342457}
 --- !u!114 &6991602016641133472
 MonoBehaviour:
@@ -237,7 +238,7 @@ MonoBehaviour:
   secondaryWeapons:
   - {fileID: 5936406216322940931}
   pacifier: {fileID: 0}
-  primaryIndex: 1
+  primaryIndex: 255
   secondaryIndex: 0
 --- !u!114 &5018046254760015926
 MonoBehaviour:
@@ -405,6 +406,10 @@ PrefabInstance:
     - target: {fileID: 1714632598187998691, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
       propertyPath: m_Name
       value: WaterGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714632598187998691, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: 666a96b12b69469489b608c0b2f8d92b, type: 3}
       propertyPath: m_RootOrder
