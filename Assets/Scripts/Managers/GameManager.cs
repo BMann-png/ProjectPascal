@@ -37,7 +37,10 @@ public class GameManager : Singleton<GameManager>
 	private LobbyHandler lobby;
 
 	private PrefabManager prefabManager;
-	public PrefabManager PrefabManager { get => prefabManager; }
+    public PrefabManager PrefabManager { get => prefabManager; }
+
+    private AudioManager audioManager;
+	public AudioManager AudioManager { get => audioManager; }
 
 	private SceneLoader sceneLoader;
 	public SceneLoader SceneLoader { get => sceneLoader; }
@@ -56,6 +59,7 @@ public class GameManager : Singleton<GameManager>
 
 		healthBarHolder = GameObject.FindGameObjectWithTag("HealthBars").transform;
 		prefabManager = FindFirstObjectByType<PrefabManager>();
+		audioManager = FindFirstObjectByType<AudioManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
 
 		DontDestroyOnLoad(FindAnyObjectByType<EventSystem>().gameObject);
@@ -530,6 +534,8 @@ public class GameManager : Singleton<GameManager>
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
+		audioManager.Source.PlayOneShot
+			(audioManager.GetShots());
 	}
 
 	public void Destroy(Entity obj)
