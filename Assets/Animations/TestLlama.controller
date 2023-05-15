@@ -10,8 +10,8 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: -5505630858449070141}
-    m_Position: {x: 430, y: 70, z: 0}
+    m_State: {fileID: -1060659290830684241}
+    m_Position: {x: 360, y: 110, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -21,15 +21,15 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -5505630858449070141}
---- !u!1102 &-5505630858449070141
+  m_DefaultState: {fileID: -1060659290830684241}
+--- !u!1102 &-1060659290830684241
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Llama Run
+  m_Name: Llama Death
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -42,7 +42,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 5311aeb85c5dee440858c03cd56fad44, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: 98ae8c2ddffd8cb47a7fa15aa30ce112, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
