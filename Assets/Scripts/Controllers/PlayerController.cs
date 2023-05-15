@@ -14,13 +14,17 @@ public class PlayerController : MonoBehaviour
 	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
+	[SerializeField] private Animator animator;
+	[SerializeField] private GameObject hand;
 	private CharacterController controller;
 	private Entity entity;
 	private Health health;
 	private Vector3 movement;
+	private HUDManager hudManager;
 
 	private bool sprinting = false;
 	private bool tripped = false;
+
 	private bool down = false;
 	private float sprintTimer = 0.0f;
 	private float sprintCooldownTimer = 0.0f;
@@ -34,6 +38,10 @@ public class PlayerController : MonoBehaviour
 		controller = GetComponent<CharacterController>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
+
+		
+		hudManager = FindAnyObjectByType<HUDManager>();
+		entity.animator = animator;
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
 	}
@@ -55,12 +63,14 @@ public class PlayerController : MonoBehaviour
 				NetworkManager.Instance.SendMessage(action);
 
 				EndSprint();
+
+				animator.SetTrigger("Trip");
 			}
 
 			Packet packet = new Packet();
 			packet.type = 0;
 			packet.id = entity.id;
-			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
+			packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
@@ -77,12 +87,13 @@ public class PlayerController : MonoBehaviour
 			else if(health.health == 0 && health.down == 0)
 			{
 				//TODO: Die
+				GameManager.Instance.AudioManager.StopCry();
 			}
 
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 			reviveTimer -= Time.deltaTime;
 
-			if (!down)
+			if (!down && !hudManager.Paused)
 			{
 				float vertInput = Input.GetAxis("Vertical");
 				float HoriInput = Input.GetAxis("Horizontal");
@@ -122,16 +133,28 @@ public class PlayerController : MonoBehaviour
 
 			controller.Move(movement);
 
-			if (entity.shoot)
+			if (entity.weapon)
 			{
-				entity.shoot.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x + 90.0f, transform.eulerAngles.y, 0.0f);
-			}
+				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
+ 
 
-			if (Input.GetKeyDown(KeyCode.Mouse0) && !down)
+        entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
+
+        Packet packet = new Packet();
+        packet.type = 10;
+        packet.id = entity.id;
+        packet.rotation = new RotationPacket(x, y);
+               
+        NetworkManager.Instance.SendMessage(packet);
+      }
+			
+            Weapon weapon = hand.GetComponentInChildren<Weapon>();
+			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
 			{
-				Shoot();
+				weapon.IsFiring = true;
+				weapon.Shoot();
 			}
-		}
+        }
 	}
 
 	private void StartSprint()
@@ -152,6 +175,8 @@ public class PlayerController : MonoBehaviour
 		packet.action = new ActionPacket(0);
 
 		NetworkManager.Instance.SendMessage(packet);
+
+		animator.SetTrigger("Sprint");
 	}
 
 	private void EndSprint()
@@ -171,6 +196,8 @@ public class PlayerController : MonoBehaviour
 		packet.action = new ActionPacket(1);
 
 		NetworkManager.Instance.SendMessage(packet);
+
+		animator.SetTrigger("StopSprint");
 	}
 
 	private void OnDown()
@@ -184,6 +211,9 @@ public class PlayerController : MonoBehaviour
 		NetworkManager.Instance.SendMessage(packet);
 
 		health.OnDown();
+
+		animator.SetTrigger("Down");
+		GameManager.Instance.AudioManager.StartCry();
 	}
 
 	private void OnRevive()
@@ -199,6 +229,9 @@ public class PlayerController : MonoBehaviour
 		NetworkManager.Instance.SendMessage(packet);
 
 		health.Revive(20);
+
+		animator.SetTrigger("Revive");
+		GameManager.Instance.AudioManager.StopCry();
 	}
 
 	public void StartRevive()
@@ -217,10 +250,5 @@ public class PlayerController : MonoBehaviour
 			reviving = false;
 			reviveTimer = 0.0f;
 		}
-	}
-
-	private void Shoot()
-	{
-		GameManager.Instance.Shoot(0);
 	}
 }

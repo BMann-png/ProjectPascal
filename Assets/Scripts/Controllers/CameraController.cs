@@ -6,9 +6,11 @@ public class CameraController : MonoBehaviour
 	private static readonly float MAX_ANGLE = 90.0f;
 
 	private Transform character;
+	private HUDManager hudManager;
 
 	private void Start()
 	{
+		hudManager = FindFirstObjectByType<HUDManager>();
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 		character = transform.parent;
@@ -16,7 +18,7 @@ public class CameraController : MonoBehaviour
 
 	private void Update()
 	{
-		if (!GameManager.Instance.Loading)
+		if (!GameManager.Instance.Loading && !hudManager.Paused)
 		{
 			float sensitivity = PlayerPrefs.GetFloat("Sensitivity");
 
