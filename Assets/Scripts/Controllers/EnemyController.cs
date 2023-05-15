@@ -25,7 +25,7 @@ public class EnemyController : MonoBehaviour, INetworked
 		}
 	}
 
-    public void NetworkUpdate()
+    public void Tick()
     {
         if (NetPrevPos != transform.position && Mathf.Abs((transform.position - NetPrevPos).magnitude) > .5)
         {

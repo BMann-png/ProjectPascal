@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour, INetworked
 
     private void Awake()
     {
-        NetworkManager.Instance.tickUpdate += NetworkUpdate;
+        NetworkManager.Instance.tickUpdate += Tick;
         controller = GetComponent<CharacterController>();
         entity = GetComponent<Entity>();
         health = GetComponent<Health>();
@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour, INetworked
         }
     }
 
-    public void NetworkUpdate()
+    public void Tick()
     {
         Packet packet;
         if (NetPrevPos != transform.position && Mathf.Abs((transform.position - NetPrevPos).magnitude) > .5)
@@ -246,7 +246,7 @@ public class PlayerController : MonoBehaviour, INetworked
         }
     }
 
-    void INetworked.NetworkUpdate()
+    void INetworked.Tick()
     {
         throw new System.NotImplementedException();
     }

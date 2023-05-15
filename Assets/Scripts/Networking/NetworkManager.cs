@@ -48,16 +48,16 @@ public struct ActionPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HealthPacket
 {
-	public HealthPacket(byte health, byte trauma, byte down)
-	{
-		this.health = health;
-		this.trauma = trauma;
-		this.down = down;
-	}
+    public HealthPacket(byte health, byte trauma, byte down)
+    {
+        this.health = health;
+        this.trauma = trauma;
+        this.down = down;
+    }
 
-	public byte health;
-	public byte trauma;
-	public byte down;
+    public byte health;
+    public byte trauma;
+    public byte down;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -76,14 +76,14 @@ public struct InventoryPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct SpawnPacket
 {
-	public SpawnPacket(ushort spawn, byte type = 255)
-	{
-		this.spawn = spawn;
-		this.type = type;
-	}
+    public SpawnPacket(ushort spawn, byte type = 255)
+    {
+        this.spawn = spawn;
+        this.type = type;
+    }
 
-	public ushort spawn;
-	public byte type;
+    public ushort spawn;
+    public byte type;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -100,29 +100,29 @@ public struct OwnerPacket
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct JoinPacket
 {
-	public JoinPacket(ulong steamId)
-	{
-		this.steamId = steamId;
-		level = 255;
-	}
+    public JoinPacket(ulong steamId)
+    {
+        this.steamId = steamId;
+        level = 255;
+    }
 
-	public ulong steamId;
-	public byte level;
+    public ulong steamId;
+    public byte level;
 }
 
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
 public struct Packet
 {
-	[FieldOffset(0)] public byte type;
-	[FieldOffset(1)] public ushort id;
+    [FieldOffset(0)] public byte type;
+    [FieldOffset(1)] public ushort id;
 
-	[FieldOffset(3)] public TransformPacket transform;
-	[FieldOffset(3)] public ActionPacket action;
-	[FieldOffset(3)] public HealthPacket health;
-	[FieldOffset(3)] public InventoryPacket inventory;
-	[FieldOffset(3)] public SpawnPacket spawn;
-	[FieldOffset(3)] public OwnerPacket owner;
-	[FieldOffset(3)] public JoinPacket join;
+    [FieldOffset(3)] public TransformPacket transform;
+    [FieldOffset(3)] public ActionPacket action;
+    [FieldOffset(3)] public HealthPacket health;
+    [FieldOffset(3)] public InventoryPacket inventory;
+    [FieldOffset(3)] public SpawnPacket spawn;
+    [FieldOffset(3)] public OwnerPacket owner;
+    [FieldOffset(3)] public JoinPacket join;
 }
 #endregion
 
@@ -135,8 +135,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public string PlayerName { get; private set; }
     public SteamId PlayerId { get; private set; }
-
-    private string playerIdString;
 
     private Pascal.SocketManager socketManager;
     private Pascal.ConnectionManager connectionManager;
@@ -169,7 +167,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
             PlayerName = SteamClient.Name;
             PlayerId = SteamClient.SteamId;
-            playerIdString = PlayerId.ToString();
             activeLobbies = new List<Lobby>();
 
             SteamNetworkingUtils.InitRelayNetworkAccess();
@@ -184,83 +181,29 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private void Start()
     {
-        SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoinedCallback;
         SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeaveCallback;
+        //SteamMatchmaking.OnLobbyEntered += OnLobbyEnteredCallback;
+        SteamNetworkingSockets.OnConnectionStatusChanged += OnConnectionStatusChanged;
     }
 
-    #region Callbacks
-
-
-    //private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //private void OnDlcInstalledCallback(AppId obj)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <param name="lobby"></param>
-    ///// <param name="id"></param>
-    //[Obsolete("This is deprecated, please use JoinSocketServer instead.")]
-    //async private void OnGameLobbyJoinRequestedCallback(Lobby lobby, SteamId id)
-    //{
-    //    RoomEnter joinedLobby = await lobby.Join();
-
-    //    if (joinedLobby == RoomEnter.Success)
-    //    {
-    //        currentLobby = lobby;
-    //        //AcceptP2P(OpponentSteamId);
-    //        SceneManager.LoadScene("Scene to load");
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("failed to join lobby");
-    //    }
-    //}
-
-    private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend friend)
+    private void OnLobbyMemberLeaveCallback(Lobby lobby, Friend player)
     {
-        if (friend.IsMe) { return; } //ignore yourself leaving
-        GameManager.Instance.PlayerLeft(friend);
+        if (player.IsMe) { return; } //ignore yourself leaving
+        GameManager.Instance.PlayerLeft(player);
     }
 
-    //private void OnLobbyMemberDisconnectedCallback(Lobby lobby, Friend friend)
-    //{
-    //	if (friend.IsMe) { return; } //ignore yourself disconnected
-    //	FindFirstObjectByType<LobbyHandler>().PlayerLeft(friend);
-    //}
-
-    //private void OnChatMessageCallback(Lobby arg1, Friend arg2, string arg3)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    private void OnLobbyMemberJoinedCallback(Lobby lobby, Friend friend)
+    private void OnConnectionStatusChanged(Connection connection, ConnectionInfo info)
     {
-        if (friend.IsMe) { return; } //ignore yourself joining
-        GameManager.Instance.PlayerJoined(friend);
+        if (info.State == ConnectionState.Connected)
+        {
+            Packet packet = new Packet();
+            packet.type = 9;
+            packet.id = GameManager.INVALID_ID;
+            packet.join = new JoinPacket(PlayerId);
+
+            Instance.SendMessage(packet);
+        }
     }
-
-    //private void OnLobbyEnteredCallback(Lobby obj)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //private void OnLobbyCreatedCallback(Result arg1, Lobby arg2)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //private void OnLobbyGameCreatedCallback(Lobby arg1, uint arg2, ushort arg3, SteamId arg4)
-    //{
-    //    throw new NotImplementedException();
-    //}
-    #endregion
 
     void Update()
     {
@@ -336,24 +279,19 @@ public class NetworkManager : Singleton<NetworkManager>
             activeLobbies.Clear();
             activeLobbies = (await SteamMatchmaking.LobbyList.WithSlotsAvailable(1).WithMaxResults(100).RequestAsync()).ToList();
         }
-        catch (Exception e)
-        {
-            Debug.Log("Error fetching multiplayer lobbies");
-            Debug.Log(e.ToString());
-        }
+        catch { }
 
         return activeLobbies;
     }
 
-    public async Task<bool> JoinLobby(Lobby lobby)
+    public async void JoinLobby(Lobby lobby)
     {
         currentLobby = lobby;
-        RoomEnter result = await currentLobby.Join();
+        await currentLobby.Join();
 
-        JoinSocketServer();
+        JoinSocketServer(lobby);
         StartCoroutine(Tick());
 
-        return result == RoomEnter.Success;
     }
 
     public void LeaveLobby()
@@ -370,12 +308,12 @@ public class NetworkManager : Singleton<NetworkManager>
         activeSocketConnection = true;
     }
 
-	private void JoinSocketServer(Lobby lobby)
-	{
-		connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
-		activeSocketServer = false;
-		activeSocketConnection = true;
-	}
+    private void JoinSocketServer(Lobby lobby)
+    {
+        connectionManager = SteamNetworkingSockets.ConnectRelay<Pascal.ConnectionManager>(lobby.Owner.Id);
+        activeSocketServer = false;
+        activeSocketConnection = true;
+    }
 
     private void LeaveSocketServer()
     {
@@ -412,20 +350,20 @@ public class NetworkManager : Singleton<NetworkManager>
     public bool SendMessage(Packet packet)
     {
         int size;
-		switch (packet.type)
-		{
-			case 0: size = 23; break;   //Transform
-			case 1: size = 4; break;    //Action
-			case 2: size = 6; break;    //Health
-			case 3: size = 6; break;    //Inventory
-			case 4: size = 3; break;    //Game Trigger
-			case 5: size = 3; break;    //Scene Load
-			case 6: size = 6; break;    //Game Spawn
-			case 7: size = 3; break;    //Game Despawn
-			case 8: size = 11; break;   //Owner Change
-			case 9: size = 12; break;   //Player Joined
-			default: return false;
-		}
+        switch (packet.type)
+        {
+            case 0: size = 23; break;   //Transform
+            case 1: size = 4; break;    //Action
+            case 2: size = 6; break;    //Health
+            case 3: size = 6; break;    //Inventory
+            case 4: size = 3; break;    //Game Trigger
+            case 5: size = 3; break;    //Scene Load
+            case 6: size = 6; break;    //Game Spawn
+            case 7: size = 3; break;    //Game Despawn
+            case 8: size = 11; break;   //Owner Change
+            case 9: size = 12; break;   //Player Joined
+            default: return false;
+        }
 
         try
         {
@@ -450,31 +388,31 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void ProcessMessage(IntPtr message, int dataBlockSize)
     {
-		try
-		{
-			Packet packet = Marshal.PtrToStructure<Packet>(message);
+        try
+        {
+            Packet packet = Marshal.PtrToStructure<Packet>(message);
 
-			switch (packet.type)
-			{
-				case 0: GameManager.Instance.ReceiveTransform(packet); break;   //Transform
-				case 1: GameManager.Instance.Action(packet); break;             //Action
-				case 2: GameManager.Instance.Health(packet); break;             //Health
-				case 3: GameManager.Instance.Inventory(packet); break;          //Inventory
-				case 4: GameManager.Instance.GameTrigger(packet); break;        //Game Trigger
-				case 5: GameManager.Instance.LoadLevel((byte)packet.id); break; //Scene Load
-				case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
-				case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
-				case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
-				case 9: GameManager.Instance.PlayerJoined(packet); break;       //Player Joined
-				default: break;
-			}
-		}
-		catch
-		{
-			Packet packet = Marshal.PtrToStructure<Packet>(message);
+            switch (packet.type)
+            {
+                case 0: GameManager.Instance.ReceiveTransform(packet); break;   //Transform
+                case 1: GameManager.Instance.Action(packet); break;             //Action
+                case 2: GameManager.Instance.Health(packet); break;             //Health
+                case 3: GameManager.Instance.Inventory(packet); break;          //Inventory
+                case 4: GameManager.Instance.GameTrigger(packet); break;        //Game Trigger
+                case 5: GameManager.Instance.LoadLevel((byte)packet.id); break; //Scene Load
+                case 6: GameManager.Instance.Spawn(packet); break;              //Game Spawn
+                case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
+                case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
+                case 9: GameManager.Instance.PlayerJoined(packet); break;       //Player Joined
+                default: break;
+            }
+        }
+        catch
+        {
+            Packet packet = Marshal.PtrToStructure<Packet>(message);
 
-			Debug.Log($"Packet Failed: ID: {packet.id}, Type: {packet.type}");
-		}
+            Debug.Log($"Packet Failed: ID: {packet.id}, Type: {packet.type}");
+        }
 
     }
 

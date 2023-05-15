@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface INetworked
 {
-    public void NetworkUpdate();
+    public void Tick();
 }
