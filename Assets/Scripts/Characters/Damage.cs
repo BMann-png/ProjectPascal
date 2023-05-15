@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Entity))]
 public class Damage : MonoBehaviour
 {
+    public GameObject Owner { get; set; }
+
     public bool dealsDamage = true;
     [SerializeField] bool damageOverTime = false;
     [SerializeField] int damage = 0;
@@ -10,6 +12,8 @@ public class Damage : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject == Owner) return;
+
         Health collisionHealth;
 		if (!dealsDamage || !collision.gameObject.TryGetComponent(out collisionHealth)) { return; }
 

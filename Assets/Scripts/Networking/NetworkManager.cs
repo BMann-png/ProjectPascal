@@ -35,6 +35,19 @@ public struct TransformPacket
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct RotationPacket
+{
+    public RotationPacket(float x, float y)
+    {
+        xRot = x;
+        yRot = y;
+    }
+
+    public float xRot;
+    public float yRot;
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct ActionPacket
 {
     public ActionPacket(byte data)
@@ -117,6 +130,7 @@ public struct Packet
     [FieldOffset(1)] public ushort id;
 
     [FieldOffset(3)] public TransformPacket transform;
+    [FieldOffset(3)] public RotationPacket rotation;
     [FieldOffset(3)] public ActionPacket action;
     [FieldOffset(3)] public HealthPacket health;
     [FieldOffset(3)] public InventoryPacket inventory;
@@ -298,6 +312,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         currentLobby.Leave();
         LeaveSocketServer();
+        
     }
 
     public void CreateSocketServer()
@@ -362,6 +377,7 @@ public class NetworkManager : Singleton<NetworkManager>
             case 7: size = 3; break;    //Game Despawn
             case 8: size = 11; break;   //Owner Change
             case 9: size = 12; break;   //Player Joined
+            case 10: size = 11; break;  //Rotate Shoot
             default: return false;
         }
 
@@ -404,6 +420,7 @@ public class NetworkManager : Singleton<NetworkManager>
                 case 7: GameManager.Instance.Despawn(packet); break;            //Game Despawn
                 case 8: GameManager.Instance.OwnerChange(packet); break;        //Owner Change
                 case 9: GameManager.Instance.PlayerJoined(packet); break;       //Player Joined
+                case 10: GameManager.Instance.RotateShoot(packet); break;             //Rotate Shoot
                 default: break;
             }
         }
@@ -413,7 +430,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
             Debug.Log($"Packet Failed: ID: {packet.id}, Type: {packet.type}");
         }
-
     }
 
     private void OnDisable()
