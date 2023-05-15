@@ -73,8 +73,8 @@ public class LobbyHandler : MonoBehaviour
 
 	public void DisableUI()
 	{
-		levelSelect.GetComponent<TMP_Dropdown>().interactable = false;
-		startButton.GetComponent<Button>().interactable = false;
-		leaveButton.GetComponent<Button>().interactable = false;
+		if (levelSelect) { levelSelect.GetComponent<TMP_Dropdown>().interactable = false; }
+		if (startButton) { startButton.GetComponent<Button>().interactable = false; }
+		if (leaveButton) { leaveButton.GetComponent<Button>().interactable = false; }
 	}
 }
