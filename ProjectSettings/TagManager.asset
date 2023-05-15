@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - EnemySpawner
+  - Interactable
+  - Pushable
+  - NetPlayer
+  - HealthBars
   layers:
   - Default
   - TransparentFX
@@ -16,8 +21,8 @@ TagManager:
   - Enemy
   - Projectile
   - Light
-  - 
-  - 
+  - Interactable
+  - PlayerModel
   - 
   - 
   - 
@@ -41,4 +46,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: LoadingScreen
+    uniqueID: 3248358675
     locked: 0

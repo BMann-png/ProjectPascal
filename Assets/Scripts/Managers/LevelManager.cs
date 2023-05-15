@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
 	private PlayerSpawner[] playerSpawners;
 	private EnemySpawner[] enemySpawners;
+	private InteractableSpawner[] interactableSpawners;
 
 	//TODO: Initial spawn and hidden spawn
 
@@ -13,6 +12,7 @@ public class LevelManager : MonoBehaviour
 	{
 		playerSpawners = FindObjectsByType<PlayerSpawner>(FindObjectsSortMode.InstanceID);
 		enemySpawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.InstanceID);
+		interactableSpawners = FindObjectsByType<InteractableSpawner>(FindObjectsSortMode.InstanceID);
 
 		GameManager.Instance.OnLevelLoad(this);
 	}
@@ -27,8 +27,28 @@ public class LevelManager : MonoBehaviour
 		return enemySpawners[index].transform;
 	}
 
+	public ushort InteractableSpawnCount()
+	{
+		return (ushort)interactableSpawners.Length;
+	}
+
+	public InteractableSpawner GetInteractableSpawn(int index)
+	{
+		return interactableSpawners[index];
+	}
+
 	public byte RandomEnemySpawn()
 	{
 		return (byte)Random.Range(0, enemySpawners.Length);
+	}
+
+	public void SetInteractable(int id)
+	{
+		Interactable[] ints = FindObjectsByType<Interactable>(FindObjectsSortMode.InstanceID);
+
+		foreach (Interactable i in ints)
+		{
+			if(i.id == id) { i.canInteract = true; }
+		}
 	}
 }

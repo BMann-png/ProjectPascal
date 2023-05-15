@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class WanderState : State
 {
     public WanderState(string name, BaseAI agent) : base(name, agent) { }
