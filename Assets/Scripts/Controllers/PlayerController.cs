@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_MOD = 2.0f;
 	private static readonly float TRIP_MOD = 0.5f;
 	private static readonly float REVIVE_TIME = 3.0f;
+	private static readonly float SPRINT_MAX_LENGTH = 8.0f;
 	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
@@ -50,7 +51,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!GameManager.Instance.Loading)
 		{
-			if (sprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime))
+			if (TripChance())
 			{
 				tripped = true;
 				tripTimer = TRIP_TIME;
@@ -109,7 +110,7 @@ public class PlayerController : MonoBehaviour
 					StartSprint();
 				}
 
-				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
+				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f) && sprinting)
 				{
 					if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
 
@@ -251,4 +252,9 @@ public class PlayerController : MonoBehaviour
 			reviveTimer = 0.0f;
 		}
 	}
+
+	public bool TripChance()
+    {
+		return sprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime);
+    }
 }
