@@ -4,13 +4,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	private static readonly float SPRINT_TIME = 3.0f;
-	private static readonly float SPRINT_COOLDOWN = 6.0f;
-	private static readonly float TRIP_TIME = 1.0f;
+	private static readonly float SPRINT_COOLDOWN = 4.0f;
+	private static readonly float TRIP_TIME = 5.0f;
 	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
 	private static readonly float MOVEMENT_SPEED = 3.0f;
 	private static readonly float SPRINT_MOD = 2.0f;
 	private static readonly float TRIP_MOD = 0.5f;
 	private static readonly float REVIVE_TIME = 3.0f;
+	private static readonly float SPRINT_MAX_LENGTH = 8.0f;
+	private static readonly float TRIP_MAX_CHANCE = 0.3f;
 	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
@@ -32,6 +34,8 @@ public class PlayerController : MonoBehaviour
 	private float reviveTimer = 0.0f;
 	private bool reviving = false;
 	private byte playersReviving = 0;
+	private float sprintSecondsElapsed = 0.0f;
+	private float sprint_max_length;
 
 	private void Awake()
 	{
@@ -50,23 +54,27 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!GameManager.Instance.Loading)
 		{
-			if (sprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime))
-			{
-				tripped = true;
-				tripTimer = TRIP_TIME;
+			if (sprinting)
+            {
+				if (TripChance())
+				{
+					tripped = true;
+					tripTimer = TRIP_TIME;
 
-				Packet action = new Packet();
-				action.type = 1;
-				action.id = entity.id;
-				action.action = new ActionPacket(4);
+					Packet action = new Packet();
+					action.type = 1;
+					action.id = entity.id;
+					action.action = new ActionPacket(4);
 
-				NetworkManager.Instance.SendMessage(action);
+					NetworkManager.Instance.SendMessage(action);
 
-				EndSprint();
+					EndSprint();
 
-				animator.SetTrigger("Trip");
+
+					animator.SetTrigger("Trip");
+				}
 			}
-
+			
 			Packet packet = new Packet();
 			packet.type = 0;
 			packet.id = entity.id;
@@ -90,6 +98,10 @@ public class PlayerController : MonoBehaviour
 				GameManager.Instance.AudioManager.StopCry();
 			}
 
+			sprintTimer -= Time.deltaTime;
+			sprintCooldownTimer -= Time.deltaTime;
+			tripTimer -= Time.deltaTime;
+
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 			reviveTimer -= Time.deltaTime;
 
@@ -98,20 +110,16 @@ public class PlayerController : MonoBehaviour
 				float vertInput = Input.GetAxis("Vertical");
 				float HoriInput = Input.GetAxis("Horizontal");
 
-				sprintTimer -= Time.deltaTime;
-				sprintCooldownTimer -= Time.deltaTime;
-				tripTimer -= Time.deltaTime;
-
 				tripped = tripTimer > 0.0f;
 
-				if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting)
+				if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting && !tripped)
 				{
 					StartSprint();
 				}
 
-				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && sprinting)
+				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f) && sprinting)
 				{
-					if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
+					//if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
 
 					EndSprint();
 				}
@@ -159,6 +167,10 @@ public class PlayerController : MonoBehaviour
 
 	private void StartSprint()
 	{
+		float x = Random.Range(50.0f, 100.0f);
+		sprint_max_length = (Mathf.Pow(2, (0.07647f * x))) * 0.5f;
+		sprint_max_length += 50.0f;
+
 		sprinting = true;
 		sprintTimer = SPRINT_TIME;
 		sprintCooldownTimer = SPRINT_COOLDOWN;
@@ -181,6 +193,11 @@ public class PlayerController : MonoBehaviour
 
 	private void EndSprint()
 	{
+		sprintCooldownTimer += sprintTimer * 0.25f;
+
+		sprint_max_length = 0.0f;
+		sprintSecondsElapsed = 0.0f;
+
 		sprinting = false;
 		sprintTimer = 0.0f;
 
@@ -251,4 +268,12 @@ public class PlayerController : MonoBehaviour
 			reviveTimer = 0.0f;
 		}
 	}
+
+	public bool TripChance()
+    {
+		float x = (sprintSecondsElapsed / SPRINT_MAX_LENGTH) * 100;
+		sprintSecondsElapsed += Time.deltaTime;
+		Debug.Log(sprint_max_length);
+		return x > sprint_max_length;
+    }
 }
