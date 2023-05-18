@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
 				{
 					tripped = true;
 					tripTimer = TRIP_TIME;
-					sprintSecondsElapsed = 0.0f;
 
 					Packet action = new Packet();
 					action.type = 1;
@@ -194,6 +193,9 @@ public class PlayerController : MonoBehaviour
 
 	private void EndSprint()
 	{
+		sprint_max_length = 0.0f;
+		sprintSecondsElapsed = 0.0f;
+
 		sprinting = false;
 		sprintTimer = 0.0f;
 
