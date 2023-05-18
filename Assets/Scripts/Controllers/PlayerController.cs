@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	private static readonly float SPRINT_TIME = 3.0f;
-	private static readonly float SPRINT_COOLDOWN = 6.0f;
+	private static readonly float SPRINT_COOLDOWN = 4.0f;
 	private static readonly float TRIP_TIME = 5.0f;
 	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
 	private static readonly float MOVEMENT_SPEED = 3.0f;
@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
 
 				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f) && sprinting)
 				{
-					if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
+					//if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
 
 					EndSprint();
 				}
@@ -193,6 +193,8 @@ public class PlayerController : MonoBehaviour
 
 	private void EndSprint()
 	{
+		sprintCooldownTimer += sprintTimer * 0.25f;
+
 		sprint_max_length = 0.0f;
 		sprintSecondsElapsed = 0.0f;
 
