@@ -98,6 +98,10 @@ public class PlayerController : MonoBehaviour
 				GameManager.Instance.AudioManager.StopCry();
 			}
 
+			sprintTimer -= Time.deltaTime;
+			sprintCooldownTimer -= Time.deltaTime;
+			tripTimer -= Time.deltaTime;
+
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 			reviveTimer -= Time.deltaTime;
 
@@ -105,10 +109,6 @@ public class PlayerController : MonoBehaviour
 			{
 				float vertInput = Input.GetAxis("Vertical");
 				float HoriInput = Input.GetAxis("Horizontal");
-
-				sprintTimer -= Time.deltaTime;
-				sprintCooldownTimer -= Time.deltaTime;
-				tripTimer -= Time.deltaTime;
 
 				tripped = tripTimer > 0.0f;
 
