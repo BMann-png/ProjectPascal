@@ -238,8 +238,8 @@ MonoBehaviour:
   secondaryWeapons:
   - {fileID: 5936406216322940931}
   pacifier: {fileID: 0}
-  primaryIndex: 255
-  secondaryIndex: 0
+  primaryIndex: 1
+  secondaryIndex: 255
 --- !u!114 &5018046254760015926
 MonoBehaviour:
   m_ObjectHideFlags: 0
