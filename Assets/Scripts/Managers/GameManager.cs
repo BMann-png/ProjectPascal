@@ -151,7 +151,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void ChangeLevel(byte level)
 	{
-		if (IsServer)
+		if (IsServer && !Fading)
 		{
 			Packet packet = new Packet();
 			packet.type = 5;

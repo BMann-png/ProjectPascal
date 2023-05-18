@@ -18,12 +18,7 @@ public class Weapon : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        if (timer < 0)
-        {
-            IsFiring = false;
-        }
-        //print(IsFiring);
-        //print(timer);
+        if (timer < 0) { IsFiring = false; }
     }
 
     public void Shoot() 
