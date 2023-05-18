@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Attack : MonoBehaviour
@@ -23,6 +21,8 @@ public class Attack : MonoBehaviour
 			{
 				if (health.down > 0) { health.OnDownDamage(3); }
 				else { health.OnDamaged(10); }
+				GameManager.Instance.AudioManager.Source.PlayOneShot
+					(GameManager.Instance.AudioManager.GetPunch());
 			}
 		}
 	}

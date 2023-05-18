@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationEvents : MonoBehaviour
@@ -15,4 +13,16 @@ public class AnimationEvents : MonoBehaviour
 	{
 		attack.OnAttack();
 	}
+
+	public void OnStep()
+    {
+		GameManager.Instance.AudioManager.Source.PlayOneShot
+			(GameManager.Instance.AudioManager.GetFootStep());
+    }
+
+	public void OnTrip()
+    {
+		GameManager.Instance.AudioManager.Source.PlayOneShot
+			(GameManager.Instance.AudioManager.GetTrip());
+    }
 }

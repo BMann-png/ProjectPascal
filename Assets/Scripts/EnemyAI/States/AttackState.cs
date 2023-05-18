@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class AttackState : State
 {
 	public AttackState(string name, BaseAI agent) : base(name, agent) { }

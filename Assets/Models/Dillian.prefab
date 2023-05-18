@@ -7185,6 +7185,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4165041430683902706}
   - component: {fileID: 6665199511786701194}
+  - component: {fileID: 4154090965171149917}
   m_Layer: 0
   m_Name: Dillian
   m_TagString: Untagged
@@ -7232,6 +7233,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4154090965171149917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3640847701278636104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7925c301538ee674e91c7da53ad55d55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3649866922467735726
 GameObject:
   m_ObjectHideFlags: 0
