@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour, INetworked
 
     private void Awake()
     {
+        NetworkManager.Instance.tickUpdate += Tick;
+
         entity = GetComponent<Entity>();
     }
 

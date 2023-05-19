@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour, INetworked
 
     private void Awake()
     {
+        NetworkManager.Instance.tickUpdate += Tick;
+
         controller = GetComponent<CharacterController>();
         entity = GetComponent<Entity>();
         health = GetComponent<Health>();
