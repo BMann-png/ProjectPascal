@@ -42,6 +42,10 @@ public class CaretakerController : MonoBehaviour
             startingCryTime = Time.time;
             startingDistanceFromChild = (startingPosition.position - endPosition.position).magnitude;
         }
+        else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Flip Back"))
+        {
+            hands.SetActive(false);
+        }
         else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Crying"))
         {
             float distanceMoved = (100 - playerHealth.down) / 5;
@@ -54,10 +58,6 @@ public class CaretakerController : MonoBehaviour
             {
                 SetAnimators();
             }
-        }
-        else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Flip Back"))
-        {
-            hands.SetActive(false);
         }
         
 
