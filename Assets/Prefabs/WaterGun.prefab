@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6499522961762826845}
+  - component: {fileID: 5881763866788516015}
   m_Layer: 0
   m_Name: WaterGun
   m_TagString: Untagged
@@ -33,6 +34,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5881763866788516015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714632598187998691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d014729a75583e43812e85c9bb0041d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shoot: {fileID: 1298453045960056545}
+  type: 2
+  delay: 0.01
+  spreadAngle: 3.8
+  numsOfShots: 3
 --- !u!1 &5408430517120984168
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,28 +151,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1bd50f480b16f448a353926adbb3da5, type: 3}
---- !u!1 &1612009653095808439 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7610143269035361486, guid: b1bd50f480b16f448a353926adbb3da5, type: 3}
-  m_PrefabInstance: {fileID: 9206389833808247161}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5104849819996932360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612009653095808439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d014729a75583e43812e85c9bb0041d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shoot: {fileID: 1298453045960056545}
-  type: 2
-  delay: 0.01
-  spreadAngle: 3.8
-  numsOfShots: 3
 --- !u!4 &2095531249026656013 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7122293651742301812, guid: b1bd50f480b16f448a353926adbb3da5, type: 3}
