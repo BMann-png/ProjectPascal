@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour, INetworked
     private Vector3 movement;
     private HUDManager hudManager;
 
-    private Vector3 NetPrevPos;
+    private Transform NetPrevPos;
 
     private bool isSprinting = false;
     private bool wasSprinting = false;
@@ -179,9 +179,9 @@ public class PlayerController : MonoBehaviour, INetworked
 
     private void CheckPosition()
     {
-        if (transform.position != NetPrevPos && Mathf.Abs((transform.position - NetPrevPos).magnitude) > .5)
+        if (transform.position != NetPrevPos.position && (Mathf.Abs((transform.position - NetPrevPos.position).magnitude) > .1 || RotationDifference()))
         {
-            NetPrevPos = transform.position;
+            NetPrevPos = transform;
 
             Packet packet = new Packet();
             packet.type = 0;
@@ -189,6 +189,26 @@ public class PlayerController : MonoBehaviour, INetworked
             packet.transform = new TransformPacket(transform, Camera.main.transform.eulerAngles.x + 90.0f);
             NetworkManager.Instance.SendMessage(packet);
         }
+    }
+
+    private bool RotationDifference()
+    {
+        var difference = (transform.rotation * Quaternion.Inverse(NetPrevPos.rotation)).eulerAngles;
+
+        for (int i = 0; i < 3; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    return difference.x > 0;
+                case 1:
+                    return difference.y > 0;
+                case 2:
+                    return difference.z > 0;
+            }
+        }
+
+        return false;
     }
 
     private void CheckSprinting()
