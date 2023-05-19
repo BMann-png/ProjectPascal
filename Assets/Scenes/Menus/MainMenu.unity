@@ -28053,7 +28053,7 @@ MonoBehaviour:
   - {fileID: 2589722287660018693, guid: 3353e3a40c171c243a4e3c5bd1d2c3a5, type: 3}
   - {fileID: 2109230177950716293, guid: 3688f3b2ac3c92345ac62e5c3de5f320, type: 3}
   - {fileID: 1676897055477784835, guid: 378ed1824488f3945ad93dff203fb57a, type: 3}
-  player: {fileID: 4249420564965122353, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+  player: {fileID: 2600007259300455890, guid: b8403d55c58abe345971575fcce6d7f7, type: 3}
   networkPlayer: {fileID: 8291552484210884512, guid: e47317380b49ddf459c1a36777b6b445, type: 3}
   lobbyPlayer: {fileID: 7710098097953584521, guid: 2db0c05ceb18f8e45a2e3aeeeb5f76ea, type: 3}
   enemy: {fileID: 186295321234899170, guid: 514e832a0046b174f93bca97fdd70383, type: 3}

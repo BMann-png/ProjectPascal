@@ -3,15 +3,17 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(Entity))]
 public class PlayerController : MonoBehaviour, INetworked
 {
-    private static readonly float SPRINT_TIME = 3.0f;
-    private static readonly float SPRINT_COOLDOWN = 6.0f;
-    private static readonly float TRIP_TIME = 1.0f;
-    private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
-    private static readonly float MOVEMENT_SPEED = 3f;
-    private static readonly float SPRINT_MOD = 2f;
-    private static readonly float TRIP_MOD = 0.5f;
-    private static readonly float REVIVE_TIME = 3.0f;
-    private float addedReviveTime;
+	private static readonly float SPRINT_TIME = 3.0f;
+	private static readonly float SPRINT_COOLDOWN = 4.0f;
+	private static readonly float TRIP_TIME = 5.0f;
+	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
+	private static readonly float MOVEMENT_SPEED = 3.0f;
+	private static readonly float SPRINT_MOD = 2.0f;
+	private static readonly float TRIP_MOD = 0.5f;
+	private static readonly float REVIVE_TIME = 3.0f;
+	private static readonly float SPRINT_MAX_LENGTH = 8.0f;
+	private static readonly float TRIP_MAX_CHANCE = 0.3f;
+	private float addedReviveTime;
 
     [SerializeField] private new Transform camera;
     [SerializeField] private Animator animator;
@@ -37,36 +39,33 @@ public class PlayerController : MonoBehaviour, INetworked
     private bool reviving = false;
     private byte playersReviving = 0;
 
-    private float sprintTimer = 0.0f;
-    private float sprintCooldownTimer = 0.0f;
-    private float tripTimer = 0.0f;
+    private float sprintSecondsElapsed = 0.0f;
+	private float sprint_max_length;
 
-    private void Awake()
-    {
-        NetworkManager.Instance.tickUpdate += Tick;
-
-        controller = GetComponent<CharacterController>();
-        entity = GetComponent<Entity>();
-        health = GetComponent<Health>();
-        hudManager = FindAnyObjectByType<HUDManager>();
-
-        entity.animator = animator;
-        addedReviveTime = 6.0f / health.MaxTrauma;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!GameManager.Instance.Loading)
-        {
-            if (isSprinting && Random.Range(0.0f, 1.0f) < (TRIP_PROBABILITY * Time.fixedDeltaTime))
+	private void FixedUpdate()
+	{
+		if (!GameManager.Instance.Loading)
+		{
+			if (isSprinting)
             {
-                isTripping = true;
-                tripTimer = TRIP_TIME;
+				if (TripChance())
+				{
+					tripped = true;
+					tripTimer = TRIP_TIME;
 
-                EndSprint();
+					Packet action = new Packet();
+					action.type = 1;
+					action.id = entity.id;
+					action.action = new ActionPacket(4);
 
-                animator.SetTrigger("Trip");
-            }
+					NetworkManager.Instance.SendMessage(action);
+
+					EndSprint();
+
+
+					animator.SetTrigger("Trip");
+				}
+			}
         }
     }
 
@@ -84,28 +83,28 @@ public class PlayerController : MonoBehaviour, INetworked
                 GameManager.Instance.AudioManager.StopCry();
             }
 
-                movement = Vector3.down * 10.0f * Time.deltaTime;
-                reviveTimer -= Time.deltaTime;
+			sprintTimer -= Time.deltaTime;
+			sprintCooldownTimer -= Time.deltaTime;
+			tripTimer -= Time.deltaTime;
+
+			movement = Vector3.down * 10.0f * Time.deltaTime;
+			reviveTimer -= Time.deltaTime;
 
             if (!isDown)
             {
                 float vertInput = Input.GetAxis("Vertical");
                 float HoriInput = Input.GetAxis("Horizontal");
 
-                sprintTimer -= Time.deltaTime;
-                sprintCooldownTimer -= Time.deltaTime;
-                tripTimer -= Time.deltaTime;
+				tripped = tripTimer > 0.0f;
 
-                isTripping = tripTimer > 0.0f;
+				if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !sprinting && !tripped)
+				{
+					StartSprint();
+				}
 
-                if (Input.GetKey(KeyCode.LeftShift) && sprintCooldownTimer <= 0.0f && vertInput > 0.0f && !isSprinting)
-                {
-                    StartSprint();
-                }
-
-                if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f || sprintTimer <= 0.0f) && isSprinting)
-                {
-                    if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
+				if ((Input.GetKeyUp(KeyCode.LeftShift) || vertInput <= 0.0f) && sprinting)
+				{
+					//if (sprintTimer > 0.0f) { sprintCooldownTimer -= sprintTimer; }
 
                     EndSprint();
                 }
@@ -151,6 +150,7 @@ public class PlayerController : MonoBehaviour, INetworked
         }
     }
 
+
     public void Tick()
     {
         Packet packet;
@@ -192,9 +192,13 @@ public class PlayerController : MonoBehaviour, INetworked
         wasSprinting = isSprinting; wasTripping = isTripping;
     }
 
-    private void StartSprint()
-    {
-        isSprinting = true;
+	private void StartSprint()
+	{
+		float x = Random.Range(50.0f, 100.0f);
+		sprint_max_length = (Mathf.Pow(2, (0.07647f * x))) * 0.5f;
+		sprint_max_length += 50.0f;
+
+		isSprinting = true;
         sprintTimer = SPRINT_TIME;
         sprintCooldownTimer = SPRINT_COOLDOWN;
 
@@ -206,11 +210,15 @@ public class PlayerController : MonoBehaviour, INetworked
 
 		animator.SetTrigger("Sprint");
     }
+	private void EndSprint()
+	{
+		sprintCooldownTimer += sprintTimer * 0.25f;
 
-    private void EndSprint()
-    {
-        isSprinting = false;
-        sprintTimer = 0.0f;
+		sprint_max_length = 0.0f;
+		sprintSecondsElapsed = 0.0f;
+
+		isSprinting = false;
+		sprintTimer = 0.0f;
 
         controller.height = 1.0f;
         controller.radius = 0.5f;
@@ -276,5 +284,13 @@ public class PlayerController : MonoBehaviour, INetworked
     void INetworked.Tick()
     {
         throw new System.NotImplementedException();
+    }
+
+	public bool TripChance()
+    {
+		float x = (sprintSecondsElapsed / SPRINT_MAX_LENGTH) * 100;
+		sprintSecondsElapsed += Time.deltaTime;
+		Debug.Log(sprint_max_length);
+		return x > sprint_max_length;
     }
 }
