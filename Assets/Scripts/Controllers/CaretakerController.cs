@@ -16,7 +16,8 @@ public class CaretakerController : MonoBehaviour
     private Animator playerAnimator;
     private Health playerHealth;
 
-    private float RemainingHealth;
+    private float lastDistanceMoved;
+    private float lastPlayerDown;
 
     private void Start()
     {
@@ -51,15 +52,18 @@ public class CaretakerController : MonoBehaviour
 
             float sectionOfDistance = distanceMoved / startingDistanceFromChild;
 
+            if (playerHealth.down == lastPlayerDown) sectionOfDistance = lastDistanceMoved;
+
             transform.position = Vector3.Lerp(startingPosition.position, endPosition.position, sectionOfDistance);
 
             if (playerHealth.down <= 0)
             {
                 SetAnimators();
             }
-        }
-        
 
+            lastPlayerDown = playerHealth.down;
+            lastDistanceMoved = sectionOfDistance;
+        }
     }
 
     private void SetAnimators()
