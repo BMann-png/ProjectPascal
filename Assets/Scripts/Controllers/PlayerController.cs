@@ -6,13 +6,11 @@ public class PlayerController : MonoBehaviour
 	private static readonly float SPRINT_TIME = 3.0f;
 	private static readonly float SPRINT_COOLDOWN = 4.0f;
 	private static readonly float TRIP_TIME = 5.0f;
-	private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
 	private static readonly float MOVEMENT_SPEED = 3.0f;
 	private static readonly float SPRINT_MOD = 2.0f;
 	private static readonly float TRIP_MOD = 0.5f;
 	private static readonly float REVIVE_TIME = 3.0f;
 	private static readonly float SPRINT_MAX_LENGTH = 8.0f;
-	private static readonly float TRIP_MAX_CHANCE = 0.3f;
 	private float addedReviveTime;
 
 	[SerializeField] private new Transform camera;
@@ -43,7 +41,7 @@ public class PlayerController : MonoBehaviour
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
 
-		
+
 		hudManager = FindAnyObjectByType<HUDManager>();
 		entity.animator = animator;
 
@@ -55,7 +53,7 @@ public class PlayerController : MonoBehaviour
 		if (!GameManager.Instance.Loading)
 		{
 			if (sprinting)
-            {
+			{
 				if (TripChance())
 				{
 					tripped = true;
@@ -74,7 +72,7 @@ public class PlayerController : MonoBehaviour
 					animator.SetTrigger("Trip");
 				}
 			}
-			
+
 			Packet packet = new Packet();
 			packet.type = 0;
 			packet.id = entity.id;
@@ -88,11 +86,11 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!GameManager.Instance.Loading)
 		{
-			if(health.health == 0 && !down)
+			if (health.health == 0 && !down)
 			{
 				OnDown();
 			}
-			else if(health.health == 0 && health.down == 0)
+			else if (health.health == 0 && health.down == 0)
 			{
 				//TODO: Die
 				GameManager.Instance.AudioManager.StopCry();
@@ -130,11 +128,11 @@ public class PlayerController : MonoBehaviour
 
 				movement *= tripped ? TRIP_MOD : 1.0f;
 			}
-			else if(!reviving)
+			else if (!reviving)
 			{
 				health.OnDownDamage(Time.deltaTime);
 			}
-			else if(reviveTimer <= 0.0f)
+			else if (reviveTimer <= 0.0f)
 			{
 				OnRevive();
 			}
@@ -144,25 +142,24 @@ public class PlayerController : MonoBehaviour
 			if (entity.weapon)
 			{
 				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
- 
 
-        entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
+				entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
 
-        Packet packet = new Packet();
-        packet.type = 10;
-        packet.id = entity.id;
-        packet.rotation = new RotationPacket(x, y);
-               
-        NetworkManager.Instance.SendMessage(packet);
-      }
-			
-            Weapon weapon = hand.GetComponentInChildren<Weapon>();
+				Packet packet = new Packet();
+				packet.type = 10;
+				packet.id = entity.id;
+				packet.rotation = new RotationPacket(x, y);
+
+				NetworkManager.Instance.SendMessage(packet);
+			}
+
+			Weapon weapon = hand.GetComponentInChildren<Weapon>();
 			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
 			{
 				weapon.IsFiring = true;
 				weapon.Shoot();
 			}
-        }
+		}
 	}
 
 	private void StartSprint()
@@ -270,10 +267,9 @@ public class PlayerController : MonoBehaviour
 	}
 
 	public bool TripChance()
-    {
+	{
 		float x = (sprintSecondsElapsed / SPRINT_MAX_LENGTH) * 100;
 		sprintSecondsElapsed += Time.deltaTime;
-		Debug.Log(sprint_max_length);
 		return x > sprint_max_length;
-    }
+	}
 }
