@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour, INetworked
     private Vector3 movement;
     private HUDManager hudManager;
 
-    private Transform NetPrevPos;
+    private Vector3 NetPrevPos;
+    private Vector3 NetPrevRot;
 
     private bool isSprinting = false;
     private bool wasSprinting = false;
@@ -48,9 +49,7 @@ public class PlayerController : MonoBehaviour, INetworked
 
     private void Awake()
     {
-        NetworkManager.Instance.tickUpdate += Tick;
-
-        NetPrevPos = transform;
+        NetworkManager.Instance.TickUpdate += Tick;
 
         controller = GetComponent<CharacterController>();
         entity = GetComponent<Entity>();
@@ -180,9 +179,13 @@ public class PlayerController : MonoBehaviour, INetworked
 
     private void CheckPosition()
     {
-        if (transform.position != NetPrevPos.position && (Mathf.Abs((transform.position - NetPrevPos.position).magnitude) > .1 || RotationDifference()))
+        Debug.Log($"currPos/prevPos: {transform.position}/{NetPrevPos}\nMagnitude: {Mathf.Abs((transform.position - NetPrevPos).magnitude)}");
+        Debug.Log($"currRot/prevPos: {transform.rotation.eulerAngles}/{NetPrevRot}\nRotDiff: {transform.rotation.eulerAngles - NetPrevRot}");
+
+        if (transform.position != NetPrevPos && (Mathf.Abs((transform.position - NetPrevPos).magnitude) > .1 || RotationDifference()))
         {
-            NetPrevPos = transform;
+            NetPrevPos = transform.position;
+            NetPrevRot = transform.rotation.eulerAngles;
 
             Packet packet = new Packet();
             packet.type = 0;
@@ -194,19 +197,11 @@ public class PlayerController : MonoBehaviour, INetworked
 
     private bool RotationDifference()
     {
-        var difference = (transform.rotation * Quaternion.Inverse(NetPrevPos.rotation)).eulerAngles;
+        var difference = transform.rotation.eulerAngles - NetPrevRot;
 
-        for (int i = 0; i < 3; i++)
+        if (difference.sqrMagnitude > 0)
         {
-            switch (i)
-            {
-                case 0:
-                    return difference.x > 0;
-                case 1:
-                    return difference.y > 0;
-                case 2:
-                    return difference.z > 0;
-            }
+            return true;
         }
 
         return false;
@@ -349,5 +344,10 @@ public class PlayerController : MonoBehaviour, INetworked
         sprintSecondsElapsed += Time.deltaTime;
         Debug.Log(sprint_max_length);
         return x > sprint_max_length;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManager.Instance.TickUpdate -= Tick;
     }
 }

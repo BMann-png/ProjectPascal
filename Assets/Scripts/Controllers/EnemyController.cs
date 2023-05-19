@@ -5,22 +5,22 @@ public class EnemyController : MonoBehaviour, INetworked
 {
     private Entity entity;
 
-    Transform NetPrevPos;
+    Vector3 NetPrevPos;
+    Vector3 NetPrevRot;
 
     private void Awake()
     {
-        NetworkManager.Instance.tickUpdate += Tick;
-
-        NetPrevPos = transform;
+        NetworkManager.Instance.TickUpdate += Tick;
 
         entity = GetComponent<Entity>();
     }
 
     public void Tick()
     {
-        if (!GameManager.Instance.Loading && NetPrevPos.position != transform.position && (Mathf.Abs((transform.position - NetPrevPos.position).magnitude) > .1 || RotationDifference()))
+        if (!GameManager.Instance.Loading && NetPrevPos != transform.position && (Mathf.Abs((transform.position - NetPrevPos).magnitude) > .1 || RotationDifference()))
         {
-            NetPrevPos = transform;
+            NetPrevPos = transform.position;
+            NetPrevRot = transform.position;
 
             Packet packet = new Packet();
             packet.type = 0;
@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour, INetworked
 
     private bool RotationDifference()
     {
-        var difference = (transform.rotation * Quaternion.Inverse(NetPrevPos.rotation)).eulerAngles;
+        var difference = transform.rotation.eulerAngles - NetPrevRot;
 
         for (int i = 0; i < 3; i++)
         {
@@ -48,5 +48,10 @@ public class EnemyController : MonoBehaviour, INetworked
         }
 
         return false;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManager.Instance.TickUpdate -= Tick;
     }
 }

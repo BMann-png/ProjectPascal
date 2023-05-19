@@ -145,8 +145,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private const int TICK_RATE = 30;
     private const float TICK_TIME = 1.0f / TICK_RATE;
 
-    private int tick;
-
     public string PlayerName { get; private set; }
     public SteamId PlayerId { get; private set; }
 
@@ -162,8 +160,8 @@ public class NetworkManager : Singleton<NetworkManager>
     private IntPtr message;
     private bool cleanedUp = false;
 
-    public delegate void TickUpdate();
-    public event TickUpdate tickUpdate;
+    public delegate void TickEvent();
+    public event TickEvent TickUpdate;
 
     protected override void Awake()
     {
@@ -237,13 +235,21 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             Debug.Log("Error receiving data");
         }
+
+        string output = "";
+        foreach(var del in TickUpdate.GetInvocationList())
+        {
+            output += del.Target.ToString() + " ";
+        }
+
+        Debug.Log(output);
     }
 
     private IEnumerator Tick()
     {
         while (true)
         {
-            tickUpdate?.Invoke();
+            TickUpdate?.Invoke();
 
             yield return new WaitForSeconds(TICK_TIME);
         }
