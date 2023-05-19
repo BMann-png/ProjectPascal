@@ -20,7 +20,6 @@ public class CaretakerController : MonoBehaviour
 
     private void Start()
     {
-        transform.position = startingPosition.position;
         hands.SetActive(false);
     }
 
@@ -42,11 +41,11 @@ public class CaretakerController : MonoBehaviour
             startingCryTime = Time.time;
             startingDistanceFromChild = (startingPosition.position - endPosition.position).magnitude;
         }
-        else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Flip Back"))
+        else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Revive"))
         {
             hands.SetActive(false);
         }
-        else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Crying"))
+        else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Crying") && playerHealth.health <= 0)
         {
             float distanceMoved = (100 - playerHealth.down) / 5;
 
