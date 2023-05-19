@@ -46,6 +46,19 @@ public class PlayerController : MonoBehaviour, INetworked
     private bool reviving = false;
     private byte playersReviving = 0;
 
+    private void Awake()
+    {
+        controller = GetComponent<CharacterController>();
+        entity = GetComponent<Entity>();
+        health = GetComponent<Health>();
+
+
+        hudManager = FindAnyObjectByType<HUDManager>();
+        entity.animator = animator;
+
+        addedReviveTime = 6.0f / health.MaxTrauma;
+    }
+
     private void FixedUpdate()
     {
         if (!GameManager.Instance.Loading)
