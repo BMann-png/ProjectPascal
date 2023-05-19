@@ -49,15 +49,17 @@ public class CaretakerController : MonoBehaviour
             float sectionOfDistance = distanceMoved / startingDistanceFromChild;
 
             transform.position = Vector3.Lerp(startingPosition.position, endPosition.position, sectionOfDistance);
+
+            if (playerHealth.down <= 0)
+            {
+                SetAnimators();
+            }
         }
         else if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Flip Back"))
         {
             hands.SetActive(false);
         }
-        if (playerHealth.down <= 0)
-        {
-            SetAnimators();
-        }
+        
 
     }
 
