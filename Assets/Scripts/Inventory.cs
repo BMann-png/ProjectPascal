@@ -126,6 +126,8 @@ public class Inventory : MonoBehaviour
 				//TODO: Pacifier
 				break;
 		}
+
+		equipItem = slot;
 	}
 
 	public void EquipWeapon(byte slot, byte id)
@@ -167,6 +169,19 @@ public class Inventory : MonoBehaviour
 
 	public void SetWeapon(byte slot, byte id)
 	{
+		switch (equipItem)
+		{
+			case 0:
+				if (primaryIndex != 255) { primaryWeapons[primaryIndex].SetActive(false); }
+				break;
+			case 1:
+				if (secondaryIndex != 255) { secondaryWeapons[secondaryIndex].SetActive(false); }
+				break;
+			case 2:
+				//TODO: Pacifier
+				break;
+		}
+
 		switch (slot)
 		{
 			case 0:
