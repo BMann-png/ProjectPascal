@@ -11,6 +11,8 @@ public class EnemyController : MonoBehaviour, INetworked
     {
         NetworkManager.Instance.tickUpdate += Tick;
 
+        NetPrevPos = transform;
+
         entity = GetComponent<Entity>();
     }
 
@@ -18,6 +20,8 @@ public class EnemyController : MonoBehaviour, INetworked
     {
         if (!GameManager.Instance.Loading && NetPrevPos.position != transform.position && (Mathf.Abs((transform.position - NetPrevPos.position).magnitude) > .1 || RotationDifference()))
         {
+            NetPrevPos = transform;
+
             Packet packet = new Packet();
             packet.type = 0;
             packet.id = entity.id;

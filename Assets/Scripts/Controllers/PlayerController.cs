@@ -50,10 +50,11 @@ public class PlayerController : MonoBehaviour, INetworked
     {
         NetworkManager.Instance.tickUpdate += Tick;
 
+        NetPrevPos = transform;
+
         controller = GetComponent<CharacterController>();
         entity = GetComponent<Entity>();
         health = GetComponent<Health>();
-
 
         hudManager = FindAnyObjectByType<HUDManager>();
         entity.animator = animator;
