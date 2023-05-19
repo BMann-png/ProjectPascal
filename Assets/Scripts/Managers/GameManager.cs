@@ -522,7 +522,7 @@ public class GameManager : Singleton<GameManager>
 
 			//Entity entity = entities[ThisPlayer];
 
-			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, variation.y, 0.0f);
 
 			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
 

@@ -49,7 +49,7 @@ MonoBehaviour:
   shoot: {fileID: 5797374795737433679}
   type: 1
   delay: 0.01
-  spreadAngle: 15
+  spreadAngle: 5
   numsOfShots: 7
 --- !u!1 &3282159058386506561
 GameObject:
