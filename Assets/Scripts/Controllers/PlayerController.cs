@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
 	private bool tripped = false;
 
 	private bool down = false;
+	private bool canShoot = true;
 	private float sprintTimer = 0.0f;
 	private float sprintCooldownTimer = 0.0f;
 	private float tripTimer = 0.0f;
@@ -154,7 +155,7 @@ public class PlayerController : MonoBehaviour
 			}
 
 			Weapon weapon = hand.GetComponentInChildren<Weapon>();
-			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused)
+			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused && canShoot)
 			{
 				weapon.IsFiring = true;
 				weapon.Shoot();
@@ -186,6 +187,8 @@ public class PlayerController : MonoBehaviour
 		NetworkManager.Instance.SendMessage(packet);
 
 		animator.SetTrigger("Sprint");
+
+		canShoot = false;
 	}
 
 	private void EndSprint()
@@ -212,6 +215,8 @@ public class PlayerController : MonoBehaviour
 		NetworkManager.Instance.SendMessage(packet);
 
 		animator.SetTrigger("StopSprint");
+
+		canShoot = true;
 	}
 
 	private void OnDown()
