@@ -238,8 +238,8 @@ MonoBehaviour:
   secondaryWeapons:
   - {fileID: 5936406216322940931}
   pacifier: {fileID: 0}
-  primaryIndex: 1
-  secondaryIndex: 255
+  primaryIndex: 255
+  secondaryIndex: 0
 --- !u!114 &5018046254760015926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +339,10 @@ PrefabInstance:
     - target: {fileID: 1714632598187998691, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_Name
       value: DartGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714632598187998691, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6499522961762826845, guid: 0579cda19b7bd644d98824ee861cc32b, type: 3}
       propertyPath: m_RootOrder
