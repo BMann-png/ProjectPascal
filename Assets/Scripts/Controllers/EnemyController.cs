@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour, INetworked
 
     public void Tick()
     {
-        if (!GameManager.Instance.Loading && NetPrevPos != transform.position && (Mathf.Abs((transform.position - NetPrevPos).magnitude) > .1 || RotationDifference()))
+        if ((!GameManager.Instance.Loading && NetPrevPos != transform.position && Mathf.Abs((transform.position - NetPrevPos).magnitude) > .1) || RotationDifference())
         {
             NetPrevPos = transform.position;
             NetPrevRot = transform.position;

@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour, INetworked
         Debug.Log($"currPos/prevPos: {transform.position}/{NetPrevPos}\nMagnitude: {Mathf.Abs((transform.position - NetPrevPos).magnitude)}");
         Debug.Log($"currRot/prevPos: {transform.rotation.eulerAngles}/{NetPrevRot}\nRotDiff: {transform.rotation.eulerAngles - NetPrevRot}");
 
-        if (transform.position != NetPrevPos && (Mathf.Abs((transform.position - NetPrevPos).magnitude) > .1 || RotationDifference()))
+        if ((transform.position != NetPrevPos && Mathf.Abs((transform.position - NetPrevPos).magnitude) > .1) || RotationDifference())
         {
             NetPrevPos = transform.position;
             NetPrevRot = transform.rotation.eulerAngles;
