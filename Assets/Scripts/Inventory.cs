@@ -17,7 +17,7 @@ public class Inventory : MonoBehaviour
 	private bool hasMission = false;
 
 	private byte equipItem = 0;
-	private byte prevEquipItem = 0;
+	private byte prevEquipItem = 255;
 
 	private float scrollTime = 0.1f;
 	private float scrollTimer = 0.0f;
@@ -26,8 +26,8 @@ public class Inventory : MonoBehaviour
 
 	private void Awake()
 	{
-		//SetupPacket(equipItem, primaryIndex);
 		entity = GetComponent<Entity>();
+		SetupPacket(1, secondaryIndex);
 	}
 
 	private void Update()
@@ -84,93 +84,122 @@ public class Inventory : MonoBehaviour
 						id = secondaryIndex;
 						break;
 					case 2:
-						// TODO: Zach, do your damn job! gimme me binki D:
+						id = 0;
 						break;
 				}
 
 				SetupPacket(equipItem, id);
-			}
-			else
-			{
-				equipItem = prevEquipItem;
 			}
 		}
 	}
 
 	public void EquipWeapon(byte slot)
 	{
-		byte id;
+		switch (prevEquipItem)
+		{
+			case 0:
+				if (primaryIndex != 255) { primaryWeapons[primaryIndex].SetActive(false); }
+				break;
+			case 1:
+				if (secondaryIndex != 255) { secondaryWeapons[secondaryIndex].SetActive(false); }
+				break;
+			case 2:
+				//TODO: Pacifier
+				break;
+		}
 
 		switch (slot)
 		{
 			case 0:
-				ResetWeapons(primaryWeapons);
-				id = primaryIndex;
-				if (id == 255) return;
-				if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
-				if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
-				if (primaryWeapons[primaryIndex].TryGetComponent<Weapon>(out weapon)) entity.shoot = weapon.shoot;
+				if (primaryIndex == 255) { return; }
+				primaryWeapons[primaryIndex].SetActive(true);
+				weapon = primaryWeapons[primaryIndex].GetComponent<Weapon>();
+				entity.shoot = weapon.shoot;
 				break;
 			case 1:
-				ResetWeapons(secondaryWeapons);
-				id = secondaryIndex;
-				if (id == 255) return;
-				if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
-				if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
-				if (secondaryWeapons[secondaryIndex].TryGetComponent<Weapon>(out weapon)) entity.shoot = weapon.shoot;
+				if (secondaryIndex == 255) { return; }
+				secondaryWeapons[secondaryIndex].SetActive(true);
+				weapon = secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
+				entity.shoot = weapon.shoot;
 				break;
 			case 2:
-				// TODO: Pacifier
+				//TODO: Pacifier
 				break;
 		}
+
+		equipItem = slot;
 	}
 
 	public void EquipWeapon(byte slot, byte id)
 	{
+		switch (prevEquipItem)
+		{
+			case 0:
+				if (primaryIndex != 255) { primaryWeapons[primaryIndex].SetActive(false); }
+				break;
+			case 1:
+				if (secondaryIndex != 255) { secondaryWeapons[secondaryIndex].SetActive(false); }
+				break;
+			case 2:
+				//TODO: Pacifier
+				break;
+		}
+
+		if (id == 255) { return; }
+
 		switch (slot)
 		{
 			case 0:
-				ResetWeapons(primaryWeapons);
-				if (id == 255) return;
 				primaryIndex = id;
-				if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(true);
-				if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(false);
-				if (primaryWeapons[primaryIndex].TryGetComponent<Weapon>(out weapon)) entity.shoot = weapon.shoot;
+				primaryWeapons[primaryIndex].SetActive(true);
+				weapon = primaryWeapons[primaryIndex].GetComponent<Weapon>();
+				entity.shoot = weapon.shoot;
 				break;
 			case 1:
-				ResetWeapons(secondaryWeapons);
-				if (id == 255) return;
 				secondaryIndex = id;
-				if (primaryIndex < primaryWeapons.Count) primaryWeapons[primaryIndex].SetActive(false);
-				if (secondaryIndex < secondaryWeapons.Count) secondaryWeapons[secondaryIndex].SetActive(true);
-				if (primaryWeapons[primaryIndex].TryGetComponent<Weapon>(out weapon)) entity.shoot = weapon.shoot;
+				secondaryWeapons[secondaryIndex].SetActive(true);
+				weapon = secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
+				entity.shoot = weapon.shoot;
 				break;
 			case 2:
-				// TODO: Pacifier
+				//TODO: Pacifier
 				break;
 		}
 	}
 
 	public void SetWeapon(byte slot, byte id)
 	{
+		switch (equipItem)
+		{
+			case 0:
+				if (primaryIndex != 255) { primaryWeapons[primaryIndex].SetActive(false); }
+				break;
+			case 1:
+				if (secondaryIndex != 255) { secondaryWeapons[secondaryIndex].SetActive(false); }
+				break;
+			case 2:
+				//TODO: Pacifier
+				break;
+		}
+
 		switch (slot)
 		{
 			case 0:
-				if (primaryIndex == id) return;
+				if (primaryIndex == id) { return; }
 				primaryIndex = id;
 				SetupPacket(slot, primaryIndex);
 				break;
 			case 1:
-				if (secondaryIndex == id) return;
+				if (secondaryIndex == id) { return; }
 				secondaryIndex = id;
 				SetupPacket(slot, secondaryIndex);
 				break;
 			case 2:
-				if (id > 0 == hasPacifier) return;
+				if (id > 0 == hasPacifier) { return; }
 				hasPacifier = id > 0;
 				break;
 			case 3:
-				if (id > 0 == hasMission) return;
+				if (id > 0 == hasMission) { return; }
 				hasMission = id > 0;
 				break;
 		}
@@ -179,14 +208,6 @@ public class Inventory : MonoBehaviour
 	public void Switch(byte slot)
 	{
 		equipItem = slot;
-	}
-
-	private void ResetWeapons(List<GameObject> weapons)
-	{
-		foreach (GameObject weapon in weapons)
-		{
-			weapon.SetActive(false);
-		}
 	}
 
 	private void SetupPacket(byte slot, byte id)

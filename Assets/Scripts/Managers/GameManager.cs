@@ -196,7 +196,7 @@ public class GameManager : Singleton<GameManager>
 
 					if (spawner.type < 100)
 					{
-						entities[id] = Instantiate(prefabManager.Pickups[spawner.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
+						entities[id] = Instantiate(prefabManager.Pickups[spawner.type], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
 						Interactable inter = entities[id].GetComponent<Interactable>();
 						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
@@ -522,7 +522,7 @@ public class GameManager : Singleton<GameManager>
 
 			//Entity entity = entities[ThisPlayer];
 
-			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, variation.y, 0.0f);
 
 			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
 
