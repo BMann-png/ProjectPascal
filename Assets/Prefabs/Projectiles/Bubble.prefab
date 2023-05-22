@@ -194,6 +194,7 @@ MonoBehaviour:
   speed: 20
   gravityModifier: 10
   destoryOnCollide: 1
+  type: 1
 --- !u!114 &6882036858200203633
 MonoBehaviour:
   m_ObjectHideFlags: 0
