@@ -98,8 +98,8 @@ public class PlayerController : MonoBehaviour
 
 				if(transform.position.y > 10)
 				{
-					Destroy(gameObject);
 					GameManager.Instance.Spectate();
+					Destroy(gameObject);
 				}
 				GameManager.Instance.AudioManager.StopCry();
 			}
