@@ -9,10 +9,14 @@ public class GameManager : Singleton<GameManager>
 {
 	private static readonly object joinLock = new object();
 
-	public List<GameObject> playerLocations = new List<GameObject>();
 	private static readonly int MAX_ENEMY_COUNT = 30;
 	private static readonly int MAX_SPECIAL_COUNT = 2;
 	public static readonly ushort INVALID_ID = 65535;
+
+	public List<GameObject> playerLocations = new List<GameObject>();
+	private GameObject[] spectators;
+	private int spectateID = 0;
+	private bool spectating = false;
 
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
@@ -119,6 +123,18 @@ public class GameManager : Singleton<GameManager>
 				++specialCount;
 			}
 		}
+
+		if(spectating)
+		{
+			if(Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				if(++spectateID == spectators.Length) { spectateID = 0; }
+			}
+			else if(Input.GetKeyDown(KeyCode.Mouse1))
+			{
+				if(--spectateID == -1) { spectateID = spectators.Length - 1; }
+			}
+		}
 	}
 
 	public void SelectLevel(TMP_Dropdown change)
@@ -179,6 +195,8 @@ public class GameManager : Singleton<GameManager>
 
 	private void FinishLoading()
 	{
+		spectating = false;
+		spectateID = 0;
 		loadedPlayers = 0;
 		InGame = true;
 
@@ -262,6 +280,13 @@ public class GameManager : Singleton<GameManager>
 
 				++healthBarId;
 			}
+		}
+
+		spectators = GameObject.FindGameObjectsWithTag("Spectator");
+
+		foreach(GameObject go in spectators)
+		{
+			go.SetActive(false);
 		}
 
 		SceneLoader.SetLoadingScreen(false);
@@ -556,8 +581,6 @@ public class GameManager : Singleton<GameManager>
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
-		//audioManager.Source.PlayOneShot
-			//(audioManager.GetShots());
 	}
 
 	public void Destroy(Entity obj)
@@ -591,6 +614,13 @@ public class GameManager : Singleton<GameManager>
 		packet.type = 7;
 
 		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	public void Spectate()
+	{
+		Camera.main.gameObject.SetActive(false);
+		spectators[spectateID].SetActive(true);
+		spectating = true;
 	}
 
 	//-----CALLBACKS-----
@@ -825,7 +855,11 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (entities[packet.id] != null)
 		{
-			if(packet.id < 4) { --AlivePlayers; }
+			if(packet.id < 4)
+			{
+				--AlivePlayers;
+				//TODO: Delete spectator
+			}
 
 			entities[packet.id].destroyed = true;
 			Destroy(entities[packet.id].gameObject);

@@ -96,7 +96,11 @@ public class PlayerController : MonoBehaviour
 				controller.enabled = false;
 				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
 
-				if(transform.position.y > 10) { Destroy(gameObject); }
+				if(transform.position.y > 10)
+				{
+					Destroy(gameObject);
+					GameManager.Instance.Spectate();
+				}
 				GameManager.Instance.AudioManager.StopCry();
 			}
 
