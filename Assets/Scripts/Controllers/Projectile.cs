@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour
 	[SerializeField] private float speed = 100f;
 	[SerializeField] private float gravityModifier = -9.81f;
 	[SerializeField] private bool destoryOnCollide = false;
+	[SerializeField] private int type;
 
 	private static readonly float LIFETIME = 5.0f;
 	private static LayerMask ENEMY_MASK;
@@ -64,9 +65,11 @@ public class Projectile : MonoBehaviour
 	
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (destoryOnCollide) 
-		{ 
-            Destroy(gameObject);
+		if (destoryOnCollide)
+		{
+			Destroy(Instantiate(GameManager.Instance.PrefabManager.Particles[type], transform.position, transform.rotation), 1.0f);
+
+			Destroy(gameObject);
 		}
     }
 }
