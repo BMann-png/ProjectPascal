@@ -6436,7 +6436,7 @@ Transform:
   m_Children:
   - {fileID: 1857238444}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &288911317
 PrefabInstance:
@@ -8177,7 +8177,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &374309173
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12527,7 +12527,7 @@ RectTransform:
   - {fileID: 2029047606}
   - {fileID: 940041482}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -28049,6 +28049,8 @@ MonoBehaviour:
   - {fileID: 440804869201003401, guid: 6f595e1b43026814ab89fa0823bb93a1, type: 3}
   pickups:
   - {fileID: 5591334031132746420, guid: cbb2c32d98be87c458ccd8ad699c904e, type: 3}
+  - {fileID: 5591334031132746420, guid: 92fd4112d29bb7e4aa76822618f8927a, type: 3}
+  - {fileID: 5591334031132746420, guid: 935635cd3a120de479c719b1527fd1a0, type: 3}
   pushables:
   - {fileID: 2589722287660018693, guid: 3353e3a40c171c243a4e3c5bd1d2c3a5, type: 3}
   - {fileID: 2109230177950716293, guid: 3688f3b2ac3c92345ac62e5c3de5f320, type: 3}
@@ -28063,9 +28065,14 @@ MonoBehaviour:
   - {fileID: 6882036858200203642, guid: 4d56700dd20313b41b93b44948bd977b, type: 3}
   - {fileID: 6882036858200203642, guid: 0c7b9bc60c01c5341b50adb8d788e86d, type: 3}
   networkProjectiles:
-  - {fileID: 2722898603441365745, guid: 761c7053444668f4ab0f9c8878b24883, type: 3}
-  - {fileID: 6882036858200203642, guid: cdd4b5361300201409b4836bf1552f49, type: 3}
-  - {fileID: 2722898603441365745, guid: a699f0c6ace184f479e99a73550dd860, type: 3}
+  - {fileID: 6882036858200203642, guid: 553dc871fa4e90240899d2a46e3b5b2a, type: 3}
+  - {fileID: 6882036858200203642, guid: 81ce64ef296179d44b5e2a06a283fc8a, type: 3}
+  - {fileID: 6882036858200203642, guid: c197c4d9f64be3144b1ba0cc7041dc0d, type: 3}
+  particles:
+  - {fileID: 3684000779114506553, guid: bc38bb430fa7500429c590f82088b2c1, type: 3}
+  - {fileID: 3684000779114506553, guid: bc38bb430fa7500429c590f82088b2c1, type: 3}
+  - {fileID: 3684000779114506553, guid: 503e7f44e4522cb4f96e61cce3230e66, type: 3}
+  - {fileID: 3684000779114506553, guid: 07b32f2d66e420e4f9712d22681a54fc, type: 3}
   healthBar: {fileID: 8246028373689675949, guid: 4da834b750230584787988a5271b7ad9, type: 3}
 --- !u!4 &1463087899
 Transform:
@@ -29963,9 +29970,41 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: fb5ee2639eb9bff4298f8c8fcaf13cd6, type: 3}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: c7cd48ccbd8c77f489738489aa3c6049, type: 3}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 19f8029e5a9069848a3c18c3ead7add5, type: 3}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 498459961924abe42865a2e5babb0cc7, type: 3}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: be9c3140829e0d4428c900104dc24375, type: 3}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[5]
+      value: 
+      objectReference: {fileID: 8300000, guid: bfc2879b3a6ebdb4880f7de361998c39, type: 3}
+    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
+      propertyPath: handNoises.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2dac3dd7d2293934fb461f320957328a, type: 3}
     - target: {fileID: 3091862925460787582, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3091862925460787582, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
       propertyPath: m_LocalPosition.x

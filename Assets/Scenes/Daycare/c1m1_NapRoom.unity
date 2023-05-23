@@ -11657,7 +11657,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1563135700}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &490415682
 MonoBehaviour:
@@ -16678,6 +16678,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3360294018c0c6c43ae68395285c7b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &708878290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 708878291}
+  - component: {fileID: 708878292}
+  m_Layer: 0
+  m_Name: PickupSpawner (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &708878291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708878290}
+  m_LocalRotation: {x: 0, y: -0.3175529, z: 0, w: 0.9482406}
+  m_LocalPosition: {x: -4.8280563, y: 0, z: 14.339918}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1563135700}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: -37.03, z: 0}
+--- !u!114 &708878292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708878290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf40ff63a83599641b40e1ecde254bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guaranteeSpawn: 1
+  type: 1
+  id: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  onStopInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &714204748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37189,6 +37245,7 @@ Transform:
   - {fileID: 145846882}
   - {fileID: 1656999822}
   - {fileID: 2104048455}
+  - {fileID: 708878291}
   - {fileID: 2000110638}
   - {fileID: 1656526027}
   - {fileID: 490415681}
@@ -39760,7 +39817,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1563135700}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &1656526028
 MonoBehaviour:
@@ -48155,7 +48212,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1563135700}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: -90, y: 6.55, z: 90}
 --- !u!114 &2000110639
 MonoBehaviour:
@@ -50166,7 +50223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guaranteeSpawn: 1
-  type: 1
+  type: 0
   id: 0
   onInteract:
     m_PersistentCalls:
