@@ -236,6 +236,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 				entities[id].id = id;
+				entities[id].destroyed = true;
 				playerLocations.Add(entities[id].gameObject);
 
 				HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
@@ -249,6 +250,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 				entities[id].id = id;
+				entities[id].destroyed = true;
 				entities[id].SetModel();
 				playerLocations.Add(entities[id].gameObject);
 
@@ -303,6 +305,7 @@ public class GameManager : Singleton<GameManager>
 			InLobby = true;
 			entities[0] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[0].position, spawnPoints[0].rotation).GetComponent<Entity>();
 			entities[0].id = 0;
+			entities[0].destroyed = true;
 			entities[0].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 			entities[0].SetModel();
 
@@ -352,6 +355,7 @@ public class GameManager : Singleton<GameManager>
 
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
 					entities[i].SetModel();
 				}
@@ -359,6 +363,7 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					entities[i].SetModel();
 				}
@@ -392,6 +397,7 @@ public class GameManager : Singleton<GameManager>
 
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
 					entities[i].SetModel();
 				}
@@ -399,6 +405,7 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					entities[i].SetModel();
 				}
@@ -422,6 +429,7 @@ public class GameManager : Singleton<GameManager>
 			transform = lobbySpawnpoints[id];
 			entities[id] = Instantiate(prefabManager.LobbyPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 			entities[id].id = id;
+			entities[id].destroyed = true;
 			entities[id].SetModel();
 
 			Lobby lobby = NetworkManager.Instance.currentLobby;
@@ -542,7 +550,8 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (obj.id < 4) //Player
 		{
-			return;
+			--AlivePlayers;
+			unspawnedPlayers.Enqueue(obj.id);
 		}
 		else if (obj.id < 101) //Common Enemy
 		{
@@ -639,8 +648,7 @@ public class GameManager : Singleton<GameManager>
 					entities[i] = null;
 				}
 
-				--PlayerCount;
-				//TODO: decrement AlivePlayers
+				--AlivePlayers;
 
 				lobby.SetData("Player" + i, "0");
 
@@ -675,8 +683,6 @@ public class GameManager : Singleton<GameManager>
 	{
 		entities[inventory.id].DisplayInventory(inventory.inventory);
         entities[inventory.id].shoot = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
-		
-
     }
 
 	public void GameTrigger(Packet packet)
@@ -805,6 +811,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (entities[packet.id] != null)
 		{
+			entities[packet.id].destroyed = true;
 			Destroy(entities[packet.id].gameObject);
 		}
 	}

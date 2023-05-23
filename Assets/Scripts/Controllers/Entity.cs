@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
 
     [SerializeField] bool inLobby = false;
     private bool quitting = false;
+	public bool destroyed = false;
 
     private void Awake()
     {
@@ -272,7 +273,7 @@ public class Entity : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (!quitting)
+        if (!quitting && !destroyed)
         {
             GameManager.Instance.Destroy(this);
         }

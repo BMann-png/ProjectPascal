@@ -94,11 +94,10 @@ public class PlayerController : MonoBehaviour
 			}
 			else if(health.health == 0 && health.down == 0)
 			{
-				//TODO: Die
 				controller.enabled = false;
 				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
 
-				if(transform.position.y > 10) { Destroy(this.gameObject); }
+				if(transform.position.y > 10) { Destroy(gameObject); }
 				GameManager.Instance.AudioManager.StopCry();
 			}
 
