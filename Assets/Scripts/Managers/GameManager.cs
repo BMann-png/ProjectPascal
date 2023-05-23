@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -811,6 +810,8 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (entities[packet.id] != null)
 		{
+			if(packet.id < 4) { --AlivePlayers; }
+
 			entities[packet.id].destroyed = true;
 			Destroy(entities[packet.id].gameObject);
 		}
