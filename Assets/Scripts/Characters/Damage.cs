@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 [RequireComponent(typeof(Entity))]
 public class Damage : MonoBehaviour
@@ -22,15 +23,15 @@ public class Damage : MonoBehaviour
             collisionHealth.Decay(damage);
         }
         else
-        {
-            collisionHealth.OnDamaged(damage);
-        }
-
+		{
+			collisionHealth.OnDamaged(damage);
+			Destroy(Instantiate(GameManager.Instance.PrefabManager.Particles[3], transform.position, transform.rotation), 1.0f);
+		}
 		if(trauma > 0)
 		{
 			collisionHealth.OnTrauma(trauma);
 		}
-    }
+	}
 
     private void OnCollisionExit(Collision collision)
     {
