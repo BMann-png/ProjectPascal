@@ -132,31 +132,17 @@ public class Inventory : MonoBehaviour
 
 	public void EquipWeapon(byte slot, byte id)
 	{
-		switch (prevEquipItem)
-		{
-			case 0:
-				if (primaryIndex != 255) { primaryWeapons[primaryIndex].SetActive(false); }
-				break;
-			case 1:
-				if (secondaryIndex != 255) { secondaryWeapons[secondaryIndex].SetActive(false); }
-				break;
-			case 2:
-				//TODO: Pacifier
-				break;
-		}
-
-		if (id == 255) { return; }
+		foreach(GameObject weapon in primaryWeapons) { weapon.SetActive(false); }
+		foreach(GameObject weapon in secondaryWeapons) { weapon.SetActive(false); }
 
 		switch (slot)
 		{
 			case 0:
-				primaryIndex = id;
 				primaryWeapons[primaryIndex].SetActive(true);
 				weapon = primaryWeapons[primaryIndex].GetComponent<Weapon>();
 				entity.shoot = weapon.shoot;
 				break;
 			case 1:
-				secondaryIndex = id;
 				secondaryWeapons[secondaryIndex].SetActive(true);
 				weapon = secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
 				entity.shoot = weapon.shoot;
@@ -210,7 +196,7 @@ public class Inventory : MonoBehaviour
 		equipItem = slot;
 	}
 
-	private void SetupPacket(byte slot, byte id)
+	public void SetupPacket(byte slot, byte id)
 	{
 		EquipWeapon(slot);
 
@@ -231,7 +217,7 @@ public class Inventory : MonoBehaviour
 			case 1:
 				return secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
 			case 2:
-				// TODO: Zach, do your damn job! gimme me binki D:
+				// TODO: Binki
 				break;
 		}
 		return null;

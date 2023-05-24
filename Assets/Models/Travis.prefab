@@ -238,6 +238,7 @@ GameObject:
   m_Component:
   - component: {fileID: 758232912831483726}
   - component: {fileID: 2994202531662102860}
+  - component: {fileID: 3870748760190582909}
   m_Layer: 0
   m_Name: Travis
   m_TagString: Untagged
@@ -285,6 +286,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3870748760190582909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130068367492306420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7925c301538ee674e91c7da53ad55d55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &139072195514422546
 GameObject:
   m_ObjectHideFlags: 0
