@@ -10,6 +10,7 @@ TagManager:
   - Pushable
   - NetPlayer
   - HealthBars
+  - Spectator
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Projectile
   - Light
   - Interactable
-  - 
+  - PlayerModel
   - 
   - 
   - 
@@ -46,4 +47,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: LoadingScreen
+    uniqueID: 3248358675
     locked: 0

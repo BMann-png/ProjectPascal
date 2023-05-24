@@ -1,9 +1,8 @@
 using Steamworks.Data;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class MenuHandler : MonoBehaviour
 {
@@ -14,6 +13,7 @@ public class MenuHandler : MonoBehaviour
 	[SerializeField] private GameObject lobbyList;
 	[SerializeField] private GameObject lobbyPrefab;
 	[SerializeField] private TMP_InputField lobbyName;
+	[SerializeField] private Scrollbar scrollbar;
 
 	public void Awake()
 	{
@@ -60,14 +60,6 @@ public class MenuHandler : MonoBehaviour
 		createLobby.SetActive(true);
 	}
 
-	public void ExitGame()
-	{
-#if UNITY_EDITOR
-		UnityEditor.EditorApplication.isPlaying = false;
-#endif
-		Application.Quit();
-	}
-
 	public void CreateLobby()
 	{
 		GameManager.Instance.CreateLobby(lobbyName.text);
@@ -82,13 +74,18 @@ public class MenuHandler : MonoBehaviour
 
 		List<Lobby> lobbies = await NetworkManager.Instance.GetLobbies();
 
-		if (lobbies == null || lobbies.Count == 0) { return; }
+		if (lobbies == null || lobbies.Count == 0)
+		{
+			scrollbar.size = 1.0f;
+			scrollbar.value = 1.0f;
+			return;
+		}
 
 		int count = 0;
 		foreach (Lobby lobby in lobbies)
 		{
-			string name = lobby.GetData("Name");
-			if(name == null || name.Length == 0) { continue; }
+			string value = lobby.GetData("DaycareDescent");
+			if(value == null || value != "true") { continue; }
 
 			GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
 			go.GetComponent<LobbyEntry>().CreateLobby(lobby);
@@ -99,6 +96,15 @@ public class MenuHandler : MonoBehaviour
 		float lobbyHeight = lobbyPrefab.GetComponent<RectTransform>().rect.height;
 		float lobbyListHeight = 800;
 		float size = Mathf.Max(lobbyHeight * count, lobbyListHeight);
+
+		if(size == 0.0f) { scrollbar.size = 1.0f; }
+		else
+		{
+			scrollbar.size = Mathf.Max(1.0f, lobbyListHeight / size);
+		}
+
+		scrollbar.value = 1.0f;
+
 		lobbyList.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
 	}
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
@@ -27,18 +25,21 @@ public class PrefabManager : MonoBehaviour
 
 	[SerializeField] private GameObject lobbyPlayer;
 	public GameObject LobbyPlayer { get => lobbyPlayer; }
-  
+
 	[SerializeField] private GameObject enemy;
 	public GameObject Enemy { get => enemy; }
 
 	[SerializeField] private GameObject networkEnemy;
 	public GameObject NetworkEnemy { get => networkEnemy; }
 
-	[SerializeField] private GameObject projectile;
-	public GameObject Projectile { get => projectile; }
+	[SerializeField] private GameObject[] projectiles;
+	public GameObject[] Projectiles { get => projectiles; }
 
-	[SerializeField] private GameObject networkProjectile;
-	public GameObject NetworkProjectile { get => networkProjectile; }
+	[SerializeField] private GameObject[] networkProjectiles;
+	public GameObject[] NetworkProjectiles { get => networkProjectiles; }
+
+	[SerializeField] private GameObject[] particles;
+	public GameObject[] Particles { get => particles; }
 
 	[SerializeField] private GameObject healthBar;
 	public GameObject HealthBar { get => healthBar; }

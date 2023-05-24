@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Interactable), typeof(Entity))]
@@ -9,10 +7,12 @@ public class Animate : MonoBehaviour
 	[SerializeField] private new Animation animation;
 
 	private Interactable interactable;
+	private Entity entity;
 
 	private void Awake()
 	{
 		interactable = GetComponent<Interactable>();
+		entity = GetComponent<Entity>();
 
 		interactable.canInteract = canInteract;
 		interactable.onInteract.RemoveAllListeners();
@@ -22,5 +22,19 @@ public class Animate : MonoBehaviour
 	public void StartAnimation()
 	{
 		animation.Play();
+		interactable.canInteract = false;
+
+		Packet packet = new Packet();
+		packet.type = 1;
+		packet.id = entity.id;
+		packet.action = new ActionPacket(255);
+
+		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	public void OtherPlay()
+	{
+		animation.Play();
+		interactable.canInteract = false;
 	}
 }
