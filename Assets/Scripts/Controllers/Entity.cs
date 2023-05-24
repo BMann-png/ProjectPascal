@@ -80,13 +80,6 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public void DisplayInventory(InventoryPacket ip)
-    {
-        Inventory inventory = GetComponent<Inventory>();
-
-        inventory.EquipWeapon(ip.slot, ip.data);
-    }
-
     public void SetModel()
     {
         //TODO: Check for existing model
