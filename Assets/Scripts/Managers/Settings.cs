@@ -17,7 +17,7 @@ public class Settings : MonoBehaviour
 
 	private void Awake()
 	{
-		audioManager = GetComponent<AudioManager>();
+		audioManager = FindObjectOfType<AudioManager>();
 
 		if(!PlayerPrefs.HasKey("Sensitivity")) { PlayerPrefs.SetFloat("Sensitivity", 1.0f); }
 		if(!PlayerPrefs.HasKey("MasterAudio")) { PlayerPrefs.SetFloat("MasterAudio", 1.0f); }
@@ -30,10 +30,15 @@ public class Settings : MonoBehaviour
 		masterAudio.value = PlayerPrefs.GetFloat("MasterAudio");
 		musicAudio.value = PlayerPrefs.GetFloat("MusicAudio");
 		sfxAudio.value = PlayerPrefs.GetFloat("SFXAudio");
+
 		sensitivityInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("Sensitivity"));
 		masterAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MasterAudio"));
 		musicAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MusicAudio"));
 		sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
+
+		audioManager.ChangeMasterVolume(masterAudio.value);
+		audioManager.ChangeMusicVolume(musicAudio.value);
+		audioManager.ChangeSFXVolume(sfxAudio.value);
 	}
 
 	public void ChangeSensitivity()
@@ -95,7 +100,7 @@ public class Settings : MonoBehaviour
 		PlayerPrefs.SetFloat("MusicAudio", musicAudio.value);
 		musicAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MusicAudio"));
 
-		audioManager.ChangeMasterVolume(musicAudio.value);
+		audioManager.ChangeMusicVolume(musicAudio.value);
 
 		PlayerPrefs.Save();
 	}
@@ -109,7 +114,7 @@ public class Settings : MonoBehaviour
 			PlayerPrefs.SetFloat("MusicAudio", value);
 			musicAudio.value = PlayerPrefs.GetFloat("MusicAudio");
 
-			audioManager.ChangeMasterVolume(value);
+			audioManager.ChangeMusicVolume(value);
 
 			PlayerPrefs.Save();
 		}
@@ -124,7 +129,7 @@ public class Settings : MonoBehaviour
 		PlayerPrefs.SetFloat("SFXAudio", sfxAudio.value);
 		sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
 
-		audioManager.ChangeMasterVolume(sfxAudio.value);
+		audioManager.ChangeSFXVolume(sfxAudio.value);
 
 		PlayerPrefs.Save();
 	}
@@ -138,7 +143,7 @@ public class Settings : MonoBehaviour
 			PlayerPrefs.SetFloat("SFXAudio", value);
 			sfxAudio.value = PlayerPrefs.GetFloat("SFXAudio");
 
-			audioManager.ChangeMasterVolume(value);
+			audioManager.ChangeSFXVolume(value);
 
 			PlayerPrefs.Save();
 		}
