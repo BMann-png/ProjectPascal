@@ -16,13 +16,11 @@ public class AnimationEvents : MonoBehaviour
 
 	public void OnStep()
     {
-		GameManager.Instance.AudioManager.Source.PlayOneShot
-			(GameManager.Instance.AudioManager.GetFootStep());
+		GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetFootStep());
     }
 
 	public void OnTrip()
     {
-		GameManager.Instance.AudioManager.Source.PlayOneShot
-			(GameManager.Instance.AudioManager.GetTrip());
+		GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetTrip());
     }
 }

@@ -3,17 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(Entity))]
 public class PlayerController : MonoBehaviour, INetworked
 {
-    private static readonly float SPRINT_TIME = 3.0f;
-    private static readonly float SPRINT_COOLDOWN = 4.0f;
-    private static readonly float TRIP_TIME = 5.0f;
-    private static readonly float TRIP_PROBABILITY = 0.8f / SPRINT_TIME;
-    private static readonly float MOVEMENT_SPEED = 3.0f;
-    private static readonly float SPRINT_MOD = 2.0f;
-    private static readonly float TRIP_MOD = 0.5f;
-    private static readonly float REVIVE_TIME = 3.0f;
-    private static readonly float SPRINT_MAX_LENGTH = 8.0f;
-    private static readonly float TRIP_MAX_CHANCE = 0.3f;
-    private float addedReviveTime;
+	private static readonly float SPRINT_TIME = 3.0f;
+	private static readonly float SPRINT_COOLDOWN = 4.0f;
+	private static readonly float TRIP_TIME = 5.0f;
+	private static readonly float MOVEMENT_SPEED = 3.0f;
+	private static readonly float SPRINT_MOD = 2.0f;
+	private static readonly float TRIP_MOD = 0.5f;
+	private static readonly float REVIVE_TIME = 3.0f;
+	private static readonly float SPRINT_MAX_LENGTH = 8.0f;
+	private float addedReviveTime;
 
     [SerializeField] private new Transform camera;
     [SerializeField] private Animator animator;
@@ -97,10 +95,17 @@ public class PlayerController : MonoBehaviour, INetworked
                 OnDown();
             }
             else if (health.health == 0 && health.down == 0)
-            {
-                //TODO: Die
-                GameManager.Instance.AudioManager.StopCry();
-            }
+			{
+				controller.enabled = false;
+				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
+
+				if(transform.position.y > 10)
+				{
+					GameManager.Instance.Spectate();
+					Destroy(gameObject);
+				}
+				GameManager.Instance.AudioManager.StopCry();
+			}
 
             sprintTimer -= Time.deltaTime;
             sprintCooldownTimer -= Time.deltaTime;
@@ -109,7 +114,7 @@ public class PlayerController : MonoBehaviour, INetworked
             movement = Vector3.down * 10.0f * Time.deltaTime;
             reviveTimer -= Time.deltaTime;
 
-            if (!isDown)
+            if (!isDown && !hudManager.Paused)
             {
                 float vertInput = Input.GetAxis("Vertical");
                 float HoriInput = Input.GetAxis("Horizontal");
@@ -143,12 +148,11 @@ public class PlayerController : MonoBehaviour, INetworked
                 OnRevive();
             }
 
-            controller.Move(movement);
+			if(controller.enabled) controller.Move(movement);
 
-            if (entity.weapon)
+            if (entity.weapon && Camera.main != null)
             {
                 float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
-
 
                 entity.weapon.eulerAngles = new Vector3(x, y, 0.0f);
 
@@ -161,14 +165,13 @@ public class PlayerController : MonoBehaviour, INetworked
             }
 
             Weapon weapon = hand.GetComponentInChildren<Weapon>();
-            if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !isDown && !hudManager.Paused)
+            if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !isDown && !hudManager.Paused && canShoot)
             {
                 weapon.IsFiring = true;
                 weapon.Shoot();
             }
         }
     }
-
 
     public void Tick()
     {
@@ -280,6 +283,7 @@ public class PlayerController : MonoBehaviour, INetworked
 
         animator.SetTrigger("Sprint");
     }
+
     private void EndSprint()
     {
         sprintCooldownTimer += sprintTimer * 0.25f;
@@ -342,7 +346,6 @@ public class PlayerController : MonoBehaviour, INetworked
     {
         float x = (sprintSecondsElapsed / SPRINT_MAX_LENGTH) * 100;
         sprintSecondsElapsed += Time.deltaTime;
-        Debug.Log(sprint_max_length);
         return x > sprint_max_length;
     }
 

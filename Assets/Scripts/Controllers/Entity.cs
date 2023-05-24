@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
 
     [SerializeField] bool inLobby = false;
     private bool quitting = false;
+	public bool destroyed = false;
 
     private void Awake()
     {
@@ -77,13 +78,6 @@ public class Entity : MonoBehaviour
                 shoot.eulerAngles = new Vector3(tp.xRot, tp.yRot, 0.0f);
             }
         }
-    }
-
-    public void DisplayInventory(InventoryPacket ip)
-    {
-        Inventory inventory = GetComponent<Inventory>();
-
-        inventory.EquipWeapon(ip.slot, ip.data);
     }
 
     public void SetModel()
@@ -272,7 +266,7 @@ public class Entity : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (!quitting)
+        if (!quitting && !destroyed)
         {
             GameManager.Instance.Destroy(this);
         }

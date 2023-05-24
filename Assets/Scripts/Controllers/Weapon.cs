@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour
     {
         timer = duration;
         StartCoroutine(Fire());
+        GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetShots());
     }
 
     private IEnumerator Fire() 
@@ -33,8 +34,8 @@ public class Weapon : MonoBehaviour
         for (int i = 0; i < numsOfShots; i++)
         {
             GameManager.Instance.Shoot(shoot, type, variation, GameManager.Instance.Entities[GameManager.Instance.ThisPlayer]);
-            variation.x = Random.Range(-spreadAngle, spreadAngle + 1);
-            variation.y = Random.Range(-spreadAngle, spreadAngle + 1);
+            variation.x = Random.Range(-spreadAngle, spreadAngle);
+            variation.y = Random.Range(-spreadAngle, spreadAngle);
             yield return new WaitForSeconds(delay);
         }
     }
