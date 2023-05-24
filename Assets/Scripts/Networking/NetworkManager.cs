@@ -220,6 +220,7 @@ public class NetworkManager : Singleton<NetworkManager>
     void Update()
     {
         //SteamClient.RunCallbacks();
+        
         try
         {
             if (activeSocketServer)
@@ -235,14 +236,6 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             Debug.Log("Error receiving data");
         }
-
-        string output = "";
-        foreach(var del in TickUpdate.GetInvocationList())
-        {
-            output += del.Target.ToString() + " ";
-        }
-
-        Debug.Log(output);
     }
 
     private IEnumerator Tick()
@@ -318,7 +311,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         currentLobby.Leave();
         LeaveSocketServer();
-        
+
     }
 
     public void CreateSocketServer()
