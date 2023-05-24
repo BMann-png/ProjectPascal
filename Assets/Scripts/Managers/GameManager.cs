@@ -254,7 +254,6 @@ public class GameManager : Singleton<GameManager>
 			{
 				entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
 				entities[id].id = id;
-				entities[id].destroyed = true;
 				playerLocations.Add(entities[id].gameObject);
 
 				HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
@@ -268,7 +267,6 @@ public class GameManager : Singleton<GameManager>
 			{
 				entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 				entities[id].id = id;
-				entities[id].destroyed = true;
 				entities[id].SetModel();
 				playerLocations.Add(entities[id].gameObject);
 
