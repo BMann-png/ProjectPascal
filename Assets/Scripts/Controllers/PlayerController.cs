@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
 
 			if(controller.enabled) controller.Move(movement);
 
-			if (entity.weapon)
+			if (entity.weapon && Camera.main != null)
 			{
 				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
 
