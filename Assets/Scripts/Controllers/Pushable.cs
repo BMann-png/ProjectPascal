@@ -36,14 +36,13 @@ public class Pushable : MonoBehaviour
 		if (pushTime <= 0.0f) { pushTime = 0.01f; }
 		timeInv = 1.0f / pushTime;
 		initialPosition = transform.position;
-		requiredPlayers = Mathf.Min(GameManager.Instance.PlayerCount, requiredPlayers);
 	}
 
 	//TODO: Push faster if extra players are pushing
 	//TODO: Can't shoot or move? while pushing
 	private void Update()
 	{
-		if (playerCount >= requiredPlayers && !complete)
+		if (playerCount >= requiredPlayers || playerCount >= GameManager.Instance.AlivePlayers && !complete)
 		{
 			pushTimer += Time.deltaTime * timeInv;
 

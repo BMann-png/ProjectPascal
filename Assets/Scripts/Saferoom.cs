@@ -12,7 +12,7 @@ public class Saferoom : MonoBehaviour
 		if(other.tag == "Player" || other.tag == "NetPlayer") { ++playerCount; }
 		else if(other.tag == "Enemy") { ++enemyCount; }
 
-		if(enemyCount == 0 && playerCount == GameManager.Instance.PlayerCount)
+		if(enemyCount == 0 && playerCount >= GameManager.Instance.AlivePlayers)
 		{
 			GameManager.Instance.ChangeLevel(nextLevel);
 		}
@@ -23,7 +23,15 @@ public class Saferoom : MonoBehaviour
 		if (other.tag == "Player" || other.tag == "NetPlayer") { --playerCount; }
 		else if (other.tag == "Enemy") { --enemyCount; }
 
-		if (enemyCount == 0 && playerCount == GameManager.Instance.PlayerCount)
+		if (enemyCount == 0 && playerCount >= GameManager.Instance.AlivePlayers)
+		{
+			GameManager.Instance.ChangeLevel(nextLevel);
+		}
+	}
+
+	private void OnTriggerStay(Collider other)
+	{
+		if (enemyCount == 0 && playerCount >= GameManager.Instance.AlivePlayers)
 		{
 			GameManager.Instance.ChangeLevel(nextLevel);
 		}

@@ -10,6 +10,7 @@ TagManager:
   - Pushable
   - NetPlayer
   - HealthBars
+  - Spectator
   layers:
   - Default
   - TransparentFX

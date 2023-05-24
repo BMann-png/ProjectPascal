@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.35775155, g: 0.73686606, b: 0.9810811, a: 1}
+  m_IndirectSpecularColor: {r: 0.35791045, g: 0.73707587, b: 0.9809706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8176,7 +8176,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &374309173
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30044,38 +30044,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: fb5ee2639eb9bff4298f8c8fcaf13cd6, type: 3}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[1]
-      value: 
-      objectReference: {fileID: 8300000, guid: c7cd48ccbd8c77f489738489aa3c6049, type: 3}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[2]
-      value: 
-      objectReference: {fileID: 8300000, guid: 19f8029e5a9069848a3c18c3ead7add5, type: 3}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[3]
-      value: 
-      objectReference: {fileID: 8300000, guid: 498459961924abe42865a2e5babb0cc7, type: 3}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[4]
-      value: 
-      objectReference: {fileID: 8300000, guid: be9c3140829e0d4428c900104dc24375, type: 3}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[5]
-      value: 
-      objectReference: {fileID: 8300000, guid: bfc2879b3a6ebdb4880f7de361998c39, type: 3}
-    - target: {fileID: 3091862925460787580, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
-      propertyPath: handNoises.Array.data[6]
-      value: 
-      objectReference: {fileID: 8300000, guid: 2dac3dd7d2293934fb461f320957328a, type: 3}
     - target: {fileID: 3091862925460787582, guid: b4c9a9f4ac09a4f4985f7f4926168f6d, type: 3}
       propertyPath: m_RootOrder
       value: 10

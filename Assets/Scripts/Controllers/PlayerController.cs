@@ -93,7 +93,14 @@ public class PlayerController : MonoBehaviour
 			}
 			else if (health.health == 0 && health.down == 0)
 			{
-				//TODO: Die
+				controller.enabled = false;
+				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
+
+				if(transform.position.y > 10)
+				{
+					GameManager.Instance.Spectate();
+					Destroy(gameObject);
+				}
 				GameManager.Instance.AudioManager.StopCry();
 			}
 
@@ -138,9 +145,9 @@ public class PlayerController : MonoBehaviour
 				OnRevive();
 			}
 
-			controller.Move(movement);
+			if(controller.enabled) controller.Move(movement);
 
-			if (entity.weapon)
+			if (entity.weapon && Camera.main != null)
 			{
 				float x = Camera.main.transform.eulerAngles.x, y = transform.eulerAngles.y;
 

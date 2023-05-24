@@ -15,10 +15,13 @@ public class AudioManager : MonoBehaviour
 
 	[SerializeField] private AudioClip[] shots;
 
-	[SerializeField] private AudioSource source;
+	[SerializeField] private AudioSource sfx;
+	[SerializeField] private AudioSource music;
 	[SerializeField] private AudioSource crySource;
 
-	public AudioSource Source { get { return source; } }
+	public AudioSource Sfx { get { return sfx; } }
+	public AudioSource Music { get { return music; } }
+
 	private void Awake()
 	{
 		DontDestroyOnLoad(gameObject);
@@ -26,17 +29,17 @@ public class AudioManager : MonoBehaviour
 
 	public void ChangeMasterVolume(float volume)
 	{
-		mixer.SetFloat("MasterVolume", volume);
+		mixer.SetFloat("MasterVolume", volume * 80.0f - 80.0f);
 	}
 
 	public void ChangeMusicVolume(float volume)
 	{
-		mixer.SetFloat("MusicVolume", volume);
+		mixer.SetFloat("MusicVolume", volume * 80.0f - 80.0f);
 	}
 
 	public void ChangeSFXVolume(float volume)
 	{
-		mixer.SetFloat("SFXVolume", volume);
+		mixer.SetFloat("SFXVolume", volume * 80.0f - 80.0f);
 	}
 
 	public AudioClip GetFootStep()
