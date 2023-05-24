@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -540,6 +541,13 @@ public class GameManager : Singleton<GameManager>
 		//2, 1 - mission
 
 		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(slot, type);
+
+		Packet packet = new Packet();
+		packet.type = 3;
+		packet.id = ThisPlayer;
+		packet.inventory = new InventoryPacket(slot, type);
+
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	public void PushPlayer(Vector3 dir)

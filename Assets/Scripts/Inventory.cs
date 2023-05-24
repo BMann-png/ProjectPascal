@@ -210,7 +210,7 @@ public class Inventory : MonoBehaviour
 		equipItem = slot;
 	}
 
-	private void SetupPacket(byte slot, byte id)
+	public void SetupPacket(byte slot, byte id)
 	{
 		EquipWeapon(slot);
 
@@ -231,7 +231,7 @@ public class Inventory : MonoBehaviour
 			case 1:
 				return secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
 			case 2:
-				// TODO: Zach, do your damn job! gimme me binki D:
+				// TODO: Binki
 				break;
 		}
 		return null;
