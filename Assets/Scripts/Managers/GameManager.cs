@@ -873,6 +873,12 @@ public class GameManager : Singleton<GameManager>
 				--AlivePlayers;
 				unspawnedPlayers.Remove(packet.id);
 				spectators.RemoveAt(packet.id); //TODO: Not Correct
+
+				if(spectating && spectators.Count >= spectateID)
+				{
+					spectateID = 0;
+					spectators[spectateID].SetActive(true);
+				}
 			}
 
 			entities[packet.id].destroyed = true;
