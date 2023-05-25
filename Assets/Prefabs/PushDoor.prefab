@@ -167,6 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   shoot: {fileID: 0}
+  weapon: {fileID: 0}
   model: {fileID: 0}
   animator: {fileID: 0}
   inLobby: 0
@@ -184,13 +185,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hold: 1
   canInteract: 1
+  id: 0
   onInteract:
     m_PersistentCalls:
       m_Calls: []
-  onInteractOther:
+  onStopInteract:
     m_PersistentCalls:
       m_Calls: []
-  onStopInteract:
+  onInteractOther:
     m_PersistentCalls:
       m_Calls: []
   onStopInteractOther:
@@ -515,6 +517,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4238417932170177882}
+  - component: {fileID: -6650719852768213631}
   m_Layer: 0
   m_Name: PushDoor
   m_TagString: Untagged
@@ -538,3 +541,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &-6650719852768213631
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2589722287660018693}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
