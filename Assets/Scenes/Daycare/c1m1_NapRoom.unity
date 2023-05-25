@@ -5586,7 +5586,7 @@ Transform:
   - {fileID: 1691525896}
   - {fileID: 995843291}
   m_Father: {fileID: 1670556954}
-  m_RootOrder: 30
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &227750439
 PrefabInstance:
@@ -9796,7 +9796,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4504186263096724, guid: c3c668cb74f1ecf4e8404c2dfcf4fca1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -31.61
+      value: -42.286
       objectReference: {fileID: 0}
     - target: {fileID: 4504186263096724, guid: c3c668cb74f1ecf4e8404c2dfcf4fca1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -33417,7 +33417,7 @@ Light:
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -33456,7 +33456,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 0, z: 0, w: -8.837208e-37}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -36112,7 +36112,7 @@ Light:
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -36956,7 +36956,7 @@ Transform:
   - {fileID: 1252882762}
   - {fileID: 957373804}
   m_Father: {fileID: 1670556954}
-  m_RootOrder: 50
+  m_RootOrder: 46
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1490842662
 GameObject:
@@ -42270,6 +42270,7 @@ Transform:
   - {fileID: 9604393}
   - {fileID: 1018117646}
   - {fileID: 828582834}
+  - {fileID: 227676314}
   - {fileID: 26828394}
   - {fileID: 105945137}
   - {fileID: 1588633892}
@@ -42277,7 +42278,6 @@ Transform:
   - {fileID: 1363857564}
   - {fileID: 254472784}
   - {fileID: 802827116}
-  - {fileID: 227676314}
   - {fileID: 150942074}
   - {fileID: 1708621101}
   - {fileID: 879920196}
@@ -42293,11 +42293,11 @@ Transform:
   - {fileID: 549643154}
   - {fileID: 492769505}
   - {fileID: 1125776343}
+  - {fileID: 1484984771}
   - {fileID: 309306287}
   - {fileID: 958431243}
   - {fileID: 1380031295}
   - {fileID: 474594761}
-  - {fileID: 1484984771}
   - {fileID: 426135633}
   - {fileID: 1720824696}
   - {fileID: 1054741261}
@@ -44848,7 +44848,7 @@ Light:
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -53584,7 +53584,7 @@ Light:
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -53623,7 +53623,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 2.4405384e-30, y: 2.2e-44, z: -2.4405384e-30, w: 4.5e-44}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
