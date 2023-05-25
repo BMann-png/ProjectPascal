@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class GameManager : Singleton<GameManager>
 {
 	private static readonly object joinLock = new object();
 
-	public List<GameObject> playerLocations = new List<GameObject>();
 	private static readonly int MAX_ENEMY_COUNT = 30;
 	private static readonly int MAX_SPECIAL_COUNT = 2;
 	public static readonly ushort INVALID_ID = 65535;
+
+	public List<GameObject> playerLocations = new List<GameObject>();
+	private GameObject[] spectators;
+	private int spectateID = 0;
+	private bool spectating = false;
 
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
@@ -120,6 +123,18 @@ public class GameManager : Singleton<GameManager>
 				++specialCount;
 			}
 		}
+
+		if(spectating)
+		{
+			if(Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				if(++spectateID == spectators.Length) { spectateID = 0; }
+			}
+			else if(Input.GetKeyDown(KeyCode.Mouse1))
+			{
+				if(--spectateID == -1) { spectateID = spectators.Length - 1; }
+			}
+		}
 	}
 
 	public void SelectLevel(TMP_Dropdown change)
@@ -180,6 +195,8 @@ public class GameManager : Singleton<GameManager>
 
 	private void FinishLoading()
 	{
+		spectating = false;
+		spectateID = 0;
 		loadedPlayers = 0;
 		InGame = true;
 
@@ -197,7 +214,7 @@ public class GameManager : Singleton<GameManager>
 
 					if (spawner.type < 100)
 					{
-						entities[id] = Instantiate(prefabManager.Pickups[spawner.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
+						entities[id] = Instantiate(prefabManager.Pickups[spawner.type], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 						entities[id].id = id;
 						Interactable inter = entities[id].GetComponent<Interactable>();
 						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
@@ -263,6 +280,13 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
+		spectators = GameObject.FindGameObjectsWithTag("Spectator");
+
+		foreach(GameObject go in spectators)
+		{
+			go.SetActive(false);
+		}
+
 		SceneLoader.SetLoadingScreen(false);
 		SceneLoader.ResetScreen();
 		Loading = false;
@@ -303,6 +327,7 @@ public class GameManager : Singleton<GameManager>
 			InLobby = true;
 			entities[0] = Instantiate(prefabManager.LobbyPlayer, spawnPoints[0].position, spawnPoints[0].rotation).GetComponent<Entity>();
 			entities[0].id = 0;
+			entities[0].destroyed = true;
 			entities[0].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 			entities[0].SetModel();
 
@@ -352,6 +377,7 @@ public class GameManager : Singleton<GameManager>
 
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
 					entities[i].SetModel();
 				}
@@ -359,6 +385,7 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					entities[i].SetModel();
 				}
@@ -392,6 +419,7 @@ public class GameManager : Singleton<GameManager>
 
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = steamName;
 					entities[i].SetModel();
 				}
@@ -399,6 +427,7 @@ public class GameManager : Singleton<GameManager>
 				{
 					entities[i] = Instantiate(prefabManager.LobbyPlayer, lobbySpawnpoints[i].position, lobbySpawnpoints[i].rotation).GetComponent<Entity>();
 					entities[i].id = i;
+					entities[i].destroyed = true;
 					entities[i].GetComponent<LobbyPlayer>().name.text = NetworkManager.Instance.PlayerName;
 					entities[i].SetModel();
 				}
@@ -422,6 +451,7 @@ public class GameManager : Singleton<GameManager>
 			transform = lobbySpawnpoints[id];
 			entities[id] = Instantiate(prefabManager.LobbyPlayer, transform.position, transform.rotation).GetComponent<Entity>();
 			entities[id].id = id;
+			entities[id].destroyed = true;
 			entities[id].SetModel();
 
 			Lobby lobby = NetworkManager.Instance.currentLobby;
@@ -486,13 +516,35 @@ public class GameManager : Singleton<GameManager>
 
 	public void PickupItem(byte id)
 	{
-		//0, 1 - bubble gun
-		//0, 0 - dart gun
-		//1, 0 - squirt gun
-		//2, 0 - pacifier
+		byte slot = 0;
+		byte type = 0;
 
-		//TODO: Not sure which weapons go in which slot
-		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(0, id);
+		switch(id)
+		{
+			case 0: slot = 0; type = 0; break;
+			case 1: slot = 0; type = 1; break;
+			case 2: slot = 1; type = 0; break;
+			case 3: slot = 1; type = 1; break;
+			case 4: slot = 2; type = 1; break;
+			case 5: slot = 3; type = 1; break;
+			default: break;
+		}
+
+		//0, 0 - dart gun
+		//0, 1 - bubble gun
+		//1, 0 - squirt gun
+		//1, 1 - ball gun
+		//2, 1 - pacifier
+		//2, 1 - mission
+
+		entities[ThisPlayer].GetComponent<Inventory>().SetWeapon(slot, type);
+
+		Packet packet = new Packet();
+		packet.type = 3;
+		packet.id = ThisPlayer;
+		packet.inventory = new InventoryPacket(slot, type);
+
+		NetworkManager.Instance.SendMessage(packet);
 	}
 
 	public void PushPlayer(Vector3 dir)
@@ -508,7 +560,7 @@ public class GameManager : Singleton<GameManager>
 
 			//Entity entity = entities[ThisPlayer];
 
-			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, 0, variation.y);
+			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, variation.y, 0.0f);
 
 			GameObject go = Instantiate(prefabManager.Projectiles[type], shoot.position, rotation);
 
@@ -534,15 +586,14 @@ public class GameManager : Singleton<GameManager>
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
-		audioManager.Source.PlayOneShot
-			(audioManager.GetShots());
 	}
 
 	public void Destroy(Entity obj)
 	{
 		if (obj.id < 4) //Player
 		{
-			return;
+			--AlivePlayers;
+			unspawnedPlayers.Enqueue(obj.id);
 		}
 		else if (obj.id < 101) //Common Enemy
 		{
@@ -568,6 +619,13 @@ public class GameManager : Singleton<GameManager>
 		packet.type = 7;
 
 		NetworkManager.Instance.SendMessage(packet);
+	}
+
+	public void Spectate()
+	{
+		Camera.main.gameObject.SetActive(false);
+		spectators[spectateID].SetActive(true);
+		spectating = true;
 	}
 
 	//-----CALLBACKS-----
@@ -639,8 +697,7 @@ public class GameManager : Singleton<GameManager>
 					entities[i] = null;
 				}
 
-				--PlayerCount;
-				//TODO: decrement AlivePlayers
+				--AlivePlayers;
 
 				lobby.SetData("Player" + i, "0");
 
@@ -673,10 +730,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void Inventory(Packet inventory)
 	{
-		entities[inventory.id].DisplayInventory(inventory.inventory);
-        entities[inventory.id].shoot = entities[inventory.id].GetComponent<Inventory>().GetCurrentWeapon().shoot;
-		
-
+		entities[inventory.id].GetComponent<Inventory>().EquipWeapon(inventory.inventory.slot, inventory.inventory.data);
     }
 
 	public void GameTrigger(Packet packet)
@@ -805,6 +859,13 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (entities[packet.id] != null)
 		{
+			if(packet.id < 4)
+			{
+				--AlivePlayers;
+				//TODO: Delete spectator
+			}
+
+			entities[packet.id].destroyed = true;
 			Destroy(entities[packet.id].gameObject);
 		}
 	}
