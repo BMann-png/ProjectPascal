@@ -481,8 +481,6 @@ public class GameManager : Singleton<GameManager>
 			entities[id].GetComponent<LobbyPlayer>().name.text = steamName;
 
 			if (Fading) { unspawnedPlayers.Add(id); }
-
-			++PlayerCount;
 		}
 		else
 		{
