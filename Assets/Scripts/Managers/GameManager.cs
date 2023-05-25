@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
 	public static readonly ushort INVALID_ID = 65535;
 
 	public List<GameObject> playerLocations = new List<GameObject>();
-	private GameObject[] spectators;
+	private List<GameObject> spectators;
 	private int spectateID = 0;
 	private bool spectating = false;
 
@@ -23,7 +23,7 @@ public class GameManager : Singleton<GameManager>
 	public bool InGame { get; private set; }
 	private byte levelNum;
 
-	private Queue<ushort> unspawnedPlayers = new Queue<ushort>();
+	private List<ushort> unspawnedPlayers = new List<ushort>();
 	private Transform healthBarHolder;
 	private List<GameObject> healthBars = new List<GameObject>();
 	private Entity[] entities = new Entity[65536];
@@ -128,11 +128,11 @@ public class GameManager : Singleton<GameManager>
 		{
 			if(Input.GetKeyDown(KeyCode.Mouse0))
 			{
-				if(++spectateID == spectators.Length) { spectateID = 0; }
+				if(++spectateID == spectators.Count) { spectateID = 0; }
 			}
 			else if(Input.GetKeyDown(KeyCode.Mouse1))
 			{
-				if(--spectateID == -1) { spectateID = spectators.Length - 1; }
+				if(--spectateID == -1) { spectateID = spectators.Count - 1; }
 			}
 		}
 	}
@@ -181,7 +181,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		this.level = level;
 		InLobby = false;
-		AlivePlayers = PlayerCount;
+		AlivePlayers = 0;
 
 		if (++loadedPlayers == PlayerCount) { FinishLoading(); }
 
@@ -244,9 +244,8 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		byte healthBarId = 1;
-		while (unspawnedPlayers.Count > 0)
+		foreach(ushort id in unspawnedPlayers)
 		{
-			ushort id = unspawnedPlayers.Dequeue();
 			Transform transform = level.GetPlayerSpawn(id);
 
 			if (id == ThisPlayer)
@@ -276,11 +275,15 @@ public class GameManager : Singleton<GameManager>
 				bar.SetImage(id);
 				bar.gameObject.SetActive(true);
 
+				//spectators.Add(entities[id]);
+
 				++healthBarId;
 			}
+
+			++AlivePlayers;
 		}
 
-		spectators = GameObject.FindGameObjectsWithTag("Spectator");
+		unspawnedPlayers.Clear();
 
 		foreach(GameObject go in spectators)
 		{
@@ -437,9 +440,8 @@ public class GameManager : Singleton<GameManager>
 		}
 		else
 		{
-			//TODO: In game, load scene without caring if others are loaded
-			//This could be complicated, we don't know which players are alive
-			//We may just bar players from joining if we are in game
+			spectateID = 0;
+			Spectate();
 		}
 	}
 
@@ -469,18 +471,13 @@ public class GameManager : Singleton<GameManager>
 
 			entities[id].GetComponent<LobbyPlayer>().name.text = steamName;
 
-			if (Fading) { unspawnedPlayers.Enqueue(id); }
-		}
-		else if (Loading)
-		{
-			unspawnedPlayers.Enqueue(id);
+			if (Fading) { unspawnedPlayers.Add(id); }
+
+			++PlayerCount;
 		}
 		else
 		{
-			transform = level.GetPlayerSpawn(id);
-			entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
-			entities[id].id = id;
-			entities[id].SetModel();
+			unspawnedPlayers.Add(id);
 		}
 	}
 
@@ -593,7 +590,7 @@ public class GameManager : Singleton<GameManager>
 		if (obj.id < 4) //Player
 		{
 			--AlivePlayers;
-			unspawnedPlayers.Enqueue(obj.id);
+			unspawnedPlayers.Add(obj.id);
 		}
 		else if (obj.id < 101) //Common Enemy
 		{
@@ -685,23 +682,35 @@ public class GameManager : Singleton<GameManager>
 	{
 		Lobby lobby = NetworkManager.Instance.currentLobby;
 
-		for (int i = 0; i < 4; ++i)
+		if(player.Id == lobby.Id)
 		{
-			ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
-
-			if (steamId == player.Id.Value)
+			//Kick to menu
+		}
+		else
+		{
+			for (int i = 0; i < 4; ++i)
 			{
-				if (entities[i] != null)
+				ulong steamId = ulong.Parse(lobby.GetData("Player" + i));
+
+				if (steamId == player.Id.Value)
 				{
-					Destroy(entities[i].gameObject);
-					entities[i] = null;
+					foreach(ushort id in unspawnedPlayers)
+					{
+						unspawnedPlayers.Remove(id);
+					}
+
+					if (entities[i] != null)
+					{
+						Destroy(entities[i].gameObject);
+						entities[i] = null;
+					}
+
+					--AlivePlayers;
+
+					lobby.SetData("Player" + i, "0");
+
+					break;
 				}
-
-				--AlivePlayers;
-
-				lobby.SetData("Player" + i, "0");
-
-				break;
 			}
 		}
 	}
@@ -742,11 +751,11 @@ public class GameManager : Singleton<GameManager>
 	{
 		if(level > 99)
 		{
-			//visually change lobby level
+			//TODO: visually change lobby level
 		}
 		else
 		{
-			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Enqueue(i); } }
+			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Add(i); } }
 
 			Fading = true;
 			lobby.DisableUI();
@@ -805,7 +814,7 @@ public class GameManager : Singleton<GameManager>
 
 			if (packet.spawn.type < 100)
 			{
-				entities[packet.id] = Instantiate(prefabManager.Pickups[packet.spawn.type - 1], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
+				entities[packet.id] = Instantiate(prefabManager.Pickups[packet.spawn.type], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
 				entities[packet.id].id = packet.id;
 				Interactable i = entities[packet.id].GetComponent<Interactable>();
 				i.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
@@ -862,7 +871,8 @@ public class GameManager : Singleton<GameManager>
 			if(packet.id < 4)
 			{
 				--AlivePlayers;
-				//TODO: Delete spectator
+				unspawnedPlayers.Remove(packet.id);
+				spectators.RemoveAt(packet.id); //TODO: Not Correct
 			}
 
 			entities[packet.id].destroyed = true;
