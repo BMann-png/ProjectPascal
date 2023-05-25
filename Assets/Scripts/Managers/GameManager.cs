@@ -35,6 +35,7 @@ public class GameManager : Singleton<GameManager>
 	private bool[] specialsSpawned = new bool[10];
 	private int enemyCount = 0;
 	private int specialCount = 0;
+	private float spawnTimer = 0.0f;
 
 	private LevelManager level;
 	private LobbyHandler lobby;
@@ -74,7 +75,9 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
-		if (IsServer && !InLobby && playerLocations.Count == AlivePlayers)
+		spawnTimer -= Time.deltaTime;
+
+		if (spawnTimer <= 0.0f && IsServer && !InLobby && AlivePlayers > 0)
 		{
 			if (enemyCount < MAX_ENEMY_COUNT)
 			{
@@ -93,6 +96,10 @@ public class GameManager : Singleton<GameManager>
 				NetworkManager.Instance.SendMessage(packet);
 
 				++enemyCount;
+			}
+			else
+			{
+				spawnTimer = 5.0f;
 			}
 
 			if (specialCount < MAX_SPECIAL_COUNT)

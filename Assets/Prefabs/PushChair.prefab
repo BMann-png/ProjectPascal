@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredPlayers: 1
-  pushTime: 30
+  pushTime: 15
   endPosition: {x: -26.6, y: 1.131286, z: 22.05}
   onComplete:
     m_PersistentCalls:
