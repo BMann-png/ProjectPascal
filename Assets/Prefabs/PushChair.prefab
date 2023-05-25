@@ -55,7 +55,7 @@ GameObject:
   m_TagString: Pushable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &2109230177704842618
 Transform:
@@ -211,9 +211,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   shoot: {fileID: 0}
+  weapon: {fileID: 0}
   model: {fileID: 0}
   animator: {fileID: 0}
   inLobby: 0
+  destroyed: 0
 --- !u!114 &2473735069830096589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,10 +246,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onInteractOther:
+  onStopInteract:
     m_PersistentCalls:
       m_Calls: []
-  onStopInteract:
+  onInteractOther:
     m_PersistentCalls:
       m_Calls: []
   onStopInteractOther:
