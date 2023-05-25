@@ -764,6 +764,7 @@ public class GameManager : Singleton<GameManager>
 		}
 		else
 		{
+			loadedPlayers = 0;
 			spectators.Clear();
 			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Add(i); } }
 
