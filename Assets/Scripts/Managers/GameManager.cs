@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
 	public static readonly ushort INVALID_ID = 65535;
 
 	public List<GameObject> playerLocations = new List<GameObject>();
-	private List<GameObject> spectators;
+	private List<GameObject> spectators = new List<GameObject>();
 	private int spectateID = 0;
 	private bool spectating = false;
 
@@ -275,7 +275,7 @@ public class GameManager : Singleton<GameManager>
 				bar.SetImage(id);
 				bar.gameObject.SetActive(true);
 
-				//spectators.Add(entities[id]);
+				spectators.Add(entities[id].GetComponentInChildren<Spectate>().gameObject);
 
 				++healthBarId;
 			}
@@ -440,6 +440,8 @@ public class GameManager : Singleton<GameManager>
 		}
 		else
 		{
+			//TODO: spawn players
+
 			spectateID = 0;
 			Spectate();
 		}
@@ -755,6 +757,7 @@ public class GameManager : Singleton<GameManager>
 		}
 		else
 		{
+			spectators.Clear();
 			for (ushort i = 0; i < 4; ++i) { if (entities[i] != null) { unspawnedPlayers.Add(i); } }
 
 			Fading = true;
