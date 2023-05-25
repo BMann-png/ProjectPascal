@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.75
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: d1894fa42f07f3a4c928395a7b849410, type: 2}
@@ -14248,7 +14248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_LocalPosition.x
@@ -29670,7 +29670,7 @@ Light:
   m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 2
+  m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -36793,7 +36793,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_LocalPosition.x
@@ -36891,7 +36891,7 @@ Transform:
   - {fileID: 1252882762}
   - {fileID: 957373804}
   m_Father: {fileID: 1670556954}
-  m_RootOrder: 31
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1490842662
 GameObject:
@@ -40211,7 +40211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_LocalPosition.x
@@ -42207,13 +42207,13 @@ Transform:
   - {fileID: 828582834}
   - {fileID: 227676314}
   - {fileID: 26828394}
+  - {fileID: 1484984771}
   - {fileID: 105945137}
   - {fileID: 1588633892}
   - {fileID: 542070579}
   - {fileID: 1363857564}
   - {fileID: 254472784}
   - {fileID: 802827116}
-  - {fileID: 1484984771}
   - {fileID: 150942074}
   - {fileID: 1708621101}
   - {fileID: 879920196}
@@ -42501,7 +42501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_LocalPosition.x
@@ -48427,7 +48427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4179247157148318, guid: 4b6c439b7c823ef4eb8fa60926057686, type: 3}
       propertyPath: m_LocalPosition.x
