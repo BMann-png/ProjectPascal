@@ -1,40 +1,98 @@
 fileFormatVersion: 2
 guid: 2918f79f2a2fb99448200f7940687fd2
-timeCreated: 1518029309
-licenseType: Store
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: window A
-    100004: window B
-    100006: window C
-    100008: window frame
-    400000: //RootNode
-    400002: window A
-    400004: window B
-    400006: window C
-    400008: window frame
-    2300000: window A
-    2300002: window B
-    2300004: window C
-    2300006: window frame
-    3300000: window A
-    3300002: window B
-    3300004: window C
-    3300006: window frame
-    4300000: window frame
-    4300002: window A
-    4300004: window C
-    4300006: window B
-    7400000: Open A
-    7400002: Close A
-    7400004: Open C
-    7400006: Close C
-    7400008: Open B
-    7400010: Close B
-    9500000: //RootNode
-    11100000: //RootNode
+  serializedVersion: 21300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: window A
+  - first:
+      1: 100004
+    second: window B
+  - first:
+      1: 100006
+    second: window C
+  - first:
+      1: 100008
+    second: window frame
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: window A
+  - first:
+      4: 400004
+    second: window B
+  - first:
+      4: 400006
+    second: window C
+  - first:
+      4: 400008
+    second: window frame
+  - first:
+      23: 2300000
+    second: window A
+  - first:
+      23: 2300002
+    second: window B
+  - first:
+      23: 2300004
+    second: window C
+  - first:
+      23: 2300006
+    second: window frame
+  - first:
+      33: 3300000
+    second: window A
+  - first:
+      33: 3300002
+    second: window B
+  - first:
+      33: 3300004
+    second: window C
+  - first:
+      33: 3300006
+    second: window frame
+  - first:
+      43: 4300000
+    second: window frame
+  - first:
+      43: 4300002
+    second: window A
+  - first:
+      43: 4300004
+    second: window C
+  - first:
+      43: 4300006
+    second: window B
+  - first:
+      74: 7400000
+    second: Open A
+  - first:
+      74: 7400002
+    second: Close A
+  - first:
+      74: 7400004
+    second: Open C
+  - first:
+      74: 7400006
+    second: Close C
+  - first:
+      74: 7400008
+    second: Open B
+  - first:
+      74: 7400010
+    second: Close B
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      111: 11100000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -52,7 +110,7 @@ ModelImporter:
       name: glass
     second: {fileID: 2100000, guid: 00add754fc91154429786c535a1dc53e, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 0
@@ -61,6 +119,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -69,6 +128,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -80,6 +140,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Open A
       takeName: Take 001
+      internalID: 0
       firstFrame: 0
       lastFrame: 50
       wrapMode: 1
@@ -108,6 +169,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Close A
       takeName: Take 001
+      internalID: 0
       firstFrame: 50
       lastFrame: 100
       wrapMode: 1
@@ -136,6 +198,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Open C
       takeName: Take 001
+      internalID: 0
       firstFrame: 100
       lastFrame: 150
       wrapMode: 1
@@ -164,6 +227,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Close C
       takeName: Take 001
+      internalID: 0
       firstFrame: 150
       lastFrame: 200
       wrapMode: 1
@@ -192,6 +256,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Open B
       takeName: Take 001
+      internalID: 0
       firstFrame: 200
       lastFrame: 250
       wrapMode: 1
@@ -220,6 +285,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Close B
       takeName: Take 001
+      internalID: 0
       firstFrame: 250
       lastFrame: 300
       wrapMode: 1
@@ -251,19 +317,33 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
-    secondaryUVAreaDistortion: 15.000001
+    secondaryUVAreaDistortion: 15
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 20
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -271,10 +351,13 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -284,14 +367,18 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 1
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

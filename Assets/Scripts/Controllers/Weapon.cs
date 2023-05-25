@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour
     {
         timer = duration;
         StartCoroutine(Fire());
+        GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetShots());
     }
 
     private IEnumerator Fire() 
