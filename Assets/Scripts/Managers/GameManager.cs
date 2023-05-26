@@ -881,9 +881,11 @@ public class GameManager : Singleton<GameManager>
 			{
 				--AlivePlayers;
 				unspawnedPlayers.Remove(packet.id);
-				spectators.RemoveAt(packet.id); //TODO: Not Correct
+				GameObject s = entities[packet.id].GetComponentInChildren<Spectate>().gameObject;
+				int index = spectators.IndexOf(s);
+				spectators.Remove(entities[packet.id].GetComponentInChildren<Spectate>().gameObject);
 
-				if(spectating && spectators.Count >= spectateID)
+				if(spectating && index == spectateID)
 				{
 					spectateID = 0;
 					spectators[spectateID].SetActive(true);
