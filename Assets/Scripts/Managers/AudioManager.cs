@@ -68,12 +68,12 @@ public class AudioManager : MonoBehaviour
 	}
 
 	public void StartCry()
-    {
-		crySource.Play();
-    }
+	{
+		if (!crySource.isPlaying) crySource.Play();
+	}
 
 	public void StopCry()
-    {
+	{
 		crySource.Stop();
-    }
+	}
 }
