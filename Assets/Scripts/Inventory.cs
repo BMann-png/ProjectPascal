@@ -222,4 +222,36 @@ public class Inventory : MonoBehaviour
 		}
 		return null;
 	}
+
+	public void HideWeapon()
+	{
+		switch (equipItem)
+		{
+			case 0:
+				primaryWeapons[primaryIndex].SetActive(false);
+				break;
+			case 1:
+				secondaryWeapons[secondaryIndex].SetActive(false);
+				break;
+			case 2:
+				// TODO: Binki
+				break;
+		}
+	}
+
+	public void ShowWeapon()
+	{
+		switch (equipItem)
+		{
+			case 0:
+				primaryWeapons[primaryIndex].SetActive(true);
+				break;
+			case 1:
+				secondaryWeapons[secondaryIndex].SetActive(true);
+				break;
+			case 2:
+				// TODO: Binki
+				break;
+		}
+	}
 }
