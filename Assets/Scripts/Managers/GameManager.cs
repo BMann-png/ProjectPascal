@@ -881,17 +881,18 @@ public class GameManager : Singleton<GameManager>
 			{
 				--AlivePlayers;
 				unspawnedPlayers.Add(packet.id);
-				Entity e = entities[packet.id];
-				Spectate s = e.GetComponentInChildren<Spectate>();
-				GameObject g = s.gameObject;
-				int index = spectators.IndexOf(g);
-				spectators.RemoveAt(index);
-
-				if(spectating && index == spectateID)
-				{
-					spectateID = 0;
-					spectators[spectateID].SetActive(true);
-				}
+				//TODO: Better spectator system
+				//Entity e = entities[packet.id];
+				//Spectate s = e.GetComponentInChildren<Spectate>();
+				//GameObject g = s.gameObject;
+				//int index = spectators.IndexOf(g);
+				//spectators.RemoveAt(index);
+				//
+				//if(spectating && index == spectateID)
+				//{
+				//	spectateID = 0;
+				//	spectators[spectateID].SetActive(true);
+				//}
 			}
 
 			entities[packet.id].destroyed = true;
