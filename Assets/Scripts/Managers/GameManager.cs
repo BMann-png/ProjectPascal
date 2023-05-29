@@ -1,6 +1,7 @@
 using Steamworks;
 using Steamworks.Data;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -65,8 +66,6 @@ public class GameManager : Singleton<GameManager>
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		audioManager = FindFirstObjectByType<AudioManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
-
-		DontDestroyOnLoad(FindAnyObjectByType<EventSystem>().gameObject);
 
 		for (ushort i = 4; i < 101; ++i) { enemyIndices.Enqueue(i); }
 		for (ushort i = 111; i < 10001; ++i) { interactableIndices.Enqueue(i); }
@@ -511,6 +510,23 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 		}
+
+		if(InGame)
+		{
+			InGame = false;
+
+			loadedPlayers = 0;
+			spectators.Clear();
+			unspawnedPlayers.Clear();
+			playerLocations.Clear();
+
+			foreach (GameObject healthBar in healthBars)
+			{
+				Destroy(healthBar);
+			}
+
+			healthBars.Clear();
+		}	
 
 		PlayerCount = 0;
 		ThisPlayer = INVALID_ID;

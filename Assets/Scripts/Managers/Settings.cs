@@ -160,4 +160,16 @@ public class Settings : MonoBehaviour
 #endif
 		Application.Quit();
 	}
+
+	public void ExitLobby()
+	{
+		if (!GameManager.Instance.Fading)
+		{
+			FindFirstObjectByType<HUDManager>().HidePauseMenu();
+
+			GameManager.Instance.LeaveLobby();
+			NetworkManager.Instance.LeaveLobby();
+			GameManager.Instance.SceneLoader.LoadScene("MainMenu");
+		}
+	}
 }
