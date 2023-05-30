@@ -25,7 +25,7 @@ public class Weapon : MonoBehaviour
     {
         timer = duration;
         StartCoroutine(Fire());
-        GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetShots());
+        GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetShots(type));
 
         Packet packet = new Packet();
         packet.type = 1;
