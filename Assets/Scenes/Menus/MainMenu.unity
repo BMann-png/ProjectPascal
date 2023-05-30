@@ -25198,7 +25198,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 457487919}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
-        m_MethodName: ExitGame
+        m_MethodName: ExitLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
