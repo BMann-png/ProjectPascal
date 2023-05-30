@@ -758,7 +758,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if(level > 99)
 		{
-			//TODO: visually change lobby level
+			FindFirstObjectByType<LobbyHandler>().SelectLevel((byte)(level - 100));
 		}
 		else
 		{
