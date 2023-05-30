@@ -362,7 +362,7 @@ public class GameManager : Singleton<GameManager>
 		Lobby lobby = NetworkManager.Instance.currentLobby;
 		PlayerCount = (byte)lobby.MemberCount;
 
-		if (data == 255)
+		if (data > 199)
 		{
 			InLobby = true;
 			this.lobby = FindFirstObjectByType<LobbyHandler>();
@@ -399,12 +399,15 @@ public class GameManager : Singleton<GameManager>
 					entities[i].SetModel();
 				}
 			}
-		}
-		else if (data > 199)
-		{
-			StartLoad(data - 200);
+
+			FindFirstObjectByType<LobbyHandler>().SelectLevel((byte)(data - 200));
 		}
 		else if (data > 99)
+		{
+			FindFirstObjectByType<LobbyHandler>().SelectLevel((byte)(data - 100));
+			StartLoad(data - 100);
+		}
+		else if (data > 49)
 		{
 			InLobby = true;
 			this.lobby = FindFirstObjectByType<LobbyHandler>();
@@ -442,7 +445,8 @@ public class GameManager : Singleton<GameManager>
 				}
 			}
 
-			LoadLevel((byte)(data - 100));
+			FindFirstObjectByType<LobbyHandler>().SelectLevel((byte)(data - 50));
+			LoadLevel((byte)(data - 50));
 		}
 		else
 		{
@@ -670,10 +674,10 @@ public class GameManager : Singleton<GameManager>
 
 						packet.id = i;
 
-						if (Fading) { packet.join.level = (byte)(levelNum + 100); }
-						else if (Loading) { packet.join.level = (byte)(levelNum + 200); }
+						if (Fading) { packet.join.level = (byte)(levelNum + 50); }
+						else if (Loading) { packet.join.level = (byte)(levelNum + 100); }
 						else if (!(Loading || InLobby)) { packet.join.level = levelNum; }
-						else { packet.join.level = 255; }
+						else { packet.join.level = (byte)(levelNum + 200); }
 
 						NetworkManager.Instance.SendMessage(packet);
 						AddPlayer(i, packet.join.steamId);
