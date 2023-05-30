@@ -15,7 +15,7 @@ public class Settings : MonoBehaviour
 
 	private AudioManager audioManager;
 
-	private void Awake()
+	private void Start()
 	{
 		audioManager = FindObjectOfType<AudioManager>();
 
@@ -31,10 +31,10 @@ public class Settings : MonoBehaviour
 		musicAudio.value = PlayerPrefs.GetFloat("MusicAudio");
 		sfxAudio.value = PlayerPrefs.GetFloat("SFXAudio");
 
-		sensitivityInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("Sensitivity"));
-		masterAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MasterAudio"));
-		musicAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("MusicAudio"));
-		sfxAudioInput.text = string.Format("{0:0.0}", PlayerPrefs.GetFloat("SFXAudio"));
+		sensitivityInput.text = string.Format("{0:0.0}", sensitivity.value);
+		masterAudioInput.text = string.Format("{0:0.0}", masterAudio.value);
+		musicAudioInput.text = string.Format("{0:0.0}", musicAudio.value);
+		sfxAudioInput.text = string.Format("{0:0.0}", sfxAudio.value);
 
 		audioManager.ChangeMasterVolume(masterAudio.value);
 		audioManager.ChangeMusicVolume(musicAudio.value);
