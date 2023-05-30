@@ -77,8 +77,15 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f5007c432ff89424cbe3eaf9f0a0cb13, type: 3}
   - {fileID: 8300000, guid: 4b0a813bf07a5384eb3a29948af70c51, type: 3}
   mouthNoises: []
-  shots:
-  - {fileID: 8300000, guid: 70e32e22a1b9469449fb5bc62ebec3f9, type: 3}
+  dartShots:
+  - {fileID: 8300000, guid: 50e5fd41f6da7f042a4aa43ece77e0a0, type: 3}
+  - {fileID: 8300000, guid: 85acb98d1cde75244a12456451f96373, type: 3}
+  - {fileID: 8300000, guid: a82b589f047a5e74090edd787c8c9183, type: 3}
+  - {fileID: 8300000, guid: 8038d88e7cd4d6a4791cf083d3a785c6, type: 3}
+  bubbleShots:
+  - {fileID: 8300000, guid: c8a310d9e975e4b4182a947f72a2413b, type: 3}
+  squirtShots:
+  - {fileID: 8300000, guid: e6c4f0339fe350749a94710fd1e64486, type: 3}
   sfx: {fileID: 4998478662446621912}
   music: {fileID: 3091862925460787581}
   crySource: {fileID: 3091862925460787571}
