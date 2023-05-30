@@ -932,6 +932,7 @@ public class GameManager : Singleton<GameManager>
 			{
 				--AlivePlayers;
 				unspawnedPlayers.Add(packet.id);
+				playerLocations.Remove(entities[packet.id].gameObject);
 				//TODO: Better spectator system
 				//Entity e = entities[packet.id];
 				//Spectate s = e.GetComponentInChildren<Spectate>();
