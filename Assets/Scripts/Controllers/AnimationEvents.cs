@@ -22,6 +22,11 @@ public class AnimationEvents : MonoBehaviour
 		GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetFootStep());
     }
 
+	public void OnSprint()
+    {
+		GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetSprintStep());
+    }
+
 	public void OnTrip()
     {
 		GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetTrip());
