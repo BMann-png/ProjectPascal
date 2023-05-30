@@ -517,6 +517,7 @@ public class GameManager : Singleton<GameManager>
 
 		if(InGame)
 		{
+			FindFirstObjectByType<HUDManager>().HidePauseMenu();
 			InGame = false;
 
 			loadedPlayers = 0;
