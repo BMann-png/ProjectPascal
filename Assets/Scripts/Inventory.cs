@@ -138,11 +138,13 @@ public class Inventory : MonoBehaviour
 		switch (slot)
 		{
 			case 0:
+				primaryIndex = id;
 				primaryWeapons[primaryIndex].SetActive(true);
 				weapon = primaryWeapons[primaryIndex].GetComponent<Weapon>();
 				entity.shoot = weapon.shoot;
 				break;
 			case 1:
+				secondaryIndex = id;
 				secondaryWeapons[secondaryIndex].SetActive(true);
 				weapon = secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
 				entity.shoot = weapon.shoot;

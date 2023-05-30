@@ -576,13 +576,26 @@ public class GameManager : Singleton<GameManager>
 		entities[ThisPlayer].GetComponent<CharacterController>().Move(dir);
 	}
 
-	public void Shoot(Transform shoot, byte type, Vector2 variation, Entity owner)
+	public void Shoot(Transform shoot, byte type, Entity owner)
 	{
 		if (IsServer)
 		{
 			ushort id = projectileIndices.Dequeue();
 
-			//Entity entity = entities[ThisPlayer];
+			Vector2 variation = Vector2.zero;
+			
+			switch (type)
+			{
+				case 0: break;
+				case 1:
+					variation.x = Random.Range(-5f, 5f);
+					variation.y = Random.Range(-5f, 5f);
+					break;
+				case 2:
+					variation.x = Random.Range(-3.5f, 3.5f);
+					variation.y = Random.Range(-3.5f, 3.5f);
+					break;
+			}
 
 			Quaternion rotation = shoot.rotation * Quaternion.Euler(variation.x, variation.y, 0.0f);
 
@@ -866,7 +879,24 @@ public class GameManager : Singleton<GameManager>
 
 				Entity entity = entities[packet.spawn.spawn];
 
-				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, entity.shoot.rotation).GetComponent<Entity>();
+				Vector2 variation = Vector2.zero;
+
+				switch (packet.spawn.type)
+				{
+					case 0: break;
+					case 1:
+						variation.x = Random.Range(-5f, 5f);
+						variation.y = Random.Range(-5f, 5f);
+						break;
+					case 2:
+						variation.x = Random.Range(-3.5f, 3.5f);
+						variation.y = Random.Range(-3.5f, 3.5f);
+						break;
+				}
+
+				Quaternion rotation = entity.shoot.rotation * Quaternion.Euler(variation.x, variation.y, 0.0f);
+
+				entities[id] = Instantiate(prefabManager.Projectiles[packet.spawn.type], entity.shoot.position, rotation).GetComponent<Entity>();
 				entities[id].id = id;
 				entities[id].GetComponent<Damage>().Owner = entities[packet.spawn.spawn].gameObject;
 				entities[id].GetComponent<Projectile>().SetSpeed();
