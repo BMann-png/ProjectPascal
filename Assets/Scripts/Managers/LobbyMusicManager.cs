@@ -11,7 +11,7 @@ public class LobbyMusicManager : MonoBehaviour
     {
         if (!audio)
         {
-            int index = Random.Range(0, audioClips.Length - 1);
+            int index = Random.Range(0, audioClips.Length);
 
             if (TryGetComponent<AudioSource>(out AudioSource audioSource))
             {
