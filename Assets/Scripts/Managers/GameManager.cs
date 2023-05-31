@@ -281,7 +281,7 @@ public class GameManager : Singleton<GameManager>
 				bar.SetImage(id);
 				bar.gameObject.SetActive(true);
 
-				spectators.Add(entities[id].GetComponentInChildren<Spectate>().gameObject);
+				spectators.Add(entities[id].GetComponentInChildren<CameraTarget>().gameObject);
 
 				++healthBarId;
 			}
