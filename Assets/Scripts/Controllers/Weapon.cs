@@ -7,7 +7,6 @@ public class Weapon : MonoBehaviour
 	public Transform shoot;
 	[SerializeField] private byte type = 0;
 	[SerializeField] private float delay = 0.1f;
-	[SerializeField][Range(0, 45)] private float spreadAngle = 15f;
 	[SerializeField] private int numsOfShots = 1;
 
 	public bool IsFiring { get; set; } = false;
