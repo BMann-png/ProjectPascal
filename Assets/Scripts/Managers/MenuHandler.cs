@@ -62,7 +62,11 @@ public class MenuHandler : MonoBehaviour
 
 	public void CreateLobby()
 	{
-		GameManager.Instance.CreateLobby(lobbyName.text);
+		string name = lobbyName.text.Trim();
+		if (name.Length > 0)
+		{
+			GameManager.Instance.CreateLobby(name);
+		}
 	}
 
 	public async void FillLobbyList()
@@ -84,13 +88,14 @@ public class MenuHandler : MonoBehaviour
 		int count = 0;
 		foreach (Lobby lobby in lobbies)
 		{
-			string value = lobby.GetData("DaycareDescent");
-			if(value == null || value != "true") { continue; }
+			string name = lobby.GetData("Name").Trim();
+			if (lobby.GetData("Name").Trim().Length > 0)
+			{
+				GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
+				go.GetComponent<LobbyEntry>().CreateLobby(lobby, name);
 
-			GameObject go = Instantiate(lobbyPrefab, lobbyList.transform);
-			go.GetComponent<LobbyEntry>().CreateLobby(lobby);
-
-			++count;
+				++count;
+			}
 		}
 
 		float lobbyHeight = lobbyPrefab.GetComponent<RectTransform>().rect.height;

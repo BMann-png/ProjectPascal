@@ -68,4 +68,10 @@ public class HUDManager : MonoBehaviour
 			fill.sizeDelta = new Vector2(percent * length, fill.sizeDelta.y);
 		}
 	}
+
+	public void HidePauseMenu()
+	{
+		pauseMenu.SetActive(false);
+		Paused = false;
+	}
 }

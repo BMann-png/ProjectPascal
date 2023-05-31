@@ -138,11 +138,13 @@ public class Inventory : MonoBehaviour
 		switch (slot)
 		{
 			case 0:
+				primaryIndex = id;
 				primaryWeapons[primaryIndex].SetActive(true);
 				weapon = primaryWeapons[primaryIndex].GetComponent<Weapon>();
 				entity.shoot = weapon.shoot;
 				break;
 			case 1:
+				secondaryIndex = id;
 				secondaryWeapons[secondaryIndex].SetActive(true);
 				weapon = secondaryWeapons[secondaryIndex].GetComponent<Weapon>();
 				entity.shoot = weapon.shoot;
@@ -221,5 +223,37 @@ public class Inventory : MonoBehaviour
 				break;
 		}
 		return null;
+	}
+
+	public void HideWeapon()
+	{
+		switch (equipItem)
+		{
+			case 0:
+				primaryWeapons[primaryIndex].SetActive(false);
+				break;
+			case 1:
+				secondaryWeapons[secondaryIndex].SetActive(false);
+				break;
+			case 2:
+				// TODO: Binki
+				break;
+		}
+	}
+
+	public void ShowWeapon()
+	{
+		switch (equipItem)
+		{
+			case 0:
+				primaryWeapons[primaryIndex].SetActive(true);
+				break;
+			case 1:
+				secondaryWeapons[secondaryIndex].SetActive(true);
+				break;
+			case 2:
+				// TODO: Binki
+				break;
+		}
 	}
 }

@@ -180,13 +180,15 @@ public class Entity : MonoBehaviour
                         collider.center = Vector3.up * 0.5f;
                         GetComponent<Revive>().OnDown();
                         animator.SetTrigger("Down");
+                        GetComponent<Inventory>().HideWeapon();
                     }
                     break;
                 case 6: //Revive
                     {
                         animator.SetTrigger("Revive");
                         GetComponent<Revive>().OnRevive();
-                    }
+					    GetComponent<Inventory>().ShowWeapon();
+				    }
                     break;
 
 
