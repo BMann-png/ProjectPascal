@@ -658,13 +658,26 @@ public class GameManager : Singleton<GameManager>
 		packet.type = 7;
 
 		NetworkManager.Instance.SendMessage(packet);
+
+		if(AlivePlayers <= 0)
+		{
+			Packet lose = new Packet();
+			lose.type = 4;
+
+			NetworkManager.Instance.SendMessage(lose);
+
+			sceneLoader.LoadScene("Endgame");
+		}
 	}
 
 	public void Spectate()
 	{
-		Camera.main.gameObject.SetActive(false);
-		spectators[spectateID].SetActive(true);
-		spectating = true;
+		if (spectators.Count > 0)
+		{
+			Camera.main.gameObject.SetActive(false);
+			spectators[spectateID].SetActive(true);
+			spectating = true;
+		}
 	}
 
 	//-----CALLBACKS-----
@@ -786,7 +799,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void GameTrigger(Packet packet)
 	{
-
+		sceneLoader.LoadScene("Endgame");
 	}
 
 	public void LoadLevel(byte level)
@@ -935,17 +948,15 @@ public class GameManager : Singleton<GameManager>
 				unspawnedPlayers.Add(packet.id);
 				playerLocations.Remove(entities[packet.id].gameObject);
 				//TODO: Better spectator system
-				//Entity e = entities[packet.id];
-				//Spectate s = e.GetComponentInChildren<Spectate>();
-				//GameObject g = s.gameObject;
-				//int index = spectators.IndexOf(g);
-				//spectators.RemoveAt(index);
-				//
-				//if(spectating && index == spectateID)
-				//{
-				//	spectateID = 0;
-				//	spectators[spectateID].SetActive(true);
-				//}
+				GameObject g = entities[packet.id].GetComponentInChildren<Spectate>().gameObject;
+				int index = spectators.IndexOf(g);
+				spectators.RemoveAt(index);
+				
+				if(spectating && index == spectateID)
+				{
+					spectateID = 0;
+					spectators[spectateID].SetActive(true);
+				}
 			}
 
 			entities[packet.id].destroyed = true;
