@@ -9,11 +9,11 @@ public class LobbyEntry : MonoBehaviour
 
 	private Lobby lobby;
 
-	public void CreateLobby(Lobby lobby)
+	public void CreateLobby(Lobby lobby, string name)
 	{
 		this.lobby = lobby;
 
-		lobbyName.text = lobby.GetData("Name");
+		lobbyName.text = name;
 		playerCount.text = $"{lobby.MemberCount}/{lobby.MaxMembers}";
 	}
 

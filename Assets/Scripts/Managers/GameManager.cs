@@ -517,7 +517,6 @@ public class GameManager : Singleton<GameManager>
 
 		if(InGame)
 		{
-			FindFirstObjectByType<HUDManager>().HidePauseMenu();
 			InGame = false;
 
 			loadedPlayers = 0;
@@ -537,6 +536,8 @@ public class GameManager : Singleton<GameManager>
 		ThisPlayer = INVALID_ID;
 		IsServer = false;
 		InLobby = false;
+
+		FindFirstObjectByType<HUDManager>().HidePauseMenu();
 	}
 
 	public void PickupItem(byte id)
