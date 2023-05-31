@@ -130,6 +130,7 @@ public class Pushable : MonoBehaviour
 		if (!othersPushing[id])
 		{
 			++playerCount;
+			othersPushing[id] = true;
 		}
 	}
 
@@ -138,6 +139,7 @@ public class Pushable : MonoBehaviour
 		if (othersPushing[id])
 		{
 			--playerCount;
+			othersPushing[id] = false;
 		}
 	}
 

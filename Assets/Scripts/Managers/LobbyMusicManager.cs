@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LobbyMusicManager : MonoBehaviour
 {
     [SerializeField] AudioClip[] audioClips;
-    bool audio = false;
+    new bool audio = false;
 
     private void Update()
     {

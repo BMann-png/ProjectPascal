@@ -27,4 +27,9 @@ public class Interactable : MonoBehaviour
 		onStopInteractOther = onStopInteract;
 		if(TryGetComponent(out Pushable p)) { p.onCompleteOther = onComplete; }
 	}
+
+	public void EnableInteract(bool b)
+	{
+		canInteract = b;
+	}
 }

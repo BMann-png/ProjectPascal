@@ -24,7 +24,7 @@ public class BaseAI : MonoBehaviour
 
 	private void Start()
 	{
-		obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count - 1)];
+		obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count)];
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
@@ -64,6 +64,8 @@ public class BaseAI : MonoBehaviour
 
 	private void Update()
 	{
+		if(obsession == null) { obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count)]; }
+
 		distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
 
 		agentHealth.value = health.health;
