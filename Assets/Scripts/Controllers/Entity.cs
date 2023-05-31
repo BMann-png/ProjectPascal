@@ -202,6 +202,25 @@ public class Entity : MonoBehaviour
                         GetComponent<PlayerController>().EndRevive();
                     }
                     break;
+
+                case 23: //Play Dart Sound
+                    {
+                        GameManager.Instance.AudioManager.Sfx.PlayOneShot
+                            (GameManager.Instance.AudioManager.GetShots(0));
+                    }
+                    break;
+                case 24: //Play Bubble Sound
+                    {
+                        GameManager.Instance.AudioManager.Sfx.PlayOneShot
+                            (GameManager.Instance.AudioManager.GetShots(1));
+                    }
+                    break;
+                case 25: //Play Squirt Sound
+                    {
+                        GameManager.Instance.AudioManager.Sfx.PlayOneShot
+                            (GameManager.Instance.AudioManager.GetShots(2));
+                    }
+                    break;
             }
         }
         else if (id < 101)

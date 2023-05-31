@@ -9,11 +9,14 @@ public class AudioManager : MonoBehaviour
 	[SerializeField] private AudioMixer mixer;
 
 	[SerializeField] private AudioClip[] feetNoises;
+	[SerializeField] private AudioClip[] heelNoises;
 	[SerializeField] private AudioClip[] handNoises;
 	[SerializeField] private AudioClip[] faceNoises;
 	[SerializeField] private AudioClip[] mouthNoises;
 
-	[SerializeField] private AudioClip[] shots;
+	[SerializeField] private AudioClip[] dartShots;
+	[SerializeField] private AudioClip[] bubbleShots;
+	[SerializeField] private AudioClip[] squirtShots;
 
 	[SerializeField] private AudioSource sfx;
 	[SerializeField] private AudioSource music;
@@ -47,6 +50,11 @@ public class AudioManager : MonoBehaviour
 		return feetNoises[Random.Range(0, feetNoises.Length)];
     }
 
+	public AudioClip GetSprintStep()
+    {
+		return heelNoises[Random.Range(0, heelNoises.Length)];
+    }
+
 	public AudioClip GetTrip()
     {
 		return faceNoises[Random.Range(0, faceNoises.Length)];
@@ -62,18 +70,28 @@ public class AudioManager : MonoBehaviour
 		return mouthNoises[Random.Range(0, mouthNoises.Length)];
 	}
 
-	public AudioClip GetShots()
+	public AudioClip GetShots(int type)
     {
-		return shots[Random.Range(0, shots.Length)];
+        switch (type)
+        {
+			case 0:
+				return dartShots[Random.Range(0, dartShots.Length)];
+			case 1:
+				return bubbleShots[Random.Range(0, bubbleShots.Length)];
+			case 2:
+				return squirtShots[Random.Range(0, squirtShots.Length)];
+			default:
+				return null;
+        }		
 	}
 
 	public void StartCry()
-    {
-		crySource.Play();
-    }
+	{
+		if (!crySource.isPlaying) crySource.Play();
+	}
 
 	public void StopCry()
-    {
+	{
 		crySource.Stop();
-    }
+	}
 }

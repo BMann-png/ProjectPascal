@@ -1,15 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LobbyMusicManager : MonoBehaviour
 {
     [SerializeField] AudioClip[] audioClips;
-    new bool audio = false;
+    bool audio = false;
 
     private void Update()
     {
         if (!audio)
         {
-            int index = Random.Range(0, audioClips.Length - 1);
+            int index = Random.Range(0, audioClips.Length);
 
             if (TryGetComponent<AudioSource>(out AudioSource audioSource))
             {

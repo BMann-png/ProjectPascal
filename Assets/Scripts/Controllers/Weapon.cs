@@ -20,12 +20,23 @@ public class Weapon : MonoBehaviour
 		if (timer < 0) { IsFiring = false; }
 	}
 
-	public void Shoot()
-	{
-		timer = duration;
-		StartCoroutine(Fire());
-		GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetShots());
-	}
+    public void Shoot() 
+    {
+        timer = duration;
+        StartCoroutine(Fire());
+        GameManager.Instance.AudioManager.Sfx.PlayOneShot(GameManager.Instance.AudioManager.GetShots(type));
+
+        Packet packet = new Packet();
+        packet.type = 1;
+        packet.id = GameManager.Instance.ThisPlayer;
+        packet.action = new ActionPacket();
+        //Adding the type to 23 changes the action packet in the entity to play different sounds
+        packet.action.data = (byte)(23 + type);
+
+        NetworkManager.Instance.SendMessage(packet);
+
+
+    }
 
 	private IEnumerator Fire()
 	{

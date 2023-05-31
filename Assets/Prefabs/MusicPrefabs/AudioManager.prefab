@@ -49,18 +49,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mixer: {fileID: 24100000, guid: 7bb00f47ad094f3409351852183bb45b, type: 2}
   feetNoises:
-  - {fileID: 8300000, guid: 1c9303a09edfe8743971e3c237c27560, type: 3}
-  - {fileID: 8300000, guid: 59b4e1deff6e9df4d86100db0d2383f1, type: 3}
-  - {fileID: 8300000, guid: 24ae623a9f869454c8165881c4a50b09, type: 3}
-  - {fileID: 8300000, guid: b9e695a99affc734ea6c8d84e86d77b4, type: 3}
-  - {fileID: 8300000, guid: d8312fbc615534746b795226117be19f, type: 3}
-  - {fileID: 8300000, guid: 7cdeeaee236b7214489d8379c88c2e27, type: 3}
-  - {fileID: 8300000, guid: a30e4279629b39f4fb4e3002e62f635e, type: 3}
-  - {fileID: 8300000, guid: 9cc0a92ab475c7242a91f401af72058e, type: 3}
-  - {fileID: 8300000, guid: b88689ff8c9492d408bfd6977caeea7b, type: 3}
-  - {fileID: 8300000, guid: 3ec0194d849643044b0752fda69826de, type: 3}
-  - {fileID: 8300000, guid: 37d5517fec99b844a862af9122d94e48, type: 3}
-  - {fileID: 8300000, guid: d7f6a63486a2eb0488e2cea05ed1324a, type: 3}
+  - {fileID: 8300000, guid: 6612607b33fc4b04b8b281603ad3f4af, type: 3}
+  - {fileID: 8300000, guid: c5c02d787db51724a9d802ae91311fca, type: 3}
+  - {fileID: 8300000, guid: 36859b56132e7864abffb6c1bafdec5a, type: 3}
+  - {fileID: 8300000, guid: a53bf0e67b0419545b7eba5ab4df5936, type: 3}
+  - {fileID: 8300000, guid: db5661efdf88da943984c15a9d4da97c, type: 3}
+  - {fileID: 8300000, guid: b641be2d37ae61a4f961fa6be81fdd15, type: 3}
+  - {fileID: 8300000, guid: cf0a44ab9881f33418b3eaca61decbec, type: 3}
+  - {fileID: 8300000, guid: 538c024d4a002a24399f980b8aafb7e5, type: 3}
+  - {fileID: 8300000, guid: 7909b907912e51f438ee92a0fb60f5de, type: 3}
+  heelNoises:
+  - {fileID: 8300000, guid: 2412a7b0ee501604dab437a592967a2e, type: 3}
+  - {fileID: 8300000, guid: 4afe19ff9d2451a499e0f3ac2c26f47b, type: 3}
+  - {fileID: 8300000, guid: d0203e4c46326de4caf70b5cdd054a9b, type: 3}
+  - {fileID: 8300000, guid: df8d39c6ea15fb94ab3c3db3c2558270, type: 3}
   handNoises:
   - {fileID: 8300000, guid: 70e32e22a1b9469449fb5bc62ebec3f9, type: 3}
   - {fileID: 8300000, guid: fb5ee2639eb9bff4298f8c8fcaf13cd6, type: 3}
@@ -75,8 +77,15 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f5007c432ff89424cbe3eaf9f0a0cb13, type: 3}
   - {fileID: 8300000, guid: 4b0a813bf07a5384eb3a29948af70c51, type: 3}
   mouthNoises: []
-  shots:
-  - {fileID: 8300000, guid: 70e32e22a1b9469449fb5bc62ebec3f9, type: 3}
+  dartShots:
+  - {fileID: 8300000, guid: 50e5fd41f6da7f042a4aa43ece77e0a0, type: 3}
+  - {fileID: 8300000, guid: 85acb98d1cde75244a12456451f96373, type: 3}
+  - {fileID: 8300000, guid: a82b589f047a5e74090edd787c8c9183, type: 3}
+  - {fileID: 8300000, guid: 8038d88e7cd4d6a4791cf083d3a785c6, type: 3}
+  bubbleShots:
+  - {fileID: 8300000, guid: c8a310d9e975e4b4182a947f72a2413b, type: 3}
+  squirtShots:
+  - {fileID: 8300000, guid: e6c4f0339fe350749a94710fd1e64486, type: 3}
   sfx: {fileID: 4998478662446621912}
   music: {fileID: 3091862925460787581}
   crySource: {fileID: 3091862925460787571}
