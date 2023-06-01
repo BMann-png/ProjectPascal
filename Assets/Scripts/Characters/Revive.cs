@@ -31,7 +31,7 @@ public class Revive : MonoBehaviour
 			Packet packet = new Packet();
 			packet.type = 1;
 			packet.id = entity.id;
-			packet.action = new ActionPacket(10);
+			packet.action = new ActionPacket(10, (byte)GameManager.Instance.ThisPlayer);
 
 			NetworkManager.Instance.SendMessage(packet);
 		}
