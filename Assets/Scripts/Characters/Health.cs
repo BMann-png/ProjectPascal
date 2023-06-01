@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
@@ -72,6 +73,8 @@ public class Health : MonoBehaviour
 			packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 			NetworkManager.Instance.SendMessage(packet);
 		}
+
+		GameManager.Instance.HudManager.SpawnTear();
 	}
 
 	public void OnTrauma(float traumaDamage)

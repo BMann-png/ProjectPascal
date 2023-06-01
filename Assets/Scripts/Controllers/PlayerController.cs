@@ -42,12 +42,14 @@ public class PlayerController : MonoBehaviour
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
 
-
 		hudManager = FindAnyObjectByType<HUDManager>();
+
 		entity.animator = animator;
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
-	}
+
+        hudManager.SetCryEffect(true);
+    }
 
 	private void FixedUpdate()
 	{
@@ -228,6 +230,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnDown()
 	{
+		hudManager.SetCryEffect(true);
 		down = true;
 		Packet packet = new Packet();
 		packet.type = 1;
@@ -243,7 +246,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnRevive()
 	{
-		down = false;
+        down = false;
 		reviving = false;
 
 		Packet packet = new Packet();

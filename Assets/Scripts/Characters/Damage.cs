@@ -24,7 +24,6 @@ public class Damage : MonoBehaviour
         }
         else
 		{
-			collisionHealth.OnDamaged(damage);
 			Destroy(Instantiate(GameManager.Instance.PrefabManager.Particles[3], transform.position, transform.rotation), 1.0f);
 		}
 		if(trauma > 0)

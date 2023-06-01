@@ -5,6 +5,8 @@ public class HUDManager : MonoBehaviour
 {
 	[SerializeField] private TMP_Text toolTip;
 	[SerializeField] private GameObject pauseMenu;
+	[SerializeField] private GameObject cryEffect;
+	[SerializeField] private GameObject[] tears;
 	[SerializeField] private RectTransform progress;
 	[SerializeField] private RectTransform fill;
 
@@ -17,6 +19,7 @@ public class HUDManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 		toolTip.gameObject.SetActive(false);
 		pauseMenu.SetActive(false);
+		cryEffect.SetActive(false);
 
 		length = progress.sizeDelta.x;
 		fill.gameObject.SetActive(false);
@@ -73,5 +76,16 @@ public class HUDManager : MonoBehaviour
 	{
 		pauseMenu.SetActive(false);
 		Paused = false;
+	}
+
+	public void SetCryEffect(bool isActive)
+	{
+		cryEffect.SetActive(isActive);
+	}
+
+	public void SpawnTear()
+	{
+		int tear = Random.Range(0, tears.Length);
+		Instantiate(tears[tear], new Vector2(Random.Range(100, 700), Random.Range(100, 500)), cryEffect.transform.rotation, cryEffect.transform);
 	}
 }
