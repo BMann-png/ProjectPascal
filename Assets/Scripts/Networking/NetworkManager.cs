@@ -50,9 +50,17 @@ public struct ActionPacket
     public ActionPacket(byte data)
     {
         this.data = data;
+        sender = 0;
+    }
+
+    public ActionPacket(byte data, byte sender)
+    {
+        this.data = data;
+        this.sender = sender;
     }
 
     public byte data;
+    public byte sender;
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -340,7 +348,7 @@ public class NetworkManager : Singleton<NetworkManager>
         switch (packet.type)
         {
             case 0: size = 23; break;   //Transform
-            case 1: size = 4; break;    //Action
+            case 1: size = 5; break;    //Action
             case 2: size = 6; break;    //Health
             case 3: size = 6; break;    //Inventory
             case 4: size = 3; break;    //Game Trigger
