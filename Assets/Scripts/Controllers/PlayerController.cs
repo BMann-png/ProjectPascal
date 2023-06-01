@@ -266,7 +266,7 @@ public class PlayerController : MonoBehaviour
 		{
 			reviving = true;
 			reviveTimer = REVIVE_TIME + health.trauma * addedReviveTime;
-            animator.SetTrigger("Reviving");
+            
         }
 	}
 
@@ -276,7 +276,6 @@ public class PlayerController : MonoBehaviour
 		{
 			reviving = false;
 			reviveTimer = 0.0f;
-			animator.SetTrigger("StopReviving");
 		}
 	}
 
