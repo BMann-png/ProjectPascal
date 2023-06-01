@@ -264,7 +264,8 @@ public class PlayerController : MonoBehaviour
 		{
 			reviving = true;
 			reviveTimer = REVIVE_TIME + health.trauma * addedReviveTime;
-		}
+            
+        }
 	}
 
 	public void EndRevive()
