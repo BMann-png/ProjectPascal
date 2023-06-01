@@ -14,7 +14,13 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+		if(!GameManager.Instance.FirstMenu)
+		{
+			Destroy(gameObject);
+			return;
+		}
+
+		DontDestroyOnLoad(gameObject);
 		toolTip.gameObject.SetActive(false);
 		pauseMenu.SetActive(false);
 
@@ -25,7 +31,7 @@ public class HUDManager : MonoBehaviour
 
 	private void Update()
 	{
-		if (GameManager.Instance.InGame && Input.GetKeyDown(KeyCode.Escape))
+		if (!GameManager.Instance.GameOver && GameManager.Instance.InGame && Input.GetKeyDown(KeyCode.Escape))
 		{
 			pauseMenu.SetActive(!pauseMenu.activeSelf);
 			Paused = !Paused;
@@ -40,6 +46,12 @@ public class HUDManager : MonoBehaviour
 				Cursor.lockState = CursorLockMode.Locked;
 				Cursor.visible = false;
 			}
+		}
+
+		if((GameManager.Instance.GameOver || !GameManager.Instance.InGame) && pauseMenu.activeSelf)
+		{
+			pauseMenu.SetActive(false);
+			Paused = false;
 		}
 	}
 

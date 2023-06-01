@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
 			{
 				OnDown();
 			}
-			else if (health.health == 0 && health.down == 0)
+			else if (health.health == 0 && health.down == 0 && down)
 			{
 				controller.enabled = false;
 				transform.position += new Vector3(0, 1, 0) * Time.deltaTime;

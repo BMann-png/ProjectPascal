@@ -14,6 +14,7 @@ public class LobbyHandler : MonoBehaviour
 
 	private void Awake()
 	{
+		GameManager.Instance.FirstMenu = false;
 		level = 0;
 		levels[0].SetActive(true);
 		for (int i = 1; i < levels.Length; ++i) { levels[1].SetActive(false); }
