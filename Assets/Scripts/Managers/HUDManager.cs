@@ -25,7 +25,7 @@ public class HUDManager : MonoBehaviour
 
 	private void Update()
 	{
-		if (GameManager.Instance.InGame && Input.GetKeyDown(KeyCode.Escape))
+		if (!GameManager.Instance.GameOver && GameManager.Instance.InGame && Input.GetKeyDown(KeyCode.Escape))
 		{
 			pauseMenu.SetActive(!pauseMenu.activeSelf);
 			Paused = !Paused;
@@ -42,7 +42,7 @@ public class HUDManager : MonoBehaviour
 			}
 		}
 
-		if(!GameManager.Instance.InGame && pauseMenu.activeSelf)
+		if((GameManager.Instance.GameOver || !GameManager.Instance.InGame) && pauseMenu.activeSelf)
 		{
 			pauseMenu.SetActive(false);
 			Paused = false;
