@@ -52,6 +52,7 @@ public class GameManager : Singleton<GameManager>
 
 	public bool Loading { get; private set; } = false;
 	public bool Fading { get; private set; } = false;
+	public bool Lose { get; private set; } = false;
 
 	public ushort ThisPlayer { get; private set; } = INVALID_ID;
 	public byte PlayerCount { get; private set; } = 0;
@@ -524,15 +525,21 @@ public class GameManager : Singleton<GameManager>
 			unspawnedPlayers.Clear();
 			playerLocations.Clear();
 
+			for(int i = 0; i < 4; ++i)
+			{
+				if(entities[0] != null) { entities[0].destroyed = true; }
+			}
+
 			foreach (GameObject healthBar in healthBars)
 			{
 				Destroy(healthBar);
 			}
 
 			healthBars.Clear();
-		}	
+		}
 
 		PlayerCount = 0;
+		AlivePlayers = 0;
 		ThisPlayer = INVALID_ID;
 		IsServer = false;
 		InLobby = false;
@@ -659,10 +666,19 @@ public class GameManager : Singleton<GameManager>
 
 		NetworkManager.Instance.SendMessage(packet);
 
-		if(AlivePlayers <= 0)
+		if(AlivePlayers <= 0 && InGame && !Lose)
 		{
+			Lose = true;
+
+			foreach (GameObject healthBar in healthBars) { Destroy(healthBar); }
+
+			healthBars.Clear();
+
+			FindFirstObjectByType<HUDManager>().HidePauseMenu();
+
 			Packet lose = new Packet();
 			lose.type = 4;
+			lose.id = 1;
 
 			NetworkManager.Instance.SendMessage(lose);
 
@@ -799,6 +815,14 @@ public class GameManager : Singleton<GameManager>
 
 	public void GameTrigger(Packet packet)
 	{
+		if(packet.id == 1) { Lose = true; }
+
+		foreach (GameObject healthBar in healthBars) { Destroy(healthBar); }
+
+		healthBars.Clear();
+
+		FindFirstObjectByType<HUDManager>().HidePauseMenu();
+
 		sceneLoader.LoadScene("Endgame");
 	}
 

@@ -41,6 +41,12 @@ public class HUDManager : MonoBehaviour
 				Cursor.visible = false;
 			}
 		}
+
+		if(!GameManager.Instance.InGame && pauseMenu.activeSelf)
+		{
+			pauseMenu.SetActive(false);
+			Paused = false;
+		}
 	}
 
 	public void SetTooltip(string text)
