@@ -19,6 +19,7 @@ public class GameManager : Singleton<GameManager>
 	private int spectateID = 0;
 	private bool spectating = false;
 
+	public bool FirstMenu { get; set; } = true;
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
 	public bool InGame { get; private set; }
@@ -53,7 +54,7 @@ public class GameManager : Singleton<GameManager>
 	public bool Loading { get; private set; } = false;
 	public bool Fading { get; private set; } = false;
 	public bool Lose { get; private set; } = false;
-	public bool GameOver { get; private set; } = false;
+	public bool GameOver { get; set; } = false;
 
 	public ushort ThisPlayer { get; private set; } = INVALID_ID;
 	public byte PlayerCount { get; private set; } = 0;
@@ -76,6 +77,8 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
+		if(!InGame || GameOver) { return; }
+
 		spawnTimer -= Time.deltaTime;
 
 		if (spawnTimer <= 0.0f && IsServer && !InLobby && AlivePlayers > 0)
@@ -201,7 +204,7 @@ public class GameManager : Singleton<GameManager>
 		NetworkManager.Instance.SendMessage(packet);
 	}
 
-	private void FinishLoading()
+	public void FinishLoading()
 	{
 		spectating = false;
 		spectateID = 0;
@@ -877,7 +880,7 @@ public class GameManager : Singleton<GameManager>
 			case 2: scene = "c1m3_Playground"; break;
 			case 3: scene = "c1m4_Cellar"; break;
 			case 4: scene = "c1m5_Corruption"; break;
-			case 99: scene = "Endgame"; break;
+			case 99: scene = "Endgame"; GameOver = true; break;
 		}
 
 		SceneLoader.LoadScene(scene);

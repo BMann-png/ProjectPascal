@@ -9,8 +9,13 @@ public class Endscreen : MonoBehaviour
 
 	void Start()
 	{
-		if(GameManager.Instance.Lose) { lose.SetActive(true); win.SetActive(false); }
+		if (GameManager.Instance.Lose) { lose.SetActive(true); win.SetActive(false); }
 		else { lose.SetActive(false); win.SetActive(true); }
+
+		Cursor.lockState = CursorLockMode.Confined;
+		Cursor.visible = true;
+
+		GameManager.Instance.FinishLoading();
 	}
 
 	public void Quit()

@@ -10,6 +10,12 @@ public class InteractManager : MonoBehaviour
 
 	private void Awake()
 	{
+		if (!GameManager.Instance.FirstMenu)
+		{
+			Destroy(gameObject);
+			return;
+		}
+
 		DontDestroyOnLoad(gameObject);
 
 		hudManager = FindFirstObjectByType<HUDManager>();

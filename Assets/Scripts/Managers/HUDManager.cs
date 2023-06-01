@@ -14,7 +14,13 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+		if(!GameManager.Instance.FirstMenu)
+		{
+			Destroy(gameObject);
+			return;
+		}
+
+		DontDestroyOnLoad(gameObject);
 		toolTip.gameObject.SetActive(false);
 		pauseMenu.SetActive(false);
 
