@@ -48,6 +48,9 @@ public class GameManager : Singleton<GameManager>
     private AudioManager audioManager;
 	public AudioManager AudioManager { get => audioManager; }
 
+	private HUDManager hudManager;
+	public HUDManager HudManager { get => hudManager; }
+
 	private SceneLoader sceneLoader;
 	public SceneLoader SceneLoader { get => sceneLoader; }
 
@@ -69,6 +72,7 @@ public class GameManager : Singleton<GameManager>
 		prefabManager = FindFirstObjectByType<PrefabManager>();
 		audioManager = FindFirstObjectByType<AudioManager>();
 		sceneLoader = FindFirstObjectByType<SceneLoader>();
+		hudManager = FindFirstObjectByType<HUDManager>();
 
 		for (ushort i = 4; i < 101; ++i) { enemyIndices.Enqueue(i); }
 		for (ushort i = 111; i < 10001; ++i) { interactableIndices.Enqueue(i); }
@@ -553,7 +557,7 @@ public class GameManager : Singleton<GameManager>
 		GameOver = false;
 		Lose = false;
 
-		FindFirstObjectByType<HUDManager>().HidePauseMenu();
+		HudManager.HidePauseMenu();
 	}
 
 	public void PickupItem(byte id)
