@@ -43,9 +43,9 @@ public class GameManager : Singleton<GameManager>
 	private LobbyHandler lobby;
 
 	private PrefabManager prefabManager;
-    public PrefabManager PrefabManager { get => prefabManager; }
+	public PrefabManager PrefabManager { get => prefabManager; }
 
-    private AudioManager audioManager;
+	private AudioManager audioManager;
 	public AudioManager AudioManager { get => audioManager; }
 
 	private SceneLoader sceneLoader;
@@ -135,15 +135,15 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
-		if(spectating)
+		if (spectating)
 		{
-			if(Input.GetKeyDown(KeyCode.Mouse0))
+			if (Input.GetKeyDown(KeyCode.Mouse0))
 			{
-				if(++spectateID == spectators.Count) { spectateID = 0; }
+				if (++spectateID == spectators.Count) { spectateID = 0; }
 			}
-			else if(Input.GetKeyDown(KeyCode.Mouse1))
+			else if (Input.GetKeyDown(KeyCode.Mouse1))
 			{
-				if(--spectateID == -1) { spectateID = spectators.Count - 1; }
+				if (--spectateID == -1) { spectateID = spectators.Count - 1; }
 			}
 		}
 	}
@@ -523,7 +523,7 @@ public class GameManager : Singleton<GameManager>
 			}
 		}
 
-		if(InGame)
+		if (InGame)
 		{
 			InGame = false;
 
@@ -561,7 +561,7 @@ public class GameManager : Singleton<GameManager>
 		byte slot = 0;
 		byte type = 0;
 
-		switch(id)
+		switch (id)
 		{
 			case 0: slot = 0; type = 0; break;
 			case 1: slot = 0; type = 1; break;
@@ -601,7 +601,7 @@ public class GameManager : Singleton<GameManager>
 			ushort id = projectileIndices.Dequeue();
 
 			Vector2 variation = Vector2.zero;
-			
+
 			switch (type)
 			{
 				case 0: break;
@@ -621,7 +621,7 @@ public class GameManager : Singleton<GameManager>
 
 			go.GetComponent<Damage>().Owner = owner.gameObject;
 
-            entities[id] = go.GetComponent<Entity>();
+			entities[id] = go.GetComponent<Entity>();
 			entities[id].id = id;
 			entities[id].GetComponent<Projectile>().SetSpeed();
 
@@ -763,7 +763,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		Lobby lobby = NetworkManager.Instance.currentLobby;
 
-		if(player.Id == lobby.Id)
+		if (player.Id == lobby.Id)
 		{
 			//Kick to menu
 		}
@@ -775,7 +775,7 @@ public class GameManager : Singleton<GameManager>
 
 				if (steamId == player.Id.Value)
 				{
-					foreach(ushort id in unspawnedPlayers)
+					foreach (ushort id in unspawnedPlayers)
 					{
 						unspawnedPlayers.Remove(id);
 					}
@@ -798,7 +798,18 @@ public class GameManager : Singleton<GameManager>
 
 	public void ReceiveTransform(Packet transform)
 	{
-		if (!Loading) { entities[transform.id].SetTransform(transform.transform); }
+		if (!Loading)
+		{
+			if (!transform.transform.isAim)
+			{
+				entities[transform.id].SetTransform(transform.transform);
+			}
+			else
+			{
+				entities[transform.id].shoot.SetPositionAndRotation(new Vector3(transform.transform.xPos, transform.transform.yPos, transform.transform.zPos), Quaternion.Euler(new Vector3(transform.transform.xPos, transform.transform.yPos, transform.transform.zPos)));
+			}
+		}
+
 	}
 
 	public void Action(Packet action)
@@ -821,7 +832,7 @@ public class GameManager : Singleton<GameManager>
 	public void Inventory(Packet inventory)
 	{
 		entities[inventory.id].GetComponent<Inventory>().EquipWeapon(inventory.inventory.slot, inventory.inventory.data);
-    }
+	}
 
 	public void GameTrigger(Packet packet)
 	{
@@ -838,7 +849,7 @@ public class GameManager : Singleton<GameManager>
 
 	public void LoadLevel(byte level)
 	{
-		if(level > 99)
+		if (level > 99)
 		{
 			FindFirstObjectByType<LobbyHandler>().SelectLevel((byte)(level - 100));
 		}
@@ -968,16 +979,11 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
-	public void RotateShoot(Packet packet)
-	{
-		entities[packet.id].weapon.eulerAngles = new Vector3(packet.rotation.xRot, packet.rotation.yRot); 
-	}
-
 	public void Despawn(Packet packet)
 	{
 		if (entities[packet.id] != null)
 		{
-			if(packet.id < 4)
+			if (packet.id < 4)
 			{
 				--AlivePlayers;
 				unspawnedPlayers.Add(packet.id);

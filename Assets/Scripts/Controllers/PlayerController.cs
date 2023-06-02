@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
 				Packet packet = new Packet();
 				packet.type = 10;
 				packet.id = entity.id;
-				packet.rotation = new RotationPacket(x, y);
+				packet.transform = new TransformPacket();
 
 				NetworkManager.Instance.SendMessage(packet);
 			}
