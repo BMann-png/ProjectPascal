@@ -97,13 +97,31 @@ public class HUDManager : MonoBehaviour
 
 	public void SpawnTear(int numOfTears = 0)
 	{
-        int screenHalfWidth = Screen.width / 2;
-        int screenHalfHeight = Screen.height / 2;
-
         for (int i = 0; i < numOfTears; i++) 
 		{ 
 			int tear = Random.Range(0, tears.Length);
-			Instantiate(tears[tear], new Vector2(Random.Range(screenHalfWidth - 300, screenHalfWidth + 301), Random.Range(screenHalfHeight - 400, screenHalfHeight + 401)), cryEffect.transform.rotation, cryEffect.transform);
+
+			Vector2 vec = Vector2.zero;
+			vec.x = Random.Range(-1.0f, 1.0f);
+			vec.y = Random.Range(-1.0f, 1.0f);
+
+			vec.Normalize();
+
+			Vector2 padding = vec;
+			padding.x *= 0.375f * Screen.width;
+			padding.y *= 0.375f * Screen.height;
+
+			float prec = Random.Range(0, 0.125f);
+			vec.x *= prec * Screen.width;
+			vec.y *= prec * Screen.height;
+
+			Vector2 spawn = vec + padding;
+
+			//float x = Mathf.Cos(Mathf.Deg2Rad * Random.Range(0, 360)) * Random.Range(0.5f * Screen.width, 0.6f * Screen.width);
+			//float y = Mathf.Sin(Mathf.Deg2Rad * Random.Range(0, 360)) * Random.Range(0.5f * Screen.height, 0.6f * Screen.height);
+
+            var t = Instantiate(tears[tear], cryEffect.transform);
+			t.transform.localPosition = spawn;//new Vector2(x, y);
 		}
 	}
 }
