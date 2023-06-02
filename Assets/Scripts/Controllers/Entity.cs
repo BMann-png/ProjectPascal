@@ -195,11 +195,13 @@ public class Entity : MonoBehaviour
                 case 10: //StartRevive
                     {
                         GetComponent<PlayerController>().StartRevive();
+                        GameManager.Instance.Entities[packet.sender].animator.SetTrigger("Reviving");
                     }
                     break;
                 case 11: //EndRevive
                     {
                         GetComponent<PlayerController>().EndRevive();
+                        GameManager.Instance.Entities[packet.sender].animator.SetTrigger("StopReviving");
                     }
                     break;
 

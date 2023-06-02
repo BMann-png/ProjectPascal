@@ -65,11 +65,13 @@ public class BaseAI : MonoBehaviour
 	private void Update()
 	{
 		if(obsession == null) { obsession = GameManager.Instance.playerLocations[Random.Range(0, GameManager.Instance.playerLocations.Count)]; }
+		else
+		{
+			distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
 
-		distanceToPlayer.value = (obsession.transform.position - transform.position).magnitude;
+			agentHealth.value = health.health;
 
-		agentHealth.value = health.health;
-
-		stateMachine.OnUpdate();
+			stateMachine.OnUpdate();
+		}
 	}
 }

@@ -19,6 +19,7 @@ public class GameManager : Singleton<GameManager>
 	private int spectateID = 0;
 	private bool spectating = false;
 
+	public bool FirstMenu { get; set; } = true;
 	public bool IsServer { get; private set; }
 	public bool InLobby { get; private set; }
 	public bool InGame { get; private set; }
@@ -55,6 +56,8 @@ public class GameManager : Singleton<GameManager>
 
 	public bool Loading { get; private set; } = false;
 	public bool Fading { get; private set; } = false;
+	public bool Lose { get; private set; } = false;
+	public bool GameOver { get; set; } = false;
 
 	public ushort ThisPlayer { get; private set; } = INVALID_ID;
 	public byte PlayerCount { get; private set; } = 0;
@@ -78,6 +81,8 @@ public class GameManager : Singleton<GameManager>
 
 	private void Update()
 	{
+		if(!InGame || GameOver) { return; }
+
 		spawnTimer -= Time.deltaTime;
 
 		if (spawnTimer <= 0.0f && IsServer && !InLobby && AlivePlayers > 0)
@@ -203,101 +208,104 @@ public class GameManager : Singleton<GameManager>
 		NetworkManager.Instance.SendMessage(packet);
 	}
 
-	private void FinishLoading()
+	public void FinishLoading()
 	{
 		spectating = false;
 		spectateID = 0;
 		loadedPlayers = 0;
 		InGame = true;
 
-		if (IsServer)
+		if (!GameOver)
 		{
-			for (ushort i = 0; i < level.InteractableSpawnCount(); ++i)
+			if (IsServer)
 			{
-				InteractableSpawner spawner = level.GetInteractableSpawn(i);
-
-				if (spawner.guaranteeSpawn)
+				for (ushort i = 0; i < level.InteractableSpawnCount(); ++i)
 				{
-					ushort id = interactableIndices.Dequeue();
+					InteractableSpawner spawner = level.GetInteractableSpawn(i);
 
-					if (spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
-
-					if (spawner.type < 100)
+					if (spawner.guaranteeSpawn)
 					{
-						entities[id] = Instantiate(prefabManager.Pickups[spawner.type], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
-						entities[id].id = id;
-						Interactable inter = entities[id].GetComponent<Interactable>();
-						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
-						inter.id = spawner.id;
+						ushort id = interactableIndices.Dequeue();
+
+						if (spawner.type == 255) { spawner.type = (byte)Random.Range(0, 5); }
+
+						if (spawner.type < 100)
+						{
+							entities[id] = Instantiate(prefabManager.Pickups[spawner.type], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
+							entities[id].id = id;
+							Interactable inter = entities[id].GetComponent<Interactable>();
+							inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
+							inter.id = spawner.id;
+						}
+						else if (spawner.type < 255)
+						{
+							entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
+							entities[id].id = id;
+							Interactable inter = entities[id].GetComponent<Interactable>();
+							inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
+							inter.id = spawner.id;
+						}
+
+						Packet packet = new Packet();
+						packet.type = 6;
+						packet.id = id;
+						packet.spawn = new SpawnPacket(i, spawner.type);
+
+						NetworkManager.Instance.SendMessage(packet);
 					}
-					else if (spawner.type < 255)
+					else
 					{
-						entities[id] = Instantiate(prefabManager.Pushables[spawner.type - 100], spawner.transform.position, spawner.transform.rotation).GetComponentInChildren<Entity>();
-						entities[id].id = id;
-						Interactable inter = entities[id].GetComponent<Interactable>();
-						inter.SetEvents(spawner.onInteract, spawner.onStopInteract, spawner.onComplete);
-						inter.id = spawner.id;
+						//TODO: spawn chance
 					}
+				}
+			}
 
-					Packet packet = new Packet();
-					packet.type = 6;
-					packet.id = id;
-					packet.spawn = new SpawnPacket(i, spawner.type);
+			byte healthBarId = 1;
+			foreach (ushort id in unspawnedPlayers)
+			{
+				Transform transform = level.GetPlayerSpawn(id);
 
-					NetworkManager.Instance.SendMessage(packet);
+				if (id == ThisPlayer)
+				{
+					entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
+					entities[id].id = id;
+					playerLocations.Add(entities[id].gameObject);
+
+					HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
+					healthBars.Add(bar.gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(bar);
+					bar.SetImage(id);
+					bar.gameObject.SetActive(true);
 				}
 				else
 				{
-					//TODO: spawn chance
+					entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
+					entities[id].id = id;
+					entities[id].SetModel();
+					playerLocations.Add(entities[id].gameObject);
+
+					HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
+					healthBars.Add(bar.gameObject);
+
+					entities[id].GetComponent<Health>().AttachHealthBar(bar);
+					bar.SetImage(id);
+					bar.gameObject.SetActive(true);
+
+					spectators.Add(entities[id].GetComponentInChildren<Spectate>().gameObject);
+
+					++healthBarId;
 				}
+
+				++AlivePlayers;
 			}
-		}
 
-		byte healthBarId = 1;
-		foreach(ushort id in unspawnedPlayers)
-		{
-			Transform transform = level.GetPlayerSpawn(id);
+			unspawnedPlayers.Clear();
 
-			if (id == ThisPlayer)
+			foreach (GameObject go in spectators)
 			{
-				entities[id] = Instantiate(prefabManager.Player, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				playerLocations.Add(entities[id].gameObject);
-
-				HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
-				healthBars.Add(bar.gameObject);
-
-				entities[id].GetComponent<Health>().AttachHealthBar(bar);
-				bar.SetImage(id);
-				bar.gameObject.SetActive(true);
+				go.SetActive(false);
 			}
-			else
-			{
-				entities[id] = Instantiate(prefabManager.NetworkPlayer, transform.position, transform.rotation).GetComponent<Entity>();
-				entities[id].id = id;
-				entities[id].SetModel();
-				playerLocations.Add(entities[id].gameObject);
-
-				HealthBar bar = Instantiate(prefabManager.HealthBar, healthBarHolder).GetComponent<HealthBar>();
-				healthBars.Add(bar.gameObject);
-
-				entities[id].GetComponent<Health>().AttachHealthBar(bar);
-				bar.SetImage(id);
-				bar.gameObject.SetActive(true);
-
-				spectators.Add(entities[id].GetComponentInChildren<Spectate>().gameObject);
-
-				++healthBarId;
-			}
-
-			++AlivePlayers;
-		}
-
-		unspawnedPlayers.Clear();
-
-		foreach(GameObject go in spectators)
-		{
-			go.SetActive(false);
 		}
 
 		SceneLoader.SetLoadingScreen(false);
@@ -528,18 +536,26 @@ public class GameManager : Singleton<GameManager>
 			unspawnedPlayers.Clear();
 			playerLocations.Clear();
 
+			for(int i = 0; i < 4; ++i)
+			{
+				if(entities[0] != null) { entities[0].destroyed = true; }
+			}
+
 			foreach (GameObject healthBar in healthBars)
 			{
 				Destroy(healthBar);
 			}
 
 			healthBars.Clear();
-		}	
+		}
 
 		PlayerCount = 0;
+		AlivePlayers = 0;
 		ThisPlayer = INVALID_ID;
 		IsServer = false;
 		InLobby = false;
+		GameOver = false;
+		Lose = false;
 
 		HudManager.HidePauseMenu();
 	}
@@ -662,13 +678,36 @@ public class GameManager : Singleton<GameManager>
 		packet.type = 7;
 
 		NetworkManager.Instance.SendMessage(packet);
+
+		if(AlivePlayers <= 0 && InGame && !GameOver)
+		{
+			Lose = true;
+			GameOver = true;
+
+			foreach (GameObject healthBar in healthBars) { Destroy(healthBar); }
+
+			healthBars.Clear();
+
+			FindFirstObjectByType<HUDManager>().HidePauseMenu();
+
+			Packet lose = new Packet();
+			lose.type = 4;
+			lose.id = 1;
+
+			NetworkManager.Instance.SendMessage(lose);
+
+			sceneLoader.LoadScene("Endgame");
+		}
 	}
 
 	public void Spectate()
 	{
-		Camera.main.gameObject.SetActive(false);
-		spectators[spectateID].SetActive(true);
-		spectating = true;
+		if (spectators.Count > 0)
+		{
+			Camera.main.gameObject.SetActive(false);
+			spectators[spectateID].SetActive(true);
+			spectating = true;
+		}
 	}
 
 	//-----CALLBACKS-----
@@ -790,7 +829,15 @@ public class GameManager : Singleton<GameManager>
 
 	public void GameTrigger(Packet packet)
 	{
+		if(packet.id == 1) { Lose = true; GameOver = true; }
 
+		foreach (GameObject healthBar in healthBars) { Destroy(healthBar); }
+
+		healthBars.Clear();
+
+		FindFirstObjectByType<HUDManager>().HidePauseMenu();
+
+		sceneLoader.LoadScene("Endgame");
 	}
 
 	public void LoadLevel(byte level)
@@ -837,6 +884,7 @@ public class GameManager : Singleton<GameManager>
 			case 2: scene = "c1m3_Playground"; break;
 			case 3: scene = "c1m4_Cellar"; break;
 			case 4: scene = "c1m5_Corruption"; break;
+			case 99: scene = "Endgame"; GameOver = true; break;
 		}
 
 		SceneLoader.LoadScene(scene);
@@ -939,17 +987,15 @@ public class GameManager : Singleton<GameManager>
 				unspawnedPlayers.Add(packet.id);
 				playerLocations.Remove(entities[packet.id].gameObject);
 				//TODO: Better spectator system
-				//Entity e = entities[packet.id];
-				//Spectate s = e.GetComponentInChildren<Spectate>();
-				//GameObject g = s.gameObject;
-				//int index = spectators.IndexOf(g);
-				//spectators.RemoveAt(index);
-				//
-				//if(spectating && index == spectateID)
-				//{
-				//	spectateID = 0;
-				//	spectators[spectateID].SetActive(true);
-				//}
+				GameObject g = entities[packet.id].GetComponentInChildren<Spectate>().gameObject;
+				int index = spectators.IndexOf(g);
+				spectators.RemoveAt(index);
+				
+				if(spectating && index == spectateID)
+				{
+					spectateID = 0;
+					spectators[spectateID].SetActive(true);
+				}
 			}
 
 			entities[packet.id].destroyed = true;

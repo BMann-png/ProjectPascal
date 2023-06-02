@@ -14,6 +14,12 @@ public class SceneLoader : MonoBehaviour
 
 	private void Awake()
 	{
+		if (!GameManager.Instance.FirstMenu)
+		{
+			Destroy(gameObject);
+			return;
+		}
+
 		DontDestroyOnLoad(gameObject);
 		SceneManager.sceneLoaded += SceneLoaded;
 		loadingScreen.SetActive(false);
