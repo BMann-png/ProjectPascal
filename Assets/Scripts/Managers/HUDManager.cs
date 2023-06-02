@@ -83,9 +83,15 @@ public class HUDManager : MonoBehaviour
 		cryEffect.SetActive(isActive);
 	}
 
-	public void SpawnTear()
+	public void SpawnTear(int numOfTears = 0)
 	{
-		int tear = Random.Range(0, tears.Length);
-		Instantiate(tears[tear], new Vector2(Random.Range(100, 700), Random.Range(100, 500)), cryEffect.transform.rotation, cryEffect.transform);
+        int screenHalfWidth = Screen.width / 2;
+        int screenHalfHeight = Screen.height / 2;
+
+        for (int i = 0; i < numOfTears; i++) 
+		{ 
+			int tear = Random.Range(0, tears.Length);
+			Instantiate(tears[tear], new Vector2(Random.Range(screenHalfWidth - 300, screenHalfWidth + 301), Random.Range(screenHalfHeight - 400, screenHalfHeight + 401)), cryEffect.transform.rotation, cryEffect.transform);
+		}
 	}
 }

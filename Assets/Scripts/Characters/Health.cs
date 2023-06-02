@@ -74,7 +74,7 @@ public class Health : MonoBehaviour
 			NetworkManager.Instance.SendMessage(packet);
 		}
 
-		GameManager.Instance.HudManager.SpawnTear();
+		GameManager.Instance.HudManager.SpawnTear(Random.Range(1, 4));
 	}
 
 	public void OnTrauma(float traumaDamage)

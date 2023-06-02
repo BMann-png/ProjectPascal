@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour
 	private Entity entity;
 	private Health health;
 	private Vector3 movement;
-	private HUDManager hudManager;
 
 	private bool sprinting = false;
 	private bool tripped = false;
@@ -42,13 +41,11 @@ public class PlayerController : MonoBehaviour
 		entity = GetComponent<Entity>();
 		health = GetComponent<Health>();
 
-		hudManager = FindAnyObjectByType<HUDManager>();
-
 		entity.animator = animator;
 
 		addedReviveTime = 6.0f / health.MaxTrauma;
 
-        hudManager.SetCryEffect(true);
+        GameManager.Instance.HudManager.SetCryEffect(true);
     }
 
 	private void FixedUpdate()
@@ -113,7 +110,7 @@ public class PlayerController : MonoBehaviour
 			movement = Vector3.down * 10.0f * Time.deltaTime;
 			reviveTimer -= Time.deltaTime;
 
-			if (!down && !hudManager.Paused)
+			if (!down && !GameManager.Instance.HudManager.Paused)
 			{
 				float vertInput = Input.GetAxis("Vertical");
 				float HoriInput = Input.GetAxis("Horizontal");
@@ -164,7 +161,7 @@ public class PlayerController : MonoBehaviour
 			}
 
 			Weapon weapon = hand.GetComponentInChildren<Weapon>();
-			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !hudManager.Paused && canShoot)
+			if (weapon != null && Input.GetKeyDown(KeyCode.Mouse0) && !down && !GameManager.Instance.HudManager.Paused && canShoot)
 			{
 				weapon.IsFiring = true;
 				weapon.Shoot();
@@ -230,7 +227,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnDown()
 	{
-		hudManager.SetCryEffect(true);
+		GameManager.Instance.HudManager.SetCryEffect(true);
 		down = true;
 		Packet packet = new Packet();
 		packet.type = 1;
