@@ -72,9 +72,9 @@ public class Health : MonoBehaviour
 			packet.id = entity.id;
 			packet.health = new HealthPacket((byte)healthVal, (byte)traumaVal, (byte)downVal);
 			NetworkManager.Instance.SendMessage(packet);
-		}
 
-		GameManager.Instance.HudManager.SpawnTear(Random.Range(1, 4));
+			GameManager.Instance.HudManager.SpawnTear(Random.Range(1, 4));
+		}
 	}
 
 	public void OnTrauma(float traumaDamage)
