@@ -1170,7 +1170,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771800574224154896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18756,9 +18756,29 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4249420563881191924, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.439
+      objectReference: {fileID: 0}
+    - target: {fileID: 4249420563881191924, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.557
+      objectReference: {fileID: 0}
     - target: {fileID: 4249420563881191925, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 2047
+      objectReference: {fileID: 0}
+    - target: {fileID: 4249420564580342456, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.22500002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4249420564580342456, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.116999984
+      objectReference: {fileID: 0}
+    - target: {fileID: 4249420564580342456, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.41899997
       objectReference: {fileID: 0}
     - target: {fileID: 4249420564965122352, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
       propertyPath: m_RootOrder
@@ -18823,6 +18843,18 @@ PrefabInstance:
     - target: {fileID: 5936406216322940931, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6165977815749856338, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.342
+      objectReference: {fileID: 0}
+    - target: {fileID: 6165977815749856338, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.241
+      objectReference: {fileID: 0}
+    - target: {fileID: 6165977815749856338, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.072
       objectReference: {fileID: 0}
     - target: {fileID: 6991602016641133472, guid: 6b015c8b803f1f94eaaf06df0e0992a8, type: 3}
       propertyPath: primaryWeapons.Array.data[0]
